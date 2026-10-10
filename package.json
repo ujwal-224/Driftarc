@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node backend/src/server.js",
     "test": "npm --prefix backend test",
-    "self-check": "node backend/scripts/self-check.js"
+    "self-check": "node backend/scripts/self-check.js",
+    "fake-check": "node backend/scripts/fake-check.js"
   }
 }

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1000" height="600" viewBox="0 0 1000 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1000" y2="600" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0b0f19"/>
+      <stop offset="1" stop-color="#181e2e"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#f43f5e" />
+    </marker>
+  </defs>
+
+  <rect width="1000" height="600" fill="url(#bg)"/>
+
+  <!-- Title -->
+  <text x="50" y="55" fill="#f43f5e" font-family="system-ui, sans-serif" font-size="24" font-weight="bold">Phantom Legacy Architecture (Intentionally Fabricated)</text>
+  <text x="50" y="85" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="14">All components here are absent from the codebase</text>
+
+  <!-- Box 1: GraphQL Gateway -->
+  <g transform="translate(60, 240)">
+    <rect width="180" height="110" rx="12" fill="#1e293b" stroke="#f43f5e" stroke-width="2"/>
+    <text x="90" y="48" fill="#f43f5e" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" text-anchor="middle">GraphQL</text>
+    <text x="90" y="75" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="13" text-anchor="middle">Apollo Gateway</text>
+  </g>
+
+  <!-- Box 2: Kafka Cluster -->
+  <g transform="translate(390, 240)">
+    <rect width="180" height="110" rx="12" fill="#1e293b" stroke="#f43f5e" stroke-width="2"/>
+    <text x="90" y="48" fill="#f43f5e" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" text-anchor="middle">Kafka</text>
+    <text x="90" y="75" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="13" text-anchor="middle">Event Streaming</text>
+  </g>
+
+  <!-- Box 3: Cassandra DB -->
+  <g transform="translate(730, 90)">
+    <rect width="180" height="110" rx="12" fill="#1e293b" stroke="#f43f5e" stroke-width="2"/>
+    <text x="90" y="48" fill="#f43f5e" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" text-anchor="middle">Cassandra</text>
+    <text x="90" y="75" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="13" text-anchor="middle">Wide-column DB</text>
+  </g>
+
+  <!-- Box 4: Redis Cache -->
+  <g transform="translate(730, 240)">
+    <rect width="180" height="110" rx="12" fill="#1e293b" stroke="#f43f5e" stroke-width="2"/>
+    <text x="90" y="48" fill="#f43f5e" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" text-anchor="middle">Redis</text>
+    <text x="90" y="75" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="13" text-anchor="middle">In-Memory Cache</text>
+  </g>
+
+  <!-- Box 5: Rust Worker -->
+  <g transform="translate(730, 390)">
+    <rect width="180" height="110" rx="12" fill="#1e293b" stroke="#f43f5e" stroke-width="2"/>
+    <text x="90" y="48" fill="#f43f5e" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" text-anchor="middle">Rust</text>
+    <text x="90" y="75" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="13" text-anchor="middle">Heavy Worker</text>
+  </g>
+
+  <!-- Connections -->
+  <path d="M 240 295 L 380 295" stroke="#f43f5e" stroke-width="2.5" marker-end="url(#arrow)" />
+  <path d="M 570 270 L 720 150" stroke="#f43f5e" stroke-width="2.5" marker-end="url(#arrow)" />
+  <path d="M 570 295 L 720 295" stroke="#f43f5e" stroke-width="2.5" marker-end="url(#arrow)" />
+  <path d="M 570 320 L 720 440" stroke="#f43f5e" stroke-width="2.5" marker-end="url(#arrow)" />
+</svg>
