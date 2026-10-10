@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Layers, Check } from 'lucide-react';
+import { Layers, Check, ShieldCheck, Cpu } from 'lucide-react';
 import { checkHealth, runScan } from './api.js';
 import UploadStep from './components/UploadStep.jsx';
 import ReviewStep from './components/ReviewStep.jsx';
@@ -32,7 +32,7 @@ export default function App() {
   const [scanLoading, setScanLoading] = useState(false);
   const [globalError, setGlobalError] = useState(null);
 
-  // Verify backend health
+  // Check backend health
   useEffect(() => {
     checkHealth()
       .then(() => setBackendHealthy(true))
@@ -78,31 +78,42 @@ export default function App() {
   };
 
   const steps = [
-    { num: 1, label: 'Upload' },
-    { num: 2, label: 'Review' },
-    { num: 3, label: 'Findings' },
-    { num: 4, label: 'Issues' }
+    { num: 1, label: 'Upload Diagram' },
+    { num: 2, label: 'Review Extraction' },
+    { num: 3, label: 'Audit Findings' },
+    { num: 4, label: 'Draft Issues' }
   ];
 
   return (
-    <div className="bg-[#0b0f17] text-slate-200 antialiased min-h-screen flex flex-col font-sans selection:bg-sky-500/30 selection:text-sky-200">
-      {/* Sleek, Modern Navbar */}
-      <header className="sticky top-0 z-50 backdrop-blur-md bg-[#0b0f17]/85 border-b border-slate-800/80 px-6 h-16 flex items-center justify-between">
+    <div className="min-h-screen bg-[#080c14] text-slate-100 flex flex-col font-sans selection:bg-sky-500/30 selection:text-sky-200 relative">
+      {/* Ambient background atmosphere */}
+      <div className="fixed inset-0 bg-mesh-glow pointer-events-none z-0"></div>
+      <div className="fixed inset-0 bg-dot-pattern opacity-40 pointer-events-none z-0"></div>
+
+      {/* Modern Frosted Header */}
+      <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#080c14]/80 border-b border-white/[0.08] px-6 h-16 flex items-center justify-between">
         {/* Brand */}
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-sky-500/20">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 via-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-sky-500/25 ring-1 ring-white/20">
             <Layers className="w-5 h-5" />
           </div>
           <div>
-            <span className="text-lg font-bold text-white tracking-tight">DriftCheck</span>
-            <span className="hidden sm:inline-block ml-2 text-xs text-slate-400 font-medium">
-              Architecture Drift Detector
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-base font-bold bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent tracking-tight">
+                DriftCheck
+              </span>
+              <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-sky-500/10 text-sky-400 border border-sky-500/20 font-semibold tracking-wide">
+                v2.4
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-400 leading-none mt-0.5 hidden sm:block">
+              Architecture vs Codebase Integrity
+            </p>
           </div>
         </div>
 
-        {/* Minimal Stepper Navigation */}
-        <nav className="flex items-center gap-1 sm:gap-2 bg-slate-900/60 border border-slate-800 p-1 rounded-xl">
+        {/* Workflow Stepper */}
+        <nav className="flex items-center gap-1 sm:gap-1.5 bg-slate-900/80 border border-white/[0.08] p-1 rounded-xl shadow-inner">
           {steps.map((s) => {
             const isActive = currentStep === s.num;
             const isCompleted = currentStep > s.num;
@@ -115,37 +126,44 @@ export default function App() {
                 disabled={!isAccessible}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                   isActive
-                    ? 'bg-sky-500 text-white shadow-sm shadow-sky-500/30'
+                    ? 'bg-gradient-to-r from-sky-500 to-indigo-600 text-white shadow-md shadow-sky-500/20'
                     : isCompleted
-                    ? 'text-emerald-400 hover:bg-slate-800/60'
+                    ? 'text-emerald-400 hover:bg-white/[0.06]'
                     : isAccessible
-                    ? 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
-                    : 'text-slate-600 cursor-not-allowed opacity-40'
+                    ? 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]'
+                    : 'text-slate-600 cursor-not-allowed opacity-30'
                 }`}
               >
                 {isCompleted ? (
                   <Check className="w-3.5 h-3.5 stroke-[2.5]" />
                 ) : (
-                  <span className="w-4 h-4 rounded-full flex items-center justify-center text-[10px] bg-slate-800 border border-slate-700">
+                  <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${
+                    isActive ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-400'
+                  }`}>
                     {s.num}
                   </span>
                 )}
-                <span>{s.label}</span>
+                <span className="hidden md:inline">{s.label}</span>
+                <span className="md:hidden">Step {s.num}</span>
               </button>
             );
           })}
         </nav>
 
-        {/* Live Status Pill */}
+        {/* Status indicator */}
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/80 border border-slate-800 text-xs">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/80 border border-white/[0.08] text-xs shadow-sm">
             <span
               className={`w-2 h-2 rounded-full ${
-                backendHealthy === true ? 'bg-emerald-400 animate-pulse' : backendHealthy === false ? 'bg-rose-500' : 'bg-amber-400'
+                backendHealthy === true
+                  ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]'
+                  : backendHealthy === false
+                  ? 'bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]'
+                  : 'bg-amber-400 animate-pulse'
               }`}
             ></span>
-            <span className="text-slate-400 hidden sm:inline">
-              {backendHealthy === true ? 'Connected' : backendHealthy === false ? 'Offline' : 'Connecting'}
+            <span className="text-slate-300 font-medium hidden sm:inline">
+              {backendHealthy === true ? 'Engine Ready' : backendHealthy === false ? 'Offline' : 'Connecting...'}
             </span>
           </div>
         </div>
@@ -153,13 +171,13 @@ export default function App() {
 
       {/* Global Error Banner */}
       {globalError && (
-        <div className="w-full bg-rose-950/40 border-b border-rose-800/60 px-4 py-2.5 text-center text-rose-300 text-xs flex items-center justify-center gap-2">
+        <div className="relative z-10 w-full bg-rose-950/60 border-b border-rose-500/30 px-4 py-2.5 text-center text-rose-200 text-xs flex items-center justify-center gap-2 backdrop-blur-md">
           <span>{globalError}</span>
         </div>
       )}
 
-      {/* Main Workspace */}
-      <div className="flex-1 flex flex-col">
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col relative z-10">
         {currentStep === 1 && (
           <UploadStep
             diagramImage={diagramImage}
@@ -215,11 +233,23 @@ export default function App() {
         )}
       </div>
 
-      {/* Minimal Clean Footer */}
-      <footer className="w-full border-t border-slate-900 bg-[#080c14] py-3 px-6 mt-auto">
-        <div className="max-w-6xl mx-auto flex items-center justify-between text-xs text-slate-500">
-          <span>DriftCheck • Pure Deterministic Code Scanner</span>
-          <span>Gemma 4 Multimodal Vision</span>
+      {/* Premium Footer */}
+      <footer className="w-full border-t border-white/[0.06] bg-[#080c14]/90 backdrop-blur-md py-4 px-6 mt-auto relative z-10">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
+          <div className="flex items-center gap-3">
+            <span className="flex items-center gap-1.5 text-slate-300 font-medium">
+              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              100% Deterministic Code Scanner
+            </span>
+            <span className="text-slate-700">•</span>
+            <span className="flex items-center gap-1.5 text-slate-300 font-medium">
+              <Cpu className="w-4 h-4 text-sky-400" />
+              Gemma 4 Multimodal Vision
+            </span>
+          </div>
+          <div className="text-slate-500 font-mono text-[11px]">
+            Zero Hallucinations • Zero Secret Persistence
+          </div>
         </div>
       </footer>
     </div>

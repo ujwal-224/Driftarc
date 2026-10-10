@@ -1,26 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @layer base {
   * {
     box-sizing: border-box;
   }
   body {
-    background-color: #111319;
-    color: #e2e2ea;
-    font-family: 'Inter', sans-serif;
+    background-color: #080c14;
+    color: #f1f5f9;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     margin: 0;
     padding: 0;
+    overflow-x: hidden;
   }
 }
 
-.material-symbols-outlined {
-  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
-  display: inline-block;
-  vertical-align: middle;
-  line-height: 1;
+/* Background Atmosphere Grid & Radial Glow */
+.bg-mesh-glow {
+  background-image: 
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(56, 189, 248, 0.15), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(99, 102, 241, 0.08), transparent 70%),
+    radial-gradient(ellipse 50% 30% at 20% 80%, rgba(168, 85, 247, 0.06), transparent 70%);
+}
+
+.bg-dot-pattern {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Glassmorphism Card Style */
+.glass-panel {
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+}
+
+.glass-panel:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.glass-card-interactive {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card-interactive:hover {
+  transform: translateY(-2px);
+  border-color: rgba(56, 189, 248, 0.3);
+  box-shadow: 0 24px 48px -12px rgba(56, 189, 248, 0.12);
 }
 
 /* Skeleton Loading Shimmer */
 .skeleton-shimmer {
-  background: linear-gradient(90deg, #1d2025 25%, #282a30 50%, #1d2025 75%);
+  background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
