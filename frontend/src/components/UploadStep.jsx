@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Sparkles,
   UploadCloud,
   FolderGit2,
   Image as ImageIcon,
@@ -72,39 +71,6 @@ export default function UploadStep({
     setDiagramPreview(null);
   };
 
-  const loadSampleDemo = async () => {
-    setError(null);
-    setRepoUrl('demo/planted-drift');
-    setBranch('main');
-    setDiagramPreview('/demo-diagram.png');
-
-    const sampleComponents = [
-      { name: 'React', type: 'frontend' },
-      { name: 'API', type: 'service' },
-      { name: 'Postgres', type: 'database' },
-      { name: 'Redis', type: 'cache' },
-      { name: 'Stripe', type: 'external' }
-    ];
-    const sampleConnections = [
-      { from: 'React', to: 'API', label: 'HTTP/REST' },
-      { from: 'API', to: 'Postgres', label: 'Queries' },
-      { from: 'API', to: 'Redis', label: 'Cache' },
-      { from: 'API', to: 'Stripe', label: 'Payments' }
-    ];
-
-    try {
-      const res = await fetch('/demo-diagram.png');
-      if (res.ok) {
-        const blob = await res.blob();
-        setDiagramImage(blob);
-      }
-    } catch {
-      // Continue with preview
-    }
-
-    onExtracted({ components: sampleComponents, connections: sampleConnections });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!diagramImage && !diagramPreview) {
@@ -132,9 +98,8 @@ export default function UploadStep({
   return (
     <main className="w-full max-w-5xl mx-auto px-6 py-12 flex flex-col gap-10">
       {/* Hero Section */}
-      <div className="text-center max-w-3xl mx-auto space-y-4">
+      <div className="text-center max-w-3xl mx-auto space-y-3">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-xs font-medium shadow-sm">
-          <Sparkles className="w-3.5 h-3.5" />
           <span>Multimodal Vision + Deterministic Code Scanner</span>
         </div>
 
@@ -145,19 +110,6 @@ export default function UploadStep({
         <p className="text-sm sm:text-base text-slate-400 leading-relaxed max-w-2xl mx-auto">
           Compare architecture diagrams with your GitHub repository to instantly discover phantom services, unmapped databases, and code drift.
         </p>
-
-        {/* Quick Demo CTA */}
-        <div className="pt-2">
-          <button
-            type="button"
-            onClick={loadSampleDemo}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-white/[0.1] hover:border-sky-500/40 text-xs font-semibold text-slate-200 transition-all shadow-sm group"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-sky-400 group-hover:scale-110 transition-transform" />
-            <span>Try 90-Second Demo</span>
-            <span className="text-[11px] text-slate-500 font-mono">(Planted Drift)</span>
-          </button>
-        </div>
       </div>
 
       {/* Error Alert */}
@@ -276,28 +228,21 @@ export default function UploadStep({
                   <input
                     type="text"
                     className="w-full bg-slate-950/80 border border-white/[0.08] focus:border-sky-500 focus:ring-1 focus:ring-sky-500/30 text-white pl-10 pr-4 py-3 rounded-xl text-xs font-mono outline-none transition-all placeholder:text-slate-600"
-                    placeholder="demo/planted-drift or https://github.com/owner/repo"
+                    placeholder="e.g. https://github.com/owner/repo or ."
                     value={repoUrl}
                     onChange={(e) => setRepoUrl(e.target.value)}
                   />
                 </div>
 
-                {/* Quick Selection Chips */}
-                <div className="flex flex-wrap items-center gap-2 mt-2.5">
-                  <span className="text-[11px] text-slate-500">Quick select:</span>
-                  <button
-                    type="button"
-                    onClick={() => setRepoUrl('demo/planted-drift')}
-                    className="px-2.5 py-1 rounded-lg bg-slate-950/60 border border-white/[0.06] hover:border-sky-500/30 text-[11px] text-sky-300 hover:text-white transition-all font-mono"
-                  >
-                    demo/planted-drift
-                  </button>
+                {/* Quick Selection Chip */}
+                <div className="flex items-center gap-2 mt-2.5">
+                  <span className="text-[11px] text-slate-500">Current workspace:</span>
                   <button
                     type="button"
                     onClick={() => setRepoUrl('.')}
                     className="px-2.5 py-1 rounded-lg bg-slate-950/60 border border-white/[0.06] hover:border-sky-500/30 text-[11px] text-sky-300 hover:text-white transition-all font-mono"
                   >
-                    current repo (.)
+                    current directory (.)
                   </button>
                 </div>
               </div>
@@ -388,7 +333,7 @@ export default function UploadStep({
         </div>
       </div>
 
-      {/* 3 Process Feature Pillars (Fills screen with meaningful content) */}
+      {/* 3 Process Feature Pillars */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         <div className="glass-panel glass-card-interactive rounded-2xl p-5 space-y-2.5">
           <div className="w-9 h-9 rounded-xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400">

@@ -13,7 +13,7 @@ export default function App() {
   // Workflow State
   const [diagramImage, setDiagramImage] = useState(null);
   const [diagramPreview, setDiagramPreview] = useState(null);
-  const [repoUrl, setRepoUrl] = useState('demo/planted-drift');
+  const [repoUrl, setRepoUrl] = useState('');
   const [branch, setBranch] = useState('main');
   const [token, setToken] = useState('');
 
