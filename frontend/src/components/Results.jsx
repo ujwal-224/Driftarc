@@ -1,17 +1,4 @@
 import React, { useState } from 'react';
-import { 
-  CheckCircle2, 
-  XCircle, 
-  AlertTriangle, 
-  HelpCircle, 
-  Copy, 
-  Check, 
-  FileText, 
-  ArrowRight, 
-  ArrowLeft,
-  Sparkles,
-  Network
-} from 'lucide-react';
 
 export default function Results({
   findings = [],
@@ -19,24 +6,35 @@ export default function Results({
   connectionsCheck = [],
   diagramPreview,
   filesScanned = 0,
+  repoUrl = '',
+  branch = '',
   onProceedToIssues,
   onBack,
   loading
 }) {
+  const [filter, setFilter] = useState('all');
   const [copied, setCopied] = useState(false);
 
-  // Generate complete Markdown report
+  const filteredFindings = findings.filter(f => {
+    if (filter === 'all') return true;
+    if (filter === 'match') return f.status === 'match';
+    if (filter === 'mismatch') return f.status === 'mismatch';
+    if (filter === 'undocumented') return f.status === 'undocumented';
+    return true;
+  });
+
   const handleCopyMarkdown = () => {
     const lines = [];
     lines.push('# 📋 DriftCheck Architecture Drift Audit Report');
     lines.push(`Audit generated on: ${new Date().toISOString()}`);
+    lines.push(`Target: ${repoUrl || 'Local Repo'}`);
     lines.push(`Total Files Scanned: ${filesScanned}`);
     lines.push('');
     lines.push('## Summary');
     lines.push(`- **Matches (Verified)**: ${summary.match || 0}`);
     lines.push(`- **Mismatches (Missing)**: ${summary.mismatch || 0}`);
     lines.push(`- **Undocumented (Surprise)**: ${summary.undocumented || 0}`);
-    lines.push(`- **Unknown (No Signature)**: ${summary.unknown || 0}`);
+    lines.push(`- **Unknown**: ${summary.unknown || 0}`);
     lines.push('');
     lines.push('## Detailed Findings');
 
@@ -66,179 +64,367 @@ export default function Results({
       lines.push('');
     }
 
-    lines.push('*Report generated deterministically by DriftCheck.*');
-
     navigator.clipboard.writeText(lines.join('\n'));
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
   };
 
-  if (loading) {
-    return (
-      <div className="card">
-        <div className="skeleton skeleton-text" style={{ width: '40%', height: '24px' }}></div>
-        <div className="skeleton skeleton-text" style={{ width: '60%', marginBottom: '24px' }}></div>
-        <div className="stats-grid">
-          <div className="skeleton skeleton-card"></div>
-          <div className="skeleton skeleton-card"></div>
-          <div className="skeleton skeleton-card"></div>
-          <div className="skeleton skeleton-card"></div>
-        </div>
-        <div className="skeleton skeleton-card" style={{ height: '200px' }}></div>
-      </div>
-    );
-  }
-
   return (
-    <div className="results-layout">
-      {/* Sidebar: Diagram Thumbnail (Task 5) */}
-      <div className="thumbnail-panel">
-        <h4 style={{ fontSize: '13px', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '12px' }}>
-          Architecture Diagram
-        </h4>
-        {diagramPreview ? (
-          <img src={diagramPreview} alt="Diagram" className="diagram-thumb" />
-        ) : (
-          <div style={{ height: '160px', background: '#000', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-dim)' }}>
-            No image preview
-          </div>
-        )}
-        <div style={{ marginTop: '16px', fontSize: '12px', color: 'var(--text-dim)', lineHeight: 1.5 }}>
-          <div><strong>Files Scanned:</strong> {filesScanned}</div>
-          <div><strong>Engine:</strong> Deterministic JS Pattern Matcher</div>
-        </div>
-
-        {/* Copy Markdown Report Button (Task 5) */}
-        <button
-          type="button"
-          className="btn btn-secondary"
-          onClick={handleCopyMarkdown}
-          style={{ width: '100%', marginTop: '16px', fontSize: '13px' }}
-        >
-          {copied ? <Check size={16} style={{ color: '#10b981' }} /> : <Copy size={16} />}
-          {copied ? 'Copied to Clipboard!' : 'Copy Markdown Report'}
-        </button>
-      </div>
-
-      {/* Main Results Container */}
-      <div>
-        {/* Metric Cards (Task 5) */}
-        <div className="stats-grid">
-          <div className="stat-card match">
-            <span className="stat-title">Matched</span>
-            <span className="stat-value">{summary.match || 0}</span>
-          </div>
-          <div className="stat-card mismatch">
-            <span className="stat-title">Mismatch</span>
-            <span className="stat-value">{summary.mismatch || 0}</span>
-          </div>
-          <div className="stat-card undocumented">
-            <span className="stat-title">Undocumented</span>
-            <span className="stat-value">{summary.undocumented || 0}</span>
-          </div>
-          <div className="stat-card unknown">
-            <span className="stat-title">Unknown</span>
-            <span className="stat-value">{summary.unknown || 0}</span>
-          </div>
-        </div>
-
-        {/* Header with actions */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
-          <div>
-            <h3 style={{ fontSize: '18px', fontWeight: '700' }}>Inspection Findings</h3>
-            <p style={{ color: 'var(--text-muted)', fontSize: '13px' }}>
-              Detailed code references and drift diagnosis
-            </p>
-          </div>
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={onProceedToIssues}
-          >
-            <Sparkles size={16} /> Draft GitHub Issues with Gemma 4 <ArrowRight size={16} />
-          </button>
-        </div>
-
-        {/* Findings List */}
-        <div className="findings-container">
-          {findings.map((f, idx) => (
-            <div key={idx} className={`finding-card status-${f.status}`}>
-              <div className="finding-header">
-                <div className="finding-name">
-                  {f.status === 'match' && <CheckCircle2 size={18} style={{ color: '#10b981' }} />}
-                  {f.status === 'mismatch' && <XCircle size={18} style={{ color: '#f43f5e' }} />}
-                  {f.status === 'undocumented' && <AlertTriangle size={18} style={{ color: '#f59e0b' }} />}
-                  {f.status === 'unknown' && <HelpCircle size={18} style={{ color: '#8b5cf6' }} />}
-                  {f.name}
-                </div>
-                <span className={`badge badge-${f.status}`}>
-                  {f.status}
-                </span>
-              </div>
-
-              <div className="finding-reason">
-                {f.reason}
-              </div>
-
-              {/* Evidence table */}
-              {f.evidence && f.evidence.length > 0 && (
-                <div style={{ overflowX: 'auto' }}>
-                  <table className="evidence-table">
-                    <thead>
-                      <tr>
-                        <th>File</th>
-                        <th style={{ width: '60px', textAlign: 'center' }}>Line</th>
-                        <th>Evidence Snippet</th>
-                        <th style={{ width: '80px' }}>Type</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {f.evidence.map((ev, eIdx) => (
-                        <tr key={eIdx}>
-                          <td><span className="code-badge">{ev.file}</span></td>
-                          <td style={{ textAlign: 'center' }}><code>{ev.line}</code></td>
-                          <td><span className="snippet-text">{ev.snippet}</span></td>
-                          <td><span style={{ fontSize: '11px', color: 'var(--text-dim)', textTransform: 'uppercase' }}>{ev.type}</span></td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+    <main class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
+      <div class="flex flex-col lg:flex-row gap-gutter-split items-start">
+        {/* Left Sticky Sidebar (w-80) */}
+        <aside class="w-full lg:w-80 lg:sticky lg:top-20 flex flex-col gap-space-md shrink-0">
+          {/* Architecture Diagram Box */}
+          <div class="bg-surface-container-low border border-outline-variant rounded p-space-sm flex flex-col gap-2">
+            <div class="flex items-center justify-between">
+              <span class="text-mono-label font-mono-label text-on-surface-variant uppercase tracking-wider">
+                Reference Input
+              </span>
+              <span class="text-mono-label font-mono-label text-primary">v2.1 Architecture</span>
+            </div>
+            <div class="relative bg-surface-container-lowest border border-outline-variant rounded overflow-hidden group">
+              {diagramPreview ? (
+                <img
+                  src={diagramPreview}
+                  alt="Architecture Diagram"
+                  class="w-full h-36 object-contain opacity-90 group-hover:opacity-100 transition-opacity p-2"
+                />
+              ) : (
+                <div class="w-full h-36 flex items-center justify-center text-outline text-xs font-mono-code">
+                  No preview available
                 </div>
               )}
-            </div>
-          ))}
-        </div>
-
-        {/* Connections Check (Task 6 heuristic) */}
-        {connectionsCheck && connectionsCheck.length > 0 && (
-          <div className="card" style={{ marginTop: '24px', padding: '20px' }}>
-            <h4 style={{ fontSize: '15px', fontWeight: '700', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Network size={18} style={{ color: 'var(--accent-cyan)' }} />
-              Connections Check <span style={{ fontSize: '11px', color: 'var(--text-dim)', fontWeight: 'normal' }}>(Heuristic)</span>
-            </h4>
-            <p style={{ color: 'var(--text-muted)', fontSize: '12px', marginBottom: '14px' }}>
-              Evaluates whether connecting components both exist and show signs of integration.
-            </p>
-            <div className="connections-list">
-              {connectionsCheck.map((c, idx) => (
-                <div key={idx} className="connection-item">
-                  <span>
-                    <strong style={{ marginRight: '6px' }}>{c.symbol}</strong>
-                    <strong>{c.from}</strong> &rarr; <strong>{c.to}</strong>
-                  </span>
-                  <span style={{ color: 'var(--text-dim)', fontSize: '12px' }}>{c.note}</span>
-                </div>
-              ))}
+              <div class="absolute inset-0 bg-transparent flex items-end justify-between p-2">
+                <span class="text-mono-code font-mono-code text-[11px] bg-surface-container-lowest px-1.5 py-0.5 rounded text-on-surface border border-outline-variant">
+                  diagram.png
+                </span>
+              </div>
             </div>
           </div>
-        )}
 
-        <div style={{ marginTop: '24px' }}>
-          <button type="button" className="btn btn-secondary" onClick={onBack}>
-            <ArrowLeft size={16} /> Back to Architecture Review
-          </button>
-        </div>
+          {/* Scan Metadata Card */}
+          <div class="bg-surface-container-low border border-outline-variant rounded p-space-md flex flex-col gap-space-sm">
+            <div class="flex items-center justify-between border-b border-outline-variant pb-2">
+              <span class="text-mono-label font-mono-label text-on-surface-variant uppercase tracking-wider">
+                Engine Verification
+              </span>
+              <span class="px-1.5 py-0.5 rounded bg-surface-container text-mono-label font-mono-label text-primary border border-outline-variant">
+                AST + Docker Engine
+              </span>
+            </div>
+            <div class="flex flex-col gap-2">
+              <div>
+                <span class="text-mono-label font-mono-label text-on-surface-variant block">Target</span>
+                <span class="font-mono-code text-mono-code text-on-surface font-semibold text-xs truncate block">
+                  {repoUrl || 'Local Workspace'}
+                </span>
+              </div>
+              <div class="grid grid-cols-2 gap-2 pt-1 border-t border-outline-variant">
+                <div>
+                  <span class="text-mono-label font-mono-label text-on-surface-variant block">Branch</span>
+                  <span class="font-mono-code text-mono-code text-on-surface text-xs">{branch || 'main'}</span>
+                </div>
+                <div>
+                  <span class="text-mono-label font-mono-label text-on-surface-variant block">Mode</span>
+                  <span class="font-mono-code text-mono-code text-primary text-xs">Deterministic</span>
+                </div>
+              </div>
+              <div class="pt-1 border-t border-outline-variant flex items-center justify-between text-mono-label font-mono-label">
+                <span class="text-on-surface-variant">Diagnostics:</span>
+                <span class="text-[#10B981]">{filesScanned} files scanned</span>
+              </div>
+            </div>
+
+            {/* Copy Markdown Report */}
+            <button
+              onClick={handleCopyMarkdown}
+              class="mt-2 w-full flex items-center justify-center gap-2 py-2 px-3 border border-outline-variant rounded bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors font-mono-label text-mono-label"
+            >
+              <span class="material-symbols-outlined text-sm">
+                {copied ? 'check' : 'content_copy'}
+              </span>
+              <span>{copied ? 'Copied to Clipboard!' : 'Copy Markdown Report'}</span>
+            </button>
+          </div>
+
+          {/* Filters by Status */}
+          <div class="bg-surface-container-low border border-outline-variant rounded p-space-md">
+            <span class="text-mono-label font-mono-label text-on-surface-variant uppercase tracking-wider block mb-3">
+              Filter Scan Results
+            </span>
+            <div class="flex flex-col gap-1.5">
+              <button
+                onClick={() => setFilter('all')}
+                class={`flex items-center justify-between px-2.5 py-1.5 rounded border text-mono-label font-mono-label ${
+                  filter === 'all'
+                    ? 'border-primary text-primary bg-surface-container font-semibold'
+                    : 'border-transparent text-on-surface-variant hover:text-on-surface'
+                }`}
+              >
+                <span class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                  <span>All Verified Signals</span>
+                </span>
+                <span class="px-1.5 py-0.2 rounded bg-surface text-on-surface">{findings.length}</span>
+              </button>
+
+              <button
+                onClick={() => setFilter('match')}
+                class={`flex items-center justify-between px-2.5 py-1.5 rounded border text-mono-label font-mono-label ${
+                  filter === 'match'
+                    ? 'border-primary text-primary bg-surface-container font-semibold'
+                    : 'border-transparent text-on-surface-variant hover:text-on-surface'
+                }`}
+              >
+                <span class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-[#10B981]"></span>
+                  <span>Matches</span>
+                </span>
+                <span class="px-1.5 py-0.2 rounded bg-surface-container text-[#10B981]">{summary.match || 0}</span>
+              </button>
+
+              <button
+                onClick={() => setFilter('mismatch')}
+                class={`flex items-center justify-between px-2.5 py-1.5 rounded border text-mono-label font-mono-label ${
+                  filter === 'mismatch'
+                    ? 'border-primary text-primary bg-surface-container font-semibold'
+                    : 'border-transparent text-on-surface-variant hover:text-on-surface'
+                }`}
+              >
+                <span class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-[#F43F5E]"></span>
+                  <span>Mismatches</span>
+                </span>
+                <span class="px-1.5 py-0.2 rounded bg-surface-container text-[#F43F5E]">{summary.mismatch || 0}</span>
+              </button>
+
+              <button
+                onClick={() => setFilter('undocumented')}
+                class={`flex items-center justify-between px-2.5 py-1.5 rounded border text-mono-label font-mono-label ${
+                  filter === 'undocumented'
+                    ? 'border-primary text-primary bg-surface-container font-semibold'
+                    : 'border-transparent text-on-surface-variant hover:text-on-surface'
+                }`}
+              >
+                <span class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-[#F59E0B]"></span>
+                  <span>Undocumented</span>
+                </span>
+                <span class="px-1.5 py-0.2 rounded bg-surface-container text-[#F59E0B]">{summary.undocumented || 0}</span>
+              </button>
+            </div>
+          </div>
+        </aside>
+
+        {/* Right Main Findings Area */}
+        <section class="flex-1 w-full flex flex-col gap-space-lg">
+          {/* Top 4 Prominent Metric Cards */}
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-md">
+            {/* Metric 1: Matched */}
+            <div class="bg-surface-container-low border border-outline-variant rounded p-space-md flex flex-col justify-between">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-mono-label font-mono-label text-on-surface-variant uppercase">Topology Matched</span>
+                <span class="flex items-center justify-center w-6 h-6 rounded bg-[#10B981] text-surface-container-lowest">
+                  <span class="material-symbols-outlined text-sm font-bold">check</span>
+                </span>
+              </div>
+              <div>
+                <div class="text-mono-metric font-mono-metric text-[#10B981]">{summary.match || 0} Matched</div>
+                <p class="text-mono-label font-mono-label text-on-surface-variant mt-1">Verified in code &amp; Docker</p>
+              </div>
+            </div>
+
+            {/* Metric 2: Mismatches */}
+            <div class="bg-surface-container-low border border-outline-variant rounded p-space-md flex flex-col justify-between">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-mono-label font-mono-label text-on-surface-variant uppercase">Missing In Repo</span>
+                <span class="flex items-center justify-center w-6 h-6 rounded bg-[#F43F5E] text-surface-container-lowest">
+                  <span class="material-symbols-outlined text-sm font-bold">close</span>
+                </span>
+              </div>
+              <div>
+                <div class="text-mono-metric font-mono-metric text-[#F43F5E]">{summary.mismatch || 0} Mismatches</div>
+                <p class="text-mono-label font-mono-label text-on-surface-variant mt-1">In diagram, missing in repo</p>
+              </div>
+            </div>
+
+            {/* Metric 3: Undocumented */}
+            <div class="bg-surface-container-low border border-outline-variant rounded p-space-md flex flex-col justify-between">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-mono-label font-mono-label text-on-surface-variant uppercase">Unmapped Artifacts</span>
+                <span class="flex items-center justify-center w-6 h-6 rounded bg-[#F59E0B] text-surface-container-lowest">
+                  <span class="material-symbols-outlined text-sm font-bold">warning</span>
+                </span>
+              </div>
+              <div>
+                <div class="text-mono-metric font-mono-metric text-[#F59E0B]">{summary.undocumented || 0} Undocumented</div>
+                <p class="text-mono-label font-mono-label text-on-surface-variant mt-1">Found in repo, absent in diagram</p>
+              </div>
+            </div>
+
+            {/* Metric 4: Unknown */}
+            <div class="bg-surface-container-low border border-outline-variant rounded p-space-md flex flex-col justify-between">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-mono-label font-mono-label text-on-surface-variant uppercase">Opaque Nodes</span>
+                <span class="flex items-center justify-center w-6 h-6 rounded bg-[#8B5CF6] text-surface-container-lowest">
+                  <span class="material-symbols-outlined text-sm font-bold">help</span>
+                </span>
+              </div>
+              <div>
+                <div class="text-mono-metric font-mono-metric text-[#8B5CF6]">{summary.unknown || 0} Unknown</div>
+                <p class="text-mono-label font-mono-label text-on-surface-variant mt-1">Uncataloged signals</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Detailed Finding Cards */}
+          <div class="flex flex-col gap-space-md">
+            <div class="flex items-center justify-between">
+              <h2 class="text-headline-sm font-headline-sm text-on-surface">Detected Architectural Drift Findings</h2>
+              <span class="text-mono-label font-mono-label text-on-surface-variant">Showing {filteredFindings.length} findings</span>
+            </div>
+
+            {filteredFindings.map((finding, idx) => {
+              const isMismatch = finding.status === 'mismatch';
+              const isUndoc = finding.status === 'undocumented';
+              const isMatch = finding.status === 'match';
+              const borderColor = isMismatch ? '#F43F5E' : isUndoc ? '#F59E0B' : isMatch ? '#10B981' : '#8B5CF6';
+
+              return (
+                <div
+                  key={idx}
+                  class="bg-surface-container-low border border-outline-variant rounded overflow-hidden"
+                  style={{ borderLeft: `3px solid ${borderColor}` }}
+                >
+                  <div class="p-space-md flex flex-col gap-3">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                      <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined" style={{ color: borderColor }}>
+                          {isMismatch ? 'layers_clear' : isUndoc ? 'difference' : 'check_circle'}
+                        </span>
+                        <h3 class="text-headline-sm font-headline-sm text-on-surface">{finding.name}</h3>
+                        <span
+                          class="px-2 py-0.5 rounded text-mono-label font-mono-label font-semibold bg-surface-container border"
+                          style={{ borderColor, color: borderColor }}
+                        >
+                          {finding.status.toUpperCase()}
+                        </span>
+                      </div>
+                      <div class="flex items-center gap-2 text-mono-label font-mono-label text-on-surface-variant">
+                        <span>Evidence Count:</span>
+                        <code class="px-1.5 py-0.5 rounded bg-surface border border-outline-variant text-primary font-mono-code text-xs">
+                          {finding.evidence ? `${finding.evidence.length} points` : '0 points'}
+                        </code>
+                      </div>
+                    </div>
+
+                    <p class="text-body-sm font-body-sm text-on-surface-variant">
+                      {finding.reason}
+                    </p>
+
+                    {/* Evidence Table */}
+                    {finding.evidence && finding.evidence.length > 0 ? (
+                      <div class="border border-outline-variant rounded bg-surface-container-lowest overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                          <thead>
+                            <tr class="border-b border-outline-variant bg-surface-container text-mono-label font-mono-label text-on-surface-variant">
+                              <th class="py-2 px-3">File Path</th>
+                              <th class="py-2 px-3">Line #</th>
+                              <th class="py-2 px-3">Code Snippet Preview</th>
+                              <th class="py-2 px-3">Match Type</th>
+                            </tr>
+                          </thead>
+                          <tbody class="divide-y divide-outline-variant font-mono-code text-xs">
+                            {finding.evidence.map((ev, eIdx) => (
+                              <tr key={eIdx} class="hover:bg-surface-container-low transition-colors">
+                                <td class="py-2.5 px-3 text-primary">{ev.file}</td>
+                                <td class="py-2.5 px-3 text-on-surface-variant">L{ev.line}</td>
+                                <td class="py-2.5 px-3 text-on-surface">
+                                  <code class="bg-surface px-1.5 py-0.5 rounded border border-outline-variant text-on-surface">
+                                    {ev.snippet}
+                                  </code>
+                                </td>
+                                <td class="py-2.5 px-3">
+                                  <span class="px-2 py-0.5 rounded text-mono-label font-mono-label border border-outline-variant bg-surface text-on-surface">
+                                    {ev.type || 'code'}
+                                  </span>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : (
+                      <div class="bg-surface-container-lowest border border-outline-variant rounded p-3 text-xs font-mono-code text-outline">
+                        Zero matches found across package.json, docker-compose.yml, .env.example, and source files.
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Heuristic Connections Verification Card */}
+          {connectionsCheck && connectionsCheck.length > 0 && (
+            <div class="bg-surface-container-low border border-outline-variant rounded p-space-md flex flex-col gap-3">
+              <div class="flex items-center justify-between border-b border-outline-variant pb-2">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-primary">schema</span>
+                  <h3 class="text-headline-sm font-headline-sm text-on-surface">Heuristic Topology Verification</h3>
+                </div>
+                <span class="text-mono-label font-mono-label text-on-surface-variant">Call Graph Resolution</span>
+              </div>
+              <div class="flex flex-col gap-2 font-mono-code text-xs">
+                {connectionsCheck.map((conn, idx) => (
+                  <div
+                    key={idx}
+                    class="flex flex-col sm:flex-row sm:items-center justify-between p-2.5 rounded bg-surface-container border border-outline-variant gap-2"
+                    style={{ borderLeft: conn.status === 'verified' ? '2px solid #10B981' : '2px solid #F43F5E' }}
+                  >
+                    <div class="flex items-center gap-2">
+                      <span
+                        class="px-1.5 py-0.5 rounded bg-surface border text-mono-label font-mono-label font-semibold"
+                        style={{
+                          color: conn.status === 'verified' ? '#10B981' : '#F43F5E',
+                          borderColor: conn.status === 'verified' ? '#10B981' : '#F43F5E'
+                        }}
+                      >
+                        {conn.status === 'verified' ? '✓ VERIFIED' : '✗ UNVERIFIED'}
+                      </span>
+                      <span class="text-on-surface font-semibold">{conn.from}</span>
+                      <span class="text-on-surface-variant">➔</span>
+                      <span class="text-on-surface font-semibold">{conn.to}</span>
+                    </div>
+                    <div class="text-mono-label font-mono-label text-on-surface-variant">
+                      {conn.note}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Primary Bottom Action Bar */}
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded bg-surface-container-low border border-outline-variant mt-2">
+            <button
+              onClick={onBack}
+              class="px-4 py-2 bg-surface-container hover:bg-surface-container-high border border-outline-variant text-on-surface font-mono-label text-xs rounded transition-colors flex items-center gap-1.5"
+            >
+              <span class="material-symbols-outlined text-sm">arrow_back</span>
+              Back to Architecture Review
+            </button>
+
+            <button
+              onClick={onProceedToIssues}
+              class="w-full sm:w-auto px-5 py-2.5 rounded bg-[#38BDF8] text-[#07090E] border border-[#38BDF8] hover:bg-[#0284C7] hover:border-[#0284C7] font-semibold text-xs font-mono-label transition-colors flex items-center justify-center gap-2 shrink-0"
+            >
+              <span>Draft GitHub Issues with Gemma 4</span>
+              <span class="material-symbols-outlined text-base">arrow_forward</span>
+            </button>
+          </div>
+        </section>
       </div>
-    </div>
+    </main>
   );
 }

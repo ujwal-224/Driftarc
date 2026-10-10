@@ -1,16 +1,129 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2338bdf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polygon points='12 2 2 7 12 12 22 7 12 2'></polygon><polyline points='2 17 12 22 22 17'></polyline><polyline points='2 12 12 17 22 12'></polyline></svg>" />
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="DriftCheck - Compare software architecture diagrams with GitHub repositories to automatically identify drift, undocumented dependencies, and draft verified GitHub issues." />
-    <title>DriftCheck - Architecture Drift Detection</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <title>DriftCheck - Architecture Drift Detector</title>
+    <meta name="description" content="Compare architecture diagrams with GitHub repositories to automatically identify architectural drift." />
+    <!-- Material Symbols Outlined -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <!-- Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <!-- Tailwind CSS with custom Stitch theme config -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-error-container": "#ffdad6",
+              "on-primary-container": "#004965",
+              "secondary-container": "#3131c0",
+              "secondary": "#c0c1ff",
+              "surface-container-high": "#282a30",
+              "on-primary": "#00354a",
+              "surface-container-lowest": "#0c0e13",
+              "inverse-on-surface": "#2e3036",
+              "outline": "#87929a",
+              "primary-fixed-dim": "#7bd0ff",
+              "surface-bright": "#37393f",
+              "on-secondary-fixed-variant": "#2f2ebe",
+              "on-primary-fixed-variant": "#004c69",
+              "on-error": "#690005",
+              "tertiary-fixed-dim": "#4edea3",
+              "on-secondary-container": "#b0b2ff",
+              "secondary-fixed-dim": "#c0c1ff",
+              "tertiary": "#56e5a9",
+              "secondary-fixed": "#e1e0ff",
+              "tertiary-container": "#30c88f",
+              "on-surface": "#e2e2ea",
+              "on-tertiary-fixed": "#002113",
+              "on-background": "#e2e2ea",
+              "surface-variant": "#33353b",
+              "outline-variant": "#3e484f",
+              "error-container": "#93000a",
+              "on-secondary-fixed": "#07006c",
+              "tertiary-fixed": "#6ffbbe",
+              "inverse-surface": "#e2e2ea",
+              "on-surface-variant": "#bdc8d1",
+              "surface": "#111319",
+              "inverse-primary": "#00668a",
+              "error": "#ffb4ab",
+              "on-tertiary-fixed-variant": "#005236",
+              "primary-container": "#38bdf8",
+              "on-tertiary": "#003824",
+              "on-primary-fixed": "#001e2c",
+              "background": "#111319",
+              "surface-dim": "#111319",
+              "surface-tint": "#7bd0ff",
+              "surface-container-low": "#191c21",
+              "primary": "#8ed5ff",
+              "on-secondary": "#1000a9",
+              "on-tertiary-container": "#004e34",
+              "primary-fixed": "#c4e7ff",
+              "surface-container-highest": "#33353b",
+              "surface-container": "#1d2025"
+            },
+            borderRadius: {
+              "DEFAULT": "0.125rem",
+              "lg": "0.25rem",
+              "xl": "0.5rem",
+              "full": "0.75rem"
+            },
+            spacing: {
+              "margin-mobile": "1rem",
+              "space-sm": "0.5rem",
+              "gutter": "1rem",
+              "margin": "1.5rem",
+              "space-2xs": "0.125rem",
+              "gutter-split": "1.5rem",
+              "space-xs": "0.25rem",
+              "space-2xl": "3rem",
+              "space-md": "1rem",
+              "space-xl": "2rem",
+              "space-lg": "1.5rem"
+            },
+            fontFamily: {
+              "mono-code": ["JetBrains Mono", "monospace"],
+              "display-hero": ["Inter", "sans-serif"],
+              "mono-label": ["JetBrains Mono", "monospace"],
+              "headline-sm": ["Inter", "sans-serif"],
+              "headline-lg-mobile": ["Inter", "sans-serif"],
+              "body-lg": ["Inter", "sans-serif"],
+              "body-sm": ["Inter", "sans-serif"],
+              "headline-lg": ["Inter", "sans-serif"],
+              "mono-metric": ["JetBrains Mono", "monospace"],
+              "display-hero-mobile": ["Inter", "sans-serif"]
+            },
+            fontSize: {
+              "mono-code": ["13px", { lineHeight: "20px", letterSpacing: "0em", fontWeight: "400" }],
+              "display-hero": ["36px", { lineHeight: "44px", letterSpacing: "-0.025em", fontWeight: "600" }],
+              "mono-label": ["11px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "500" }],
+              "headline-sm": ["16px", { lineHeight: "24px", letterSpacing: "-0.01em", fontWeight: "600" }],
+              "headline-lg-mobile": ["20px", { lineHeight: "28px", letterSpacing: "-0.015em", fontWeight: "600" }],
+              "body-lg": ["15px", { lineHeight: "24px", fontWeight: "400" }],
+              "body-sm": ["13px", { lineHeight: "20px", fontWeight: "400" }],
+              "headline-lg": ["24px", { lineHeight: "32px", letterSpacing: "-0.02em", fontWeight: "600" }],
+              "mono-metric": ["28px", { lineHeight: "32px", letterSpacing: "-0.02em", fontWeight: "600" }],
+              "display-hero-mobile": ["28px", { lineHeight: "36px", letterSpacing: "-0.02em", fontWeight: "600" }]
+            }
+          }
+        }
+      };
+    </script>
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+        line-height: 1;
+        display: inline-block;
+        vertical-align: middle;
+      }
+    </style>
   </head>
-  <body>
+  <body class="bg-background text-on-surface antialiased min-h-screen flex flex-col font-body-sm text-body-sm selection:bg-primary-container selection:text-on-primary-container">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
