@@ -1,229 +1,221 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="1280" height="760" viewBox="0 0 1280 760" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="1200" height="700" viewBox="0 0 1200 700" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="bgGrad" x1="0" y1="0" x2="1280" y2="760" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#080c14"/>
-      <stop offset="0.5" stop-color="#0d1424"/>
-      <stop offset="1" stop-color="#11192e"/>
-    </linearGradient>
-
-    <linearGradient id="cyanCard" x1="0" y1="0" x2="280" y2="200" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#0e2439" stop-opacity="0.9"/>
-      <stop offset="1" stop-color="#142f4c" stop-opacity="0.9"/>
-    </linearGradient>
-
-    <linearGradient id="indigoCard" x1="0" y1="0" x2="380" y2="400" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#151b38" stop-opacity="0.9"/>
-      <stop offset="1" stop-color="#1e2652" stop-opacity="0.9"/>
-    </linearGradient>
-
-    <linearGradient id="purpleCard" x1="0" y1="0" x2="280" y2="200" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#221338" stop-opacity="0.9"/>
-      <stop offset="1" stop-color="#321b54" stop-opacity="0.9"/>
-    </linearGradient>
-
-    <filter id="cardGlowCyan" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#06b6d4" flood-opacity="0.25"/>
-    </filter>
-
-    <filter id="cardGlowIndigo" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#6366f1" flood-opacity="0.25"/>
-    </filter>
-
-    <filter id="cardGlowPurple" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#a855f7" flood-opacity="0.25"/>
-    </filter>
-
-    <marker id="arrowCyan" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8" />
-    </marker>
-    <marker id="arrowIndigo" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-      <path d="M 0 1 L 10 5 L 0 9 z" fill="#818cf8" />
+    <!-- Arrow Markers -->
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563eb" />
     </marker>
     <marker id="arrowPurple" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-      <path d="M 0 1 L 10 5 L 0 9 z" fill="#c084fc" />
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#7c3aed" />
+    </marker>
+    <marker id="arrowDark" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#475569" />
     </marker>
   </defs>
 
-  <!-- Background Canvas -->
-  <rect width="1280" height="760" fill="url(#bgGrad)"/>
+  <!-- Background -->
+  <rect width="1200" height="700" fill="#f8fafc" />
 
-  <!-- Subtle Grid lines -->
-  <g stroke="#ffffff" stroke-opacity="0.03" stroke-width="1">
-    <line x1="0" y1="120" x2="1280" y2="120" />
-    <line x1="0" y1="240" x2="1280" y2="240" />
-    <line x1="0" y1="360" x2="1280" y2="360" />
-    <line x1="0" y1="480" x2="1280" y2="480" />
-    <line x1="0" y1="600" x2="1280" y2="600" />
+  <!-- Subtle grid pattern -->
+  <g stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3 3">
+    <line x1="0" y1="100" x2="1200" y2="100" />
+    <line x1="0" y1="620" x2="1200" y2="620" />
   </g>
 
-  <!-- Header Banner -->
-  <g transform="translate(60, 48)">
-    <rect width="140" height="28" rx="6" fill="#1e293b" stroke="#334155" />
-    <text x="70" y="18" fill="#38bdf8" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">SYSTEM ARCHITECTURE</text>
-    <text x="0" y="62" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="bold">DriftCheck Architecture</text>
-    <text x="0" y="90" fill="#94a3b8" font-family="system-ui, -apple-system, sans-serif" font-size="14">Deterministic Codebase Scanner &amp; Multimodal Architecture Drift Detector</text>
+  <!-- Header Section -->
+  <g transform="translate(60, 36)">
+    <!-- Badge -->
+    <rect width="180" height="24" rx="12" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1" />
+    <text x="90" y="16" fill="#1d4ed8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" text-anchor="middle" letter-spacing="0.5">DRIFTARC ARCHITECTURE</text>
+    
+    <text x="0" y="52" fill="#0f172a" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="24" font-weight="800">DriftArc System Architecture</text>
+    <text x="0" y="74" fill="#64748b" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13">Deterministic Codebase Scanner &amp; Multimodal Architecture Drift Detector</text>
   </g>
 
-  <!-- ================= TIER 1: FRONTEND ================= -->
-  <g transform="translate(60, 180)" filter="url(#cardGlowCyan)">
-    <rect width="300" height="490" rx="16" fill="url(#cyanCard)" stroke="#0284c7" stroke-width="2"/>
+  <!-- ================= TIER 1: FRONTEND CLIENT ================= -->
+  <g transform="translate(60, 130)">
+    <!-- Container Card -->
+    <rect width="320" height="460" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+    <rect width="320" height="52" rx="12" fill="#f1f5f9" />
+    <rect y="40" width="320" height="12" fill="#f1f5f9" />
     
     <!-- Header -->
-    <rect width="300" height="56" rx="16" fill="#0369a1" fill-opacity="0.3"/>
-    <circle cx="34" cy="28" r="10" fill="#0284c7" fill-opacity="0.4" stroke="#38bdf8" stroke-width="1.5"/>
-    <text x="34" y="32" fill="#38bdf8" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">UI</text>
-    <text x="58" y="27" fill="#f0f9ff" font-family="system-ui, sans-serif" font-size="16" font-weight="bold">Frontend Client</text>
-    <text x="58" y="44" fill="#7dd3fc" font-family="system-ui, sans-serif" font-size="12">Vite + React (Port 5173)</text>
+    <rect x="20" y="16" width="24" height="20" rx="4" fill="#dbeafe" />
+    <text x="32" y="30" fill="#2563eb" font-family="sans-serif" font-size="11" font-weight="700" text-anchor="middle">UI</text>
+    <text x="54" y="29" fill="#0f172a" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="700">Frontend Client</text>
+    <text x="54" y="44" fill="#64748b" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11">React 18 + Vite (Port 5173)</text>
 
-    <!-- Sub-components -->
-    <g transform="translate(20, 80)">
-      <rect width="260" height="74" rx="10" fill="#082f49" stroke="#0ea5e9" stroke-width="1"/>
-      <text x="16" y="26" fill="#38bdf8" font-family="system-ui, sans-serif" font-size="13" font-weight="bold">Step 1: Upload &amp; Target</text>
-      <text x="16" y="46" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">Architecture diagram upload (PNG/JPG)</text>
-      <text x="16" y="62" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">Local path or GitHub repo selector</text>
+    <!-- Component 1 -->
+    <g transform="translate(18, 70)">
+      <rect width="284" height="72" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" />
+      <text x="14" y="24" fill="#1e293b" font-family="sans-serif" font-size="13" font-weight="600">1. Upload &amp; Repository Setup</text>
+      <text x="14" y="42" fill="#64748b" font-family="sans-serif" font-size="11">• Architecture Diagram (PNG/JPG)</text>
+      <text x="14" y="58" fill="#64748b" font-family="sans-serif" font-size="11">• Local workspace path or GitHub URL</text>
     </g>
 
-    <g transform="translate(20, 170)">
-      <rect width="260" height="74" rx="10" fill="#082f49" stroke="#0ea5e9" stroke-width="1"/>
-      <text x="16" y="26" fill="#38bdf8" font-family="system-ui, sans-serif" font-size="13" font-weight="bold">Step 2: Review Extraction</text>
-      <text x="16" y="46" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">Human-in-the-loop inspection</text>
-      <text x="16" y="62" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">Add/edit components &amp; connections</text>
+    <!-- Component 2 -->
+    <g transform="translate(18, 154)">
+      <rect width="284" height="72" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" />
+      <text x="14" y="24" fill="#1e293b" font-family="sans-serif" font-size="13" font-weight="600">2. Interactive Review Studio</text>
+      <text x="14" y="42" fill="#64748b" font-family="sans-serif" font-size="11">• Human-in-the-loop validation</text>
+      <text x="14" y="58" fill="#64748b" font-family="sans-serif" font-size="11">• Edit extracted nodes &amp; connections</text>
     </g>
 
-    <g transform="translate(20, 260)">
-      <rect width="260" height="74" rx="10" fill="#082f49" stroke="#0ea5e9" stroke-width="1"/>
-      <text x="16" y="26" fill="#38bdf8" font-family="system-ui, sans-serif" font-size="13" font-weight="bold">Step 3: Drift Findings</text>
-      <text x="16" y="46" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">Match / Mismatch / Undocumented</text>
-      <text x="16" y="62" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">Line-level evidence file viewer</text>
+    <!-- Component 3 -->
+    <g transform="translate(18, 238)">
+      <rect width="284" height="72" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" />
+      <text x="14" y="24" fill="#1e293b" font-family="sans-serif" font-size="13" font-weight="600">3. Drift Findings &amp; Evidence</text>
+      <text x="14" y="42" fill="#64748b" font-family="sans-serif" font-size="11">• Match / Mismatch / Undocumented</text>
+      <text x="14" y="58" fill="#64748b" font-family="sans-serif" font-size="11">• Verified line-level code citations</text>
     </g>
 
-    <g transform="translate(20, 350)">
-      <rect width="260" height="74" rx="10" fill="#082f49" stroke="#0ea5e9" stroke-width="1"/>
-      <text x="16" y="26" fill="#38bdf8" font-family="system-ui, sans-serif" font-size="13" font-weight="bold">Step 4: Issue Panel</text>
-      <text x="16" y="46" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">Review AI drafted issue narrative</text>
-      <text x="16" y="62" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">1-click publish to GitHub via Octokit</text>
+    <!-- Component 4 -->
+    <g transform="translate(18, 322)">
+      <rect width="284" height="72" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" />
+      <text x="14" y="24" fill="#1e293b" font-family="sans-serif" font-size="13" font-weight="600">4. GitHub Issue Publishing</text>
+      <text x="14" y="42" fill="#64748b" font-family="sans-serif" font-size="11">• AI narrative + factual evidence table</text>
+      <text x="14" y="58" fill="#64748b" font-family="sans-serif" font-size="11">• 1-click issue creation to repository</text>
     </g>
 
-    <!-- Footer tag -->
-    <text x="150" y="460" fill="#0284c7" font-family="system-ui, sans-serif" font-size="11" font-weight="600" text-anchor="middle">Tailwind CSS + Google Stitch Dark Theme</text>
+    <!-- Footnote -->
+    <rect x="18" y="410" width="284" height="32" rx="6" fill="#eff6ff" />
+    <text x="160" y="430" fill="#2563eb" font-family="sans-serif" font-size="11" font-weight="600" text-anchor="middle">Vanilla CSS Design System • Light Theme</text>
   </g>
 
-  <!-- Connector: Frontend -> Backend -->
-  <path d="M 360 420 L 460 420" stroke="#38bdf8" stroke-width="3" marker-end="url(#arrowCyan)" />
-  <rect x="375" y="396" width="70" height="20" rx="4" fill="#082f49" stroke="#0284c7"/>
-  <text x="410" y="410" fill="#38bdf8" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" text-anchor="middle">/api proxy</text>
+  <!-- Arrow: Frontend -> Backend -->
+  <g transform="translate(380, 340)">
+    <line x1="0" y1="0" x2="68" y2="0" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowBlue)" />
+    <rect x="8" y="-18" width="52" height="16" rx="4" fill="#ffffff" stroke="#bfdbfe" />
+    <text x="34" y="-6" fill="#1d4ed8" font-family="sans-serif" font-size="9" font-weight="700" text-anchor="middle">REST / JSON</text>
+  </g>
 
   <!-- ================= TIER 2: BACKEND SERVER ================= -->
-  <g transform="translate(470, 180)" filter="url(#cardGlowIndigo)">
-    <rect width="400" height="490" rx="16" fill="url(#indigoCard)" stroke="#4f46e5" stroke-width="2"/>
-    
+  <g transform="translate(450, 130)">
+    <!-- Container Card -->
+    <rect width="360" height="460" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+    <rect width="360" height="52" rx="12" fill="#f1f5f9" />
+    <rect y="40" width="360" height="12" fill="#f1f5f9" />
+
     <!-- Header -->
-    <rect width="400" height="56" rx="16" fill="#4338ca" fill-opacity="0.3"/>
-    <circle cx="34" cy="28" r="10" fill="#4f46e5" fill-opacity="0.4" stroke="#818cf8" stroke-width="1.5"/>
-    <text x="34" y="32" fill="#818cf8" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">API</text>
-    <text x="58" y="27" fill="#eef2ff" font-family="system-ui, sans-serif" font-size="16" font-weight="bold">Backend Server (Node 20+ / ESM)</text>
-    <text x="58" y="44" fill="#a5b4fc" font-family="system-ui, sans-serif" font-size="12">Express Core Engine (Port 3001)</text>
+    <rect x="20" y="16" width="28" height="20" rx="4" fill="#dcfce7" />
+    <text x="34" y="30" fill="#15803d" font-family="sans-serif" font-size="11" font-weight="700" text-anchor="middle">API</text>
+    <text x="58" y="29" fill="#0f172a" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="700">Backend Core Engine</text>
+    <text x="58" y="44" fill="#64748b" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11">Node.js (ESM) + Express (Port 3001)</text>
 
-    <!-- Sub-components -->
-    <g transform="translate(20, 75)">
-      <rect width="360" height="66" rx="10" fill="#1e1b4b" stroke="#6366f1" stroke-width="1"/>
-      <text x="16" y="24" fill="#818cf8" font-family="system-ui, sans-serif" font-size="13" font-weight="bold">API Router (routes.js)</text>
-      <text x="16" y="44" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">POST /api/extract  •  POST /api/scan</text>
-      <text x="16" y="58" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">POST /api/issue/draft  •  POST /api/issue/publish</text>
+    <!-- Component 1: Routes -->
+    <g transform="translate(18, 70)">
+      <rect width="324" height="64" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" />
+      <text x="14" y="22" fill="#0f172a" font-family="sans-serif" font-size="13" font-weight="600">API Router (`routes.js`)</text>
+      <text x="14" y="40" fill="#64748b" font-family="sans-serif" font-size="11">/api/extract  •  /api/scan  •  /api/issue/draft</text>
+      <text x="14" y="54" fill="#64748b" font-family="sans-serif" font-size="11">/api/issue/publish  •  /api/health</text>
     </g>
 
-    <g transform="translate(20, 155)">
-      <rect width="360" height="88" rx="10" fill="#1e1b4b" stroke="#6366f1" stroke-width="1"/>
-      <text x="16" y="24" fill="#a5b4fc" font-family="system-ui, sans-serif" font-size="13" font-weight="bold">Repository Fetcher (repoFetcher.js)</text>
-      <text x="16" y="44" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">Local filesystem reader (respects .gitignore)</text>
-      <text x="16" y="60" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">GitHub Octokit REST API tree fetcher (in-memory)</text>
-      <text x="16" y="76" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">Never writes token or code to permanent disk</text>
+    <!-- Component 2: Repo Fetcher -->
+    <g transform="translate(18, 144)">
+      <rect width="324" height="64" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" />
+      <text x="14" y="22" fill="#0f172a" font-family="sans-serif" font-size="13" font-weight="600">Repository Fetcher (`repoFetcher.js`)</text>
+      <text x="14" y="40" fill="#64748b" font-family="sans-serif" font-size="11">• Local file reader (respects .gitignore)</text>
+      <text x="14" y="54" fill="#64748b" font-family="sans-serif" font-size="11">• Remote GitHub tree fetcher (in-memory)</text>
     </g>
 
-    <g transform="translate(20, 255)">
-      <rect width="360" height="96" rx="10" fill="#1e1b4b" stroke="#10b981" stroke-width="1.5"/>
-      <text x="16" y="24" fill="#34d399" font-family="system-ui, sans-serif" font-size="13" font-weight="bold">Pure Deterministic Scanner (scanner.js)</text>
-      <text x="16" y="42" fill="#6ee7b7" font-family="system-ui, sans-serif" font-size="11" font-weight="bold">🔒 ZERO AI IN SCANNER — PURE &amp; REPRODUCIBLE</text>
-      <text x="16" y="60" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">Matches: package.json, docker-compose, .env, imports</text>
-      <text x="16" y="74" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">Rules Catalog: 16+ Signatures (Postgres, Redis, Auth0...)</text>
-      <text x="16" y="88" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">Returns: Exact file:line evidence + snippet</text>
+    <!-- Component 3: Deterministic Scanner (HIGHLIGHTED CORE) -->
+    <g transform="translate(18, 218)">
+      <rect width="324" height="120" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5" />
+      <rect x="14" y="12" width="168" height="18" rx="4" fill="#16a34a" />
+      <text x="98" y="25" fill="#ffffff" font-family="sans-serif" font-size="10" font-weight="700" text-anchor="middle">PURE DETERMINISTIC SCANNER</text>
+      <text x="14" y="48" fill="#14532d" font-family="sans-serif" font-size="12" font-weight="700">Zero AI • 100% Code-Verified Evidence</text>
+      <text x="14" y="66" fill="#166534" font-family="sans-serif" font-size="11">• Signature catalog (14+ tech signatures)</text>
+      <text x="14" y="82" fill="#166534" font-family="sans-serif" font-size="11">• Checks: package.json, docker, .env, imports</text>
+      <text x="14" y="98" fill="#166534" font-family="sans-serif" font-size="11">• Exact line snippets — no hallucinations</text>
     </g>
 
-    <g transform="translate(20, 363)">
-      <rect width="360" height="74" rx="10" fill="#1e1b4b" stroke="#6366f1" stroke-width="1"/>
-      <text x="16" y="24" fill="#818cf8" font-family="system-ui, sans-serif" font-size="13" font-weight="bold">Issue Writer Engine (issueWriter.js)</text>
-      <text x="16" y="44" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">AI drafts narrative from verified facts only</text>
-      <text x="16" y="60" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">Code appends deterministic evidence table</text>
+    <!-- Component 4: Issue Writer -->
+    <g transform="translate(18, 348)">
+      <rect width="324" height="64" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" />
+      <text x="14" y="22" fill="#0f172a" font-family="sans-serif" font-size="13" font-weight="600">Issue Writer Engine (`issueWriter.js`)</text>
+      <text x="14" y="40" fill="#64748b" font-family="sans-serif" font-size="11">• AI drafts narrative from facts only</text>
+      <text x="14" y="54" fill="#64748b" font-family="sans-serif" font-size="11">• Deterministic evidence table appended by code</text>
     </g>
 
-    <!-- Footer tag -->
-    <text x="200" y="464" fill="#6366f1" font-family="system-ui, sans-serif" font-size="11" font-weight="600" text-anchor="middle">Strict Separation: Deterministic Verification vs AI</text>
+    <!-- Footnote -->
+    <rect x="18" y="420" width="324" height="26" rx="6" fill="#f1f5f9" />
+    <text x="180" y="437" fill="#475569" font-family="sans-serif" font-size="10" font-weight="600" text-anchor="middle">Clean Invariant: AI Drafts, Scanner Proves</text>
   </g>
 
-  <!-- Connectors: Backend -> External Services -->
-  <path d="M 870 280 L 960 280" stroke="#c084fc" stroke-width="2.5" marker-end="url(#arrowPurple)" />
-  <path d="M 870 540 L 960 540" stroke="#818cf8" stroke-width="2.5" marker-end="url(#arrowIndigo)" />
+  <!-- Arrow: Backend -> External Services -->
+  <g transform="translate(810, 240)">
+    <line x1="0" y1="0" x2="68" y2="0" stroke="#7c3aed" stroke-width="2" marker-end="url(#arrowPurple)" />
+    <rect x="8" y="-18" width="52" height="16" rx="4" fill="#ffffff" stroke="#ddd6fe" />
+    <text x="34" y="-6" fill="#6d28d9" font-family="sans-serif" font-size="9" font-weight="700" text-anchor="middle">Vision API</text>
+  </g>
+  <g transform="translate(810, 480)">
+    <line x1="0" y1="0" x2="68" y2="0" stroke="#475569" stroke-width="2" marker-end="url(#arrowDark)" />
+    <rect x="8" y="-18" width="52" height="16" rx="4" fill="#ffffff" stroke="#cbd5e1" />
+    <text x="34" y="-6" fill="#334155" font-family="sans-serif" font-size="9" font-weight="700" text-anchor="middle">Octokit API</text>
+  </g>
 
   <!-- ================= TIER 3: EXTERNAL SERVICES ================= -->
-  <g transform="translate(970, 180)" filter="url(#cardGlowPurple)">
-    <rect width="250" height="490" rx="16" fill="url(#purpleCard)" stroke="#9333ea" stroke-width="2"/>
-    
+  <g transform="translate(880, 130)">
+    <!-- Container Card -->
+    <rect width="260" height="460" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+    <rect width="260" height="52" rx="12" fill="#f1f5f9" />
+    <rect y="40" width="260" height="12" fill="#f1f5f9" />
+
     <!-- Header -->
-    <rect width="250" height="56" rx="16" fill="#7e22ce" fill-opacity="0.3"/>
-    <circle cx="34" cy="28" r="10" fill="#9333ea" fill-opacity="0.4" stroke="#c084fc" stroke-width="1.5"/>
-    <text x="34" y="32" fill="#c084fc" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">☁️</text>
-    <text x="58" y="27" fill="#faf5ff" font-family="system-ui, sans-serif" font-size="16" font-weight="bold">External Services</text>
-    <text x="58" y="44" fill="#d8b4fe" font-family="system-ui, sans-serif" font-size="12">AI Vision, Text &amp; GitHub</text>
+    <rect x="20" y="16" width="28" height="20" rx="4" fill="#ede9fe" />
+    <text x="34" y="30" fill="#6d28d9" font-family="sans-serif" font-size="11" font-weight="700" text-anchor="middle">EXT</text>
+    <text x="58" y="29" fill="#0f172a" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="700">External Services</text>
+    <text x="58" y="44" fill="#64748b" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11">AI Models &amp; Integrations</text>
 
-    <!-- Box A: Multimodal Vision -->
-    <g transform="translate(18, 75)">
-      <rect width="214" height="120" rx="10" fill="#2e1065" stroke="#a855f7" stroke-width="1"/>
-      <text x="14" y="24" fill="#c084fc" font-family="system-ui, sans-serif" font-size="13" font-weight="bold">Gemma 4 / Gemini Vision</text>
-      <text x="14" y="46" fill="#d8b4fe" font-family="system-ui, sans-serif" font-size="11" font-weight="600">Visual Diagram Parser</text>
-      <text x="14" y="66" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">• Input: PNG/JPG buffer</text>
-      <text x="14" y="82" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">• Output: components JSON</text>
-      <text x="14" y="98" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">• Output: connections JSON</text>
+    <!-- Service 1: Gemma 4 / Gemini Vision -->
+    <g transform="translate(18, 70)">
+      <rect width="224" height="110" rx="8" fill="#faf5ff" stroke="#e9d5ff" stroke-width="1" />
+      <text x="14" y="24" fill="#6b21a8" font-family="sans-serif" font-size="13" font-weight="700">Gemma 4 / Gemini Vision</text>
+      <text x="14" y="44" fill="#581c87" font-family="sans-serif" font-size="11" font-weight="600">Visual Architecture Parser</text>
+      <text x="14" y="64" fill="#64748b" font-family="sans-serif" font-size="11">• Input: Diagram Image</text>
+      <text x="14" y="80" fill="#64748b" font-family="sans-serif" font-size="11">• Output: Components JSON</text>
+      <text x="14" y="96" fill="#64748b" font-family="sans-serif" font-size="11">• Output: Connections JSON</text>
     </g>
 
-    <!-- Box B: Narrative Generation -->
-    <g transform="translate(18, 210)">
-      <rect width="214" height="110" rx="10" fill="#2e1065" stroke="#a855f7" stroke-width="1"/>
-      <text x="14" y="24" fill="#c084fc" font-family="system-ui, sans-serif" font-size="13" font-weight="bold">Gemma 4 / Gemini Text</text>
-      <text x="14" y="46" fill="#d8b4fe" font-family="system-ui, sans-serif" font-size="11" font-weight="600">Issue Narrative Drafting</text>
-      <text x="14" y="66" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">• Input: Verified scan finding</text>
-      <text x="14" y="82" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">• Output: Title &amp; remediation</text>
-      <text x="14" y="98" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">• No hallucinated facts</text>
+    <!-- Service 2: Gemma 4 / Gemini Text -->
+    <g transform="translate(18, 192)">
+      <rect width="224" height="110" rx="8" fill="#faf5ff" stroke="#e9d5ff" stroke-width="1" />
+      <text x="14" y="24" fill="#6b21a8" font-family="sans-serif" font-size="13" font-weight="700">Gemma 4 / Gemini Text</text>
+      <text x="14" y="44" fill="#581c87" font-family="sans-serif" font-size="11" font-weight="600">Issue Narrative Drafting</text>
+      <text x="14" y="64" fill="#64748b" font-family="sans-serif" font-size="11">• Input: Verified Finding</text>
+      <text x="14" y="80" fill="#64748b" font-family="sans-serif" font-size="11">• Output: Issue title &amp; text</text>
+      <text x="14" y="96" fill="#64748b" font-family="sans-serif" font-size="11">• Never guesses evidence</text>
     </g>
 
-    <!-- Box C: GitHub API -->
-    <g transform="translate(18, 335)">
-      <rect width="214" height="110" rx="10" fill="#2e1065" stroke="#818cf8" stroke-width="1"/>
-      <text x="14" y="24" fill="#a5b4fc" font-family="system-ui, sans-serif" font-size="13" font-weight="bold">GitHub REST API</text>
-      <text x="14" y="46" fill="#c7d2fe" font-family="system-ui, sans-serif" font-size="11" font-weight="600">Octokit Integration</text>
-      <text x="14" y="66" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">• Remote repo tree fetching</text>
-      <text x="14" y="82" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">• Direct GitHub Issue creation</text>
-      <text x="14" y="98" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">• Zero token persistence</text>
+    <!-- Service 3: GitHub REST API -->
+    <g transform="translate(18, 314)">
+      <rect width="224" height="110" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1" />
+      <text x="14" y="24" fill="#0f172a" font-family="sans-serif" font-size="13" font-weight="700">GitHub REST API</text>
+      <text x="14" y="44" fill="#334155" font-family="sans-serif" font-size="11" font-weight="600">Octokit / GitHub Service</text>
+      <text x="14" y="64" fill="#64748b" font-family="sans-serif" font-size="11">• Fetches remote repo tree</text>
+      <text x="14" y="80" fill="#64748b" font-family="sans-serif" font-size="11">• Creates GitHub issues</text>
+      <text x="14" y="96" fill="#64748b" font-family="sans-serif" font-size="11">• Zero token persistence</text>
     </g>
 
-    <!-- Footer tag -->
-    <text x="125" y="464" fill="#a855f7" font-family="system-ui, sans-serif" font-size="11" font-weight="600" text-anchor="middle">Secure HTTPS Integrations</text>
+    <!-- Footnote -->
+    <rect x="18" y="432" width="224" height="18" rx="4" fill="#f1f5f9" />
+    <text x="130" y="445" fill="#64748b" font-family="sans-serif" font-size="10" font-weight="600" text-anchor="middle">HTTPS / REST Endpoints</text>
   </g>
 
-  <!-- Legend in Footer -->
-  <g transform="translate(60, 695)">
-    <text x="0" y="16" fill="#64748b" font-family="system-ui, sans-serif" font-size="12">Key Design Principles:</text>
+  <!-- ================= BOTTOM LEGEND ================= -->
+  <g transform="translate(60, 630)">
+    <text x="0" y="14" fill="#475569" font-family="sans-serif" font-size="12" font-weight="600">Core Architecture Invariants:</text>
     
-    <circle cx="160" cy="12" r="5" fill="#38bdf8"/>
-    <text x="175" y="16" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="12">Human-in-the-Loop Review</text>
+    <rect x="180" y="3" width="12" height="12" rx="3" fill="#2563eb" />
+    <text x="200" y="14" fill="#334155" font-family="sans-serif" font-size="12">Human-in-the-Loop Validation</text>
 
-    <circle cx="360" cy="12" r="5" fill="#10b981"/>
-    <text x="375" y="16" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="12">Deterministic Scanner (No AI Decisions)</text>
+    <rect x="410" y="3" width="12" height="12" rx="3" fill="#16a34a" />
+    <text x="430" y="14" fill="#334155" font-family="sans-serif" font-size="12">Pure Deterministic Code Scanner</text>
 
-    <circle cx="630" cy="12" r="5" fill="#c084fc"/>
-    <text x="645" y="16" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="12">AI Vision for Extraction Only</text>
+    <rect x="670" y="3" width="12" height="12" rx="3" fill="#7c3aed" />
+    <text x="690" y="14" fill="#334155" font-family="sans-serif" font-size="12">Multimodal AI (Vision &amp; Drafting Only)</text>
 
-    <circle cx="860" cy="12" r="5" fill="#f43f5e"/>
-    <text x="875" y="16" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="12">Zero Token / Secret Storage</text>
+    <rect x="960" y="3" width="12" height="12" rx="3" fill="#0f172a" />
+    <text x="980" y="14" fill="#334155" font-family="sans-serif" font-size="12">Ephemeral Tokens (No Secret Storage)</text>
   </g>
 </svg>
