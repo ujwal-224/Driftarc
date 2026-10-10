@@ -1,12 +1,22 @@
 import React, { useState } from 'react';
+import {
+  Layers,
+  Plus,
+  Trash2,
+  ArrowRight,
+  ArrowLeft,
+  ArrowRightLeft,
+  Loader2,
+  X
+} from 'lucide-react';
 
-const CATEGORY_COLORS = {
-  frontend: '#38BDF8',
-  service: '#6366F1',
-  database: '#10B981',
-  cache: '#F43F5E',
-  external: '#F59E0B',
-  queue: '#A855F7'
+const CATEGORY_STYLES = {
+  frontend: { bg: 'bg-sky-500/10', text: 'text-sky-400', border: 'border-sky-500/30' },
+  service: { bg: 'bg-indigo-500/10', text: 'text-indigo-400', border: 'border-indigo-500/30' },
+  database: { bg: 'bg-emerald-500/10', text: 'text-emerald-400', border: 'border-emerald-500/30' },
+  cache: { bg: 'bg-rose-500/10', text: 'text-rose-400', border: 'border-rose-500/30' },
+  queue: { bg: 'bg-purple-500/10', text: 'text-purple-400', border: 'border-purple-500/30' },
+  external: { bg: 'bg-amber-500/10', text: 'text-amber-400', border: 'border-amber-500/30' }
 };
 
 export default function ReviewStep({
@@ -22,6 +32,7 @@ export default function ReviewStep({
 }) {
   const [newCompName, setNewCompName] = useState('');
   const [newCompType, setNewCompType] = useState('service');
+  const [showAddForm, setShowAddForm] = useState(false);
 
   const handleAddComponent = (e) => {
     e.preventDefault();
@@ -30,11 +41,11 @@ export default function ReviewStep({
       ...components,
       {
         name: newCompName.trim(),
-        type: newCompType,
-        tier: newCompType === 'database' ? 'Primary Storage' : newCompType === 'cache' ? 'In-Memory Cache' : 'Service'
+        type: newCompType
       }
     ]);
     setNewCompName('');
+    setShowAddForm(false);
   };
 
   const handleRemoveComponent = (index) => {
@@ -47,278 +58,195 @@ export default function ReviewStep({
     setComponents(updated);
   };
 
-  const handleUpdateTier = (index, newTier) => {
-    const updated = [...components];
-    updated[index].tier = newTier;
-    setComponents(updated);
+  const handleRemoveConnection = (index) => {
+    setConnections(connections.filter((_, i) => i !== index));
   };
 
   return (
-    <div class="flex-1 flex flex-col">
-      {/* Sub-Header Workspace Context Rail */}
-      <div class="w-full bg-surface-container-lowest border-b border-outline-variant px-space-md py-2 flex flex-wrap items-center justify-between gap-y-2">
-        <div class="flex items-center gap-space-md text-mono-label font-mono-label">
-          <span class="text-on-surface-variant">TARGET REPO:</span>
-          <span class="text-primary font-medium flex items-center gap-1">
-            <span class="material-symbols-outlined text-sm">schema</span> {repoUrl || 'acme-corp/ecommerce'}
-          </span>
-          <span class="text-outline">::</span>
-          <span class="text-on-surface-variant">BRANCH:</span>
-          <span class="text-on-surface">{branch || 'main'}</span>
-          <span class="text-outline">::</span>
-          <span class="text-on-surface-variant">ENGINE:</span>
-          <span class="text-tertiary">DETERMINISTIC SCANNER</span>
+    <main className="w-full max-w-5xl mx-auto px-6 py-10 flex flex-col gap-8">
+      {/* Clean Header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-slate-800">
+        <div>
+          <h1 className="text-2xl font-bold text-white tracking-tight">
+            Review Extracted Architecture
+          </h1>
+          <p className="text-sm text-slate-400 mt-1.5">
+            Gemma 4 identified {components.length} components from your diagram. You can refine or add items before the code scan.
+          </p>
         </div>
-        <div class="flex items-center gap-space-sm font-mono-label text-mono-label">
-          <span class="text-on-surface-variant">RECOGNITION CONFIDENCE:</span>
-          <span class="text-tertiary font-semibold">100% DETERMINISTIC</span>
+
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-slate-400">
+            Target: <code className="text-sky-400 font-mono bg-slate-900 px-2 py-1 rounded-md border border-slate-800">{repoUrl}</code>
+          </span>
         </div>
       </div>
 
-      {/* Main Viewport Container */}
-      <main class="flex-1 w-full max-w-6xl mx-auto px-4 py-8 flex flex-col gap-6">
-        {/* Informational Notice Banner */}
-        <div class="w-full bg-[#0D121F] border border-outline-variant p-4 flex items-start sm:items-center gap-3">
-          <span class="material-symbols-outlined text-primary text-xl flex-shrink-0">shield</span>
-          <div class="flex-1 text-body-sm font-body-sm">
-            <span class="text-primary font-semibold font-mono-label text-mono-label mr-2">DETERMINISTIC GUARANTEE:</span>
-            <span class="text-on-surface">The code scanner uses pure pattern matching (dependencies, imports, docker-compose, env vars). No AI decides matches vs mismatches.</span>
-          </div>
-          <div class="hidden md:flex items-center gap-1 text-outline font-mono-label text-mono-label flex-shrink-0">
-            <span class="material-symbols-outlined text-sm">verified</span> RULESET VERIFIED
-          </div>
+      {/* Components Section */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-white flex items-center gap-2">
+            <Layers className="w-4 h-4 text-sky-400" />
+            Components ({components.length})
+          </h2>
+          {!showAddForm && (
+            <button
+              type="button"
+              onClick={() => setShowAddForm(true)}
+              className="text-xs text-sky-400 hover:text-sky-300 font-medium flex items-center gap-1 transition-colors"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              Add Component
+            </button>
+          )}
         </div>
 
-        {/* Title and Subtitle Block */}
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-outline-variant pb-4">
-          <div>
-            <div class="flex items-center gap-2 mb-1">
-              <span class="font-mono-label text-mono-label text-primary px-1.5 py-0.5 border border-primary/40 bg-surface-container-lowest">
-                STEP 02 / INSPECTION
-              </span>
-              <span class="font-mono-label text-mono-label text-outline-variant">// HUMAN-IN-THE-LOOP VERIFICATION</span>
-            </div>
-            <h1 class="text-headline-lg font-headline-lg text-on-surface tracking-tight">
-              Review Extracted Components &amp; Topologies
-            </h1>
-            <p class="text-body-sm font-body-sm text-on-surface-variant mt-1">
-              Verify and refine the {components.length} architecture components recognized from diagram before repository pattern scan.
-            </p>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="font-mono-label text-mono-label text-on-surface-variant">EXTRACTED ENTITIES:</span>
-            <span class="font-mono-metric text-headline-sm text-primary bg-[#12192B] px-2 py-0.5 border border-outline-variant">
-              {String(components.length).padStart(2, '0')}
-            </span>
-          </div>
-        </div>
+        {/* Add Component Inline Box */}
+        {showAddForm && (
+          <form
+            onSubmit={handleAddComponent}
+            className="p-4 rounded-xl border border-sky-500/30 bg-sky-500/5 flex flex-wrap items-center gap-3"
+          >
+            <input
+              type="text"
+              placeholder="Component name (e.g. Redis, MongoDB)"
+              value={newCompName}
+              onChange={(e) => setNewCompName(e.target.value)}
+              className="flex-1 min-w-[200px] bg-slate-900 border border-slate-700 text-white px-3 py-1.5 rounded-lg text-xs outline-none focus:border-sky-400"
+              autoFocus
+            />
+            <select
+              value={newCompType}
+              onChange={(e) => setNewCompType(e.target.value)}
+              className="bg-slate-900 border border-slate-700 text-white px-3 py-1.5 rounded-lg text-xs outline-none focus:border-sky-400"
+            >
+              <option value="service">Service</option>
+              <option value="database">Database</option>
+              <option value="cache">Cache</option>
+              <option value="frontend">Frontend</option>
+              <option value="queue">Queue</option>
+              <option value="external">External</option>
+            </select>
+            <button
+              type="submit"
+              className="px-3.5 py-1.5 bg-sky-500 hover:bg-sky-400 text-white text-xs font-medium rounded-lg transition-colors"
+            >
+              Add
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowAddForm(false)}
+              className="text-xs text-slate-400 hover:text-slate-200 px-2 py-1.5"
+            >
+              Cancel
+            </button>
+          </form>
+        )}
 
-        {/* Section Heading & Category Legend */}
-        <div class="flex items-center justify-between flex-wrap gap-2">
-          <div class="flex items-center gap-2">
-            <span class="material-symbols-outlined text-primary text-base">account_tree</span>
-            <h2 class="text-headline-sm font-headline-sm text-on-surface">Architectural Nodes</h2>
-            <span class="text-on-surface-variant font-mono-label text-mono-label">(Editable AST Anchors)</span>
-          </div>
-          <div class="flex items-center gap-1.5 font-mono-label text-mono-label text-on-surface-variant flex-wrap">
-            <span class="w-2 h-2 bg-[#38BDF8]"></span> Frontend
-            <span class="w-2 h-2 bg-[#6366F1] ml-2"></span> Service
-            <span class="w-2 h-2 bg-[#10B981] ml-2"></span> Database
-            <span class="w-2 h-2 bg-[#F43F5E] ml-2"></span> Cache
-            <span class="w-2 h-2 bg-[#F59E0B] ml-2"></span> External
-          </div>
-        </div>
-
-        {/* Component Cards Grid */}
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="component-grid">
+        {/* Components Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5">
           {components.map((comp, idx) => {
-            const catType = (comp.type || 'service').toLowerCase();
-            const color = CATEGORY_COLORS[catType] || '#6366F1';
+            const style = CATEGORY_STYLES[(comp.type || 'service').toLowerCase()] || CATEGORY_STYLES.service;
 
             return (
               <div
                 key={idx}
-                class="bg-[#12192B] border border-outline-variant p-4 flex flex-col justify-between relative group hover:border-primary transition-colors"
+                className="bg-slate-900/50 border border-slate-800 hover:border-slate-700 rounded-xl p-4 flex items-center justify-between gap-3 transition-all group"
               >
-                <div>
-                  <div class="flex items-start justify-between gap-2 mb-3">
-                    <span
-                      class="px-2 py-0.5 border font-mono-label text-mono-label uppercase font-medium bg-[#07090E]"
-                      style={{ borderColor: color, color: color }}
-                    >
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <span className={`text-[10px] uppercase font-semibold px-2 py-0.5 rounded-md border ${style.bg} ${style.text} ${style.border}`}>
                       {comp.type || 'Service'}
                     </span>
-                    <button
-                      onClick={() => handleRemoveComponent(idx)}
-                      class="text-outline-variant hover:text-[#F43F5E] p-1 transition-colors"
-                      title="Remove Component"
-                    >
-                      <span class="material-symbols-outlined text-lg">delete</span>
-                    </button>
                   </div>
-
-                  <div class="space-y-3">
-                    <div>
-                      <label class="block font-mono-label text-mono-label text-on-surface-variant mb-1">
-                        NODE IDENTIFIER
-                      </label>
-                      <input
-                        type="text"
-                        class="w-full bg-[#0D121F] border border-outline-variant text-on-surface px-2.5 py-1.5 font-mono-code text-mono-code focus:border-[#38BDF8] focus:ring-0 focus:outline-none"
-                        value={comp.name}
-                        onChange={(e) => handleUpdateName(idx, e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      <label class="block font-mono-label text-mono-label text-on-surface-variant mb-1">
-                        TIER / CATEGORY
-                      </label>
-                      <input
-                        type="text"
-                        class="w-full bg-[#0D121F] border border-outline-variant text-on-surface px-2.5 py-1.5 font-mono-code text-mono-code focus:border-[#38BDF8] focus:ring-0 focus:outline-none"
-                        value={comp.tier || comp.type || 'Service Node'}
-                        onChange={(e) => handleUpdateTier(idx, e.target.value)}
-                      />
-                    </div>
-                  </div>
+                  <input
+                    type="text"
+                    value={comp.name}
+                    onChange={(e) => handleUpdateName(idx, e.target.value)}
+                    className="w-full bg-transparent border-b border-transparent hover:border-slate-700 focus:border-sky-400 text-white font-medium text-sm outline-none pb-0.5 transition-colors"
+                  />
                 </div>
-
-                <div class="mt-4 pt-3 border-t border-outline-variant flex items-center justify-between text-on-surface-variant">
-                  <div class="flex items-center gap-1.5 font-mono-label text-mono-label">
-                    <span class="material-symbols-outlined text-sm" style={{ color }}>tag</span>
-                    <span class="text-on-surface-variant">{comp.name.toLowerCase()}</span>
-                  </div>
-                  <span class="text-[10px] font-mono-label text-outline uppercase">
-                    DIAG-{String(idx + 1).padStart(2, '0')}
-                  </span>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveComponent(idx)}
+                  className="opacity-40 group-hover:opacity-100 hover:text-rose-400 text-slate-400 p-1 transition-all"
+                  title="Remove"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
               </div>
             );
           })}
+        </div>
+      </div>
 
-          {/* Card 6: + Add Component Card */}
-          <div class="bg-[#0D121F] border border-dashed border-outline-variant p-4 flex flex-col justify-between hover:border-primary transition-colors">
-            <div>
-              <div class="flex items-center justify-between mb-3">
-                <span class="px-2 py-0.5 border border-outline-variant text-on-surface-variant font-mono-label text-mono-label uppercase">
-                  NEW COMPONENT
-                </span>
-                <span class="material-symbols-outlined text-primary text-lg">add_circle</span>
-              </div>
-              <div class="space-y-3">
-                <div>
-                  <label class="block font-mono-label text-mono-label text-on-surface-variant mb-1">NAME</label>
-                  <input
-                    type="text"
-                    placeholder="Enter component name..."
-                    class="w-full bg-[#07090E] border border-outline-variant text-on-surface placeholder:text-outline-variant px-2.5 py-1.5 font-mono-code text-mono-code focus:border-primary focus:ring-0 focus:outline-none"
-                    value={newCompName}
-                    onChange={(e) => setNewCompName(e.target.value)}
-                  />
-                </div>
-                <div>
-                  <label class="block font-mono-label text-mono-label text-on-surface-variant mb-1">TYPE</label>
-                  <select
-                    class="w-full bg-[#07090E] border border-outline-variant text-on-surface px-2.5 py-1.5 font-mono-code text-mono-code focus:border-primary focus:ring-0 focus:outline-none"
-                    value={newCompType}
-                    onChange={(e) => setNewCompType(e.target.value)}
-                  >
-                    <option value="service">Service</option>
-                    <option value="database">Database</option>
-                    <option value="cache">Cache</option>
-                    <option value="queue">Queue</option>
-                    <option value="frontend">Frontend</option>
-                    <option value="external">External</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="mt-4 pt-3">
-              <button
-                type="button"
-                onClick={handleAddComponent}
-                class="w-full py-1.5 bg-[#12192B] hover:bg-[#18223B] text-primary border border-primary/40 font-mono-label text-mono-label font-medium transition-colors flex items-center justify-center gap-1.5"
+      {/* Connections Flow Section */}
+      {connections && connections.length > 0 && (
+        <div className="space-y-4 pt-2">
+          <h2 className="text-sm font-semibold text-white flex items-center gap-2">
+            <ArrowRightLeft className="w-4 h-4 text-indigo-400" />
+            Connections ({connections.length})
+          </h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {connections.map((conn, cIdx) => (
+              <div
+                key={cIdx}
+                className="bg-slate-900/40 border border-slate-800/80 rounded-xl p-3 flex items-center justify-between gap-3 text-xs"
               >
-                <span class="material-symbols-outlined text-sm">add</span> + Add to Model
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Extracted Directed Connections Card */}
-        {connections && connections.length > 0 && (
-          <div class="bg-[#0D121F] border border-outline-variant p-5">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-outline-variant pb-3 mb-4">
-              <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined text-primary text-lg">sync_alt</span>
-                <h3 class="text-headline-sm font-headline-sm text-on-surface">Extracted Directed Connections (Topological Flow)</h3>
-              </div>
-              <div class="flex items-center gap-2">
-                <span class="font-mono-label text-mono-label text-on-surface-variant">CONFIRMED EDGES:</span>
-                <span class="font-mono-code text-mono-code text-primary bg-[#12192B] px-2 py-0.5 border border-outline-variant">
-                  {connections.length} EDGES
-                </span>
-              </div>
-            </div>
-            <p class="text-body-sm font-body-sm text-on-surface-variant mb-4">
-              The scanner will verify direct code couplings (API requests, client connections, database drivers) matching these diagrammed communication vectors:
-            </p>
-
-            {/* Flow Pills Grid */}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {connections.map((conn, cIdx) => (
-                <div key={cIdx} class="bg-[#12192B] border border-outline-variant p-3 flex items-center justify-between">
-                  <div class="flex items-center gap-2 font-mono-code text-mono-code">
-                    <span class="px-2 py-0.5 bg-[#07090E] border border-[#38BDF8] text-[#38BDF8] text-xs">
-                      {conn.from}
+                <div className="flex items-center gap-2 font-mono truncate">
+                  <span className="text-slate-200 font-semibold truncate">{conn.from}</span>
+                  <span className="text-slate-500">➔</span>
+                  <span className="text-sky-300 font-semibold truncate">{conn.to}</span>
+                  {conn.label && (
+                    <span className="text-[10px] text-slate-500 font-sans ml-1">
+                      ({conn.label})
                     </span>
-                    <span class="material-symbols-outlined text-primary text-sm">arrow_forward</span>
-                    <span class="px-2 py-0.5 bg-[#07090E] border border-[#6366F1] text-[#c0c1ff] text-xs">
-                      {conn.to}
-                    </span>
-                  </div>
-                  <span class="font-mono-label text-mono-label px-2 py-0.5 border border-outline-variant text-on-surface-variant bg-[#07090E]">
-                    {conn.label || 'Direct Link'}
-                  </span>
+                  )}
                 </div>
-              ))}
-            </div>
-
-            <div class="mt-4 pt-3 border-t border-outline-variant flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-mono-label font-mono-label text-outline">
-              <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined text-sm">terminal</span>
-                <span>PARSER: AST Pattern Matching Engine v2.4 (strict no-eval mode)</span>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveConnection(cIdx)}
+                  className="text-slate-500 hover:text-rose-400 p-1 transition-colors"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
               </div>
-            </div>
+            ))}
           </div>
-        )}
-
-        {/* Navigation Footer Actions */}
-        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-outline-variant mt-2 mb-8">
-          <button
-            type="button"
-            onClick={onBack}
-            class="w-full sm:w-auto px-5 py-2.5 bg-[#12192B] text-[#F8FAFC] border border-outline-variant font-mono-label text-mono-label hover:bg-[#18223B] transition-colors flex items-center justify-center gap-2"
-          >
-            <span class="material-symbols-outlined text-base">arrow_back</span> Back to Upload
-          </button>
-          <button
-            type="button"
-            onClick={onStartScan}
-            disabled={loading || components.length === 0}
-            class="w-full sm:w-auto px-6 py-2.5 bg-[#38BDF8] hover:bg-[#0284C7] text-[#07090E] border border-[#38BDF8] font-headline-sm font-semibold text-headline-sm transition-colors flex items-center justify-center gap-2"
-          >
-            {loading ? (
-              <span>Scanning Repository...</span>
-            ) : (
-              <>
-                <span>Scan Repository for Evidence</span>
-                <span class="material-symbols-outlined text-base">arrow_forward</span>
-              </>
-            )}
-          </button>
         </div>
-      </main>
-    </div>
+      )}
+
+      {/* Navigation Buttons */}
+      <div className="flex items-center justify-between pt-6 border-t border-slate-800">
+        <button
+          type="button"
+          onClick={onBack}
+          className="px-5 py-2.5 rounded-xl border border-slate-800 hover:bg-slate-900 text-slate-300 text-xs font-medium transition-colors flex items-center gap-1.5"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Upload
+        </button>
+
+        <button
+          type="button"
+          onClick={onStartScan}
+          disabled={loading || components.length === 0}
+          className="px-7 py-3 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-semibold text-xs shadow-lg shadow-sky-500/20 transition-all flex items-center gap-2 disabled:opacity-50"
+        >
+          {loading ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              <span>Scanning Repository...</span>
+            </>
+          ) : (
+            <>
+              <span>Scan Codebase for Drift</span>
+              <ArrowRight className="w-4 h-4" />
+            </>
+          )}
+        </button>
+      </div>
+    </main>
   );
 }

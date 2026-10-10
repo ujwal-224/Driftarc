@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Layers, Check } from 'lucide-react';
 import { checkHealth, runScan } from './api.js';
 import UploadStep from './components/UploadStep.jsx';
 import ReviewStep from './components/ReviewStep.jsx';
@@ -31,7 +32,7 @@ export default function App() {
   const [scanLoading, setScanLoading] = useState(false);
   const [globalError, setGlobalError] = useState(null);
 
-  // Check health on mount (verifies Vite proxy -> Express backend)
+  // Verify backend health
   useEffect(() => {
     checkHealth()
       .then(() => setBackendHealthy(true))
@@ -76,136 +77,89 @@ export default function App() {
     }
   };
 
+  const steps = [
+    { num: 1, label: 'Upload' },
+    { num: 2, label: 'Review' },
+    { num: 3, label: 'Findings' },
+    { num: 4, label: 'Issues' }
+  ];
+
   return (
-    <div class="bg-background text-on-surface antialiased min-h-screen flex flex-col font-body-sm text-body-sm selection:bg-primary-container selection:text-on-primary-container">
-      {/* TopNavBar */}
-      <header class="flex justify-between items-center w-full px-space-md h-14 border-b border-outline-variant bg-surface-container-low sticky top-0 z-50">
-        {/* Brand Info */}
-        <div class="flex items-center gap-space-md">
-          <div class="flex items-center gap-space-sm">
-            <div class="w-8 h-8 rounded bg-surface-container flex items-center justify-center border border-outline-variant text-primary-container">
-              <span class="material-symbols-outlined text-primary-container text-[20px]">developer_board</span>
-            </div>
-            <div>
-              <span class="text-headline-sm font-headline-sm font-semibold text-primary tracking-tight">DriftCheck</span>
-              <span class="hidden xl:inline-block ml-space-xs text-mono-label font-mono-label text-outline border-l border-outline-variant pl-space-xs">
-                Diagram vs Codebase Architectural Drift Detector
-              </span>
-            </div>
+    <div className="bg-[#0b0f17] text-slate-200 antialiased min-h-screen flex flex-col font-sans selection:bg-sky-500/30 selection:text-sky-200">
+      {/* Sleek, Modern Navbar */}
+      <header className="sticky top-0 z-50 backdrop-blur-md bg-[#0b0f17]/85 border-b border-slate-800/80 px-6 h-16 flex items-center justify-between">
+        {/* Brand */}
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-sky-500/20">
+            <Layers className="w-5 h-5" />
+          </div>
+          <div>
+            <span className="text-lg font-bold text-white tracking-tight">DriftCheck</span>
+            <span className="hidden sm:inline-block ml-2 text-xs text-slate-400 font-medium">
+              Architecture Drift Detector
+            </span>
           </div>
         </div>
 
-        {/* Stepper Navigation Links */}
-        <nav class="hidden md:flex items-center gap-space-lg">
-          <button
-            onClick={() => setCurrentStep(1)}
-            class={`font-mono-label text-mono-label py-1 flex items-center gap-1.5 transition-colors ${
-              currentStep === 1
-                ? 'text-primary border-b-2 border-primary font-semibold'
-                : 'text-on-surface-variant hover:text-on-surface'
-            }`}
-          >
-            {currentStep > 1 ? (
-              <span class="material-symbols-outlined text-[#10B981] text-sm">check_circle</span>
-            ) : (
-              <span class="w-1.5 h-1.5 rounded-full bg-primary-container inline-block"></span>
-            )}
-            1: Upload &amp; Target
-          </button>
+        {/* Minimal Stepper Navigation */}
+        <nav className="flex items-center gap-1 sm:gap-2 bg-slate-900/60 border border-slate-800 p-1 rounded-xl">
+          {steps.map((s) => {
+            const isActive = currentStep === s.num;
+            const isCompleted = currentStep > s.num;
+            const isAccessible = s.num === 1 || (s.num === 2 && components.length > 0) || (s.num >= 3 && scanData.findings.length > 0);
 
-          <button
-            onClick={() => components.length > 0 && setCurrentStep(2)}
-            disabled={components.length === 0}
-            class={`font-mono-label text-mono-label py-1 flex items-center gap-1.5 transition-colors ${
-              currentStep === 2
-                ? 'text-primary border-b-2 border-primary font-semibold'
-                : components.length > 0
-                ? 'text-on-surface-variant hover:text-on-surface'
-                : 'text-outline opacity-50 cursor-not-allowed'
-            }`}
-          >
-            {currentStep > 2 ? (
-              <span class="material-symbols-outlined text-[#10B981] text-sm">check_circle</span>
-            ) : (
-              <span class="w-3.5 h-3.5 flex items-center justify-center bg-surface-container text-on-surface text-[10px] rounded">2</span>
-            )}
-            2: Review Extraction
-          </button>
-
-          <button
-            onClick={() => scanData.findings.length > 0 && setCurrentStep(3)}
-            disabled={scanData.findings.length === 0}
-            class={`font-mono-label text-mono-label py-1 flex items-center gap-1.5 transition-colors ${
-              currentStep === 3
-                ? 'text-primary border-b-2 border-primary font-semibold'
-                : scanData.findings.length > 0
-                ? 'text-on-surface-variant hover:text-on-surface'
-                : 'text-outline opacity-50 cursor-not-allowed'
-            }`}
-          >
-            {currentStep > 3 ? (
-              <span class="material-symbols-outlined text-[#10B981] text-sm">check_circle</span>
-            ) : (
-              <span class="w-3.5 h-3.5 flex items-center justify-center bg-surface-container text-on-surface text-[10px] rounded">3</span>
-            )}
-            3: Scan Findings
-          </button>
-
-          <button
-            onClick={() => scanData.findings.length > 0 && setCurrentStep(4)}
-            disabled={scanData.findings.length === 0}
-            class={`font-mono-label text-mono-label py-1 flex items-center gap-1.5 transition-colors ${
-              currentStep === 4
-                ? 'text-primary border-b-2 border-primary font-semibold'
-                : scanData.findings.length > 0
-                ? 'text-on-surface-variant hover:text-on-surface'
-                : 'text-outline opacity-50 cursor-not-allowed'
-            }`}
-          >
-            <span class="w-3.5 h-3.5 flex items-center justify-center bg-surface-container text-on-surface text-[10px] rounded">4</span>
-            4: Draft Issues
-          </button>
+            return (
+              <button
+                key={s.num}
+                onClick={() => isAccessible && setCurrentStep(s.num)}
+                disabled={!isAccessible}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                  isActive
+                    ? 'bg-sky-500 text-white shadow-sm shadow-sky-500/30'
+                    : isCompleted
+                    ? 'text-emerald-400 hover:bg-slate-800/60'
+                    : isAccessible
+                    ? 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
+                    : 'text-slate-600 cursor-not-allowed opacity-40'
+                }`}
+              >
+                {isCompleted ? (
+                  <Check className="w-3.5 h-3.5 stroke-[2.5]" />
+                ) : (
+                  <span className="w-4 h-4 rounded-full flex items-center justify-center text-[10px] bg-slate-800 border border-slate-700">
+                    {s.num}
+                  </span>
+                )}
+                <span>{s.label}</span>
+              </button>
+            );
+          })}
         </nav>
 
-        {/* Trailing Actions & Proxy Live Pill */}
-        <div class="flex items-center gap-space-sm">
-          <div class="flex items-center gap-1.5 px-2 py-0.5 rounded bg-surface-container border border-outline-variant text-mono-label font-mono-label">
+        {/* Live Status Pill */}
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/80 border border-slate-800 text-xs">
             <span
-              class="w-2 h-2 rounded-full"
-              style={{ backgroundColor: backendHealthy ? '#10B981' : '#F43F5E' }}
+              className={`w-2 h-2 rounded-full ${
+                backendHealthy === true ? 'bg-emerald-400 animate-pulse' : backendHealthy === false ? 'bg-rose-500' : 'bg-amber-400'
+              }`}
             ></span>
-            <span class="text-on-surface text-xs">
-              {backendHealthy === null ? 'Connecting...' : backendHealthy ? 'API Proxy Active' : 'API Offline'}
+            <span className="text-slate-400 hidden sm:inline">
+              {backendHealthy === true ? 'Connected' : backendHealthy === false ? 'Offline' : 'Connecting'}
             </span>
-          </div>
-
-          <div class="h-4 w-px bg-outline-variant mx-1"></div>
-
-          <div class="flex items-center gap-1">
-            <button
-              onClick={() => handleStartScan()}
-              disabled={components.length === 0}
-              class="px-2.5 py-1 text-xs font-mono-label font-medium text-on-primary-container bg-primary-container hover:bg-primary-fixed-dim rounded transition-colors"
-            >
-              Scan
-            </button>
-            <div class="w-7 h-7 rounded bg-surface-container-high border border-outline-variant flex items-center justify-center text-mono-label font-mono-label text-primary font-semibold ml-1">
-              DC
-            </div>
           </div>
         </div>
       </header>
 
       {/* Global Error Banner */}
       {globalError && (
-        <div class="w-full bg-[#93000a]/20 border-b border-[#93000a] p-3 text-center text-on-error-container text-xs font-mono-code flex items-center justify-center gap-2">
-          <span class="material-symbols-outlined text-sm">error</span>
+        <div className="w-full bg-rose-950/40 border-b border-rose-800/60 px-4 py-2.5 text-center text-rose-300 text-xs flex items-center justify-center gap-2">
           <span>{globalError}</span>
         </div>
       )}
 
-      {/* Main Content Workspace */}
-      <div class="flex-1 flex flex-col">
+      {/* Main Workspace */}
+      <div className="flex-1 flex flex-col">
         {currentStep === 1 && (
           <UploadStep
             diagramImage={diagramImage}
@@ -261,22 +215,11 @@ export default function App() {
         )}
       </div>
 
-      {/* Technical Footer */}
-      <footer class="w-full border-t border-outline-variant bg-surface-container-lowest px-space-md py-2.5 mt-auto">
-        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-mono-label font-mono-label text-outline text-[11px]">
-          <div class="flex items-center gap-3">
-            <span>DriftCheck Core v2.4.1</span>
-            <span>•</span>
-            <span class="flex items-center gap-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-[#10B981]"></span>
-              AST Pattern Matcher: Ready
-            </span>
-            <span>•</span>
-            <span>Gemma 4 Multimodal Vision Parser</span>
-          </div>
-          <div>
-            <span>DETERMINISTIC VERIFICATION • STRICT NO-AI SCANNER</span>
-          </div>
+      {/* Minimal Clean Footer */}
+      <footer className="w-full border-t border-slate-900 bg-[#080c14] py-3 px-6 mt-auto">
+        <div className="max-w-6xl mx-auto flex items-center justify-between text-xs text-slate-500">
+          <span>DriftCheck • Pure Deterministic Code Scanner</span>
+          <span>Gemma 4 Multimodal Vision</span>
         </div>
       </footer>
     </div>

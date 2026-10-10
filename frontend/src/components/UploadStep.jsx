@@ -1,4 +1,19 @@
 import React, { useState } from 'react';
+import {
+  Sparkles,
+  UploadCloud,
+  FolderGit2,
+  Image as ImageIcon,
+  CheckCircle2,
+  X,
+  ChevronDown,
+  ChevronUp,
+  Eye,
+  ShieldCheck,
+  ArrowRight,
+  Loader2,
+  AlertCircle
+} from 'lucide-react';
 import { extractDiagram } from '../api.js';
 
 export default function UploadStep({
@@ -17,7 +32,7 @@ export default function UploadStep({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [dragActive, setDragActive] = useState(false);
-  const [accordionOpen, setAccordionOpen] = useState(true);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   const handleFileChange = (file) => {
     if (!file) return;
@@ -47,6 +62,11 @@ export default function UploadStep({
     }
   };
 
+  const clearDiagram = () => {
+    setDiagramImage(null);
+    setDiagramPreview(null);
+  };
+
   const loadSampleDemo = async () => {
     setError(null);
     setRepoUrl('demo/planted-drift');
@@ -54,17 +74,17 @@ export default function UploadStep({
     setDiagramPreview('/demo-diagram.png');
 
     const sampleComponents = [
-      { name: 'React', type: 'frontend', tier: 'SPA Client' },
-      { name: 'API', type: 'service', tier: 'Core Backend' },
-      { name: 'Postgres', type: 'database', tier: 'Primary Storage' },
-      { name: 'Redis', type: 'cache', tier: 'In-Memory Cache' },
-      { name: 'Stripe', type: 'external', tier: 'Payment Gateway' }
+      { name: 'React', type: 'frontend' },
+      { name: 'API', type: 'service' },
+      { name: 'Postgres', type: 'database' },
+      { name: 'Redis', type: 'cache' },
+      { name: 'Stripe', type: 'external' }
     ];
     const sampleConnections = [
       { from: 'React', to: 'API', label: 'HTTP/REST' },
-      { from: 'API', to: 'Postgres', label: 'ORM / Queries' },
-      { from: 'API', to: 'Redis', label: 'Session Cache' },
-      { from: 'API', to: 'Stripe', label: 'Webhook & Checkout' }
+      { from: 'API', to: 'Postgres', label: 'Queries' },
+      { from: 'API', to: 'Redis', label: 'Cache' },
+      { from: 'API', to: 'Stripe', label: 'Payments' }
     ];
 
     try {
@@ -83,11 +103,11 @@ export default function UploadStep({
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!diagramImage && !diagramPreview) {
-      setError('Please select or drop an architecture diagram image.');
+      setError('Please upload an architecture diagram image.');
       return;
     }
     if (!repoUrl) {
-      setError('Please provide a GitHub repository URL or local path.');
+      setError('Please provide a repository URL or local folder path.');
       return;
     }
 
@@ -105,50 +125,55 @@ export default function UploadStep({
   };
 
   return (
-    <main class="w-full max-w-5xl mx-auto p-space-lg overflow-y-auto">
-      <div class="space-y-space-lg">
-        {/* Headline & Subtitle */}
-        <section class="border-b border-outline-variant pb-space-md">
-          <div class="flex items-center gap-2 mb-1">
-            <span class="px-2 py-0.5 rounded bg-surface-container text-primary-container text-mono-label font-mono-label border border-outline-variant">
-              STAGE 01 / INITIALIZATION
-            </span>
-            <span class="text-mono-label font-mono-label text-outline">Gemma 4 Multimodal Vision Parser</span>
-          </div>
-          <h1 class="text-headline-lg font-headline-lg text-on-surface tracking-tight">
-            Step 1: Upload Architecture Diagram &amp; Connect Repository
+    <main className="w-full max-w-4xl mx-auto px-6 py-10 flex flex-col gap-8">
+      {/* Clean Hero Header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-slate-800">
+        <div>
+          <h1 className="text-2xl font-bold text-white tracking-tight">
+            Compare Architecture vs Codebase
           </h1>
-          <p class="text-body-sm font-body-sm text-on-surface-variant mt-1">
-            Automated drift detection continuously compares intended microservice architectures against live Git AST models, detecting undocumented APIs, orphaned databases, and missing message brokers.
+          <p className="text-sm text-slate-400 mt-1.5 max-w-xl">
+            Upload an architecture diagram and select your codebase to spot missing services, unmapped databases, and architectural drift.
           </p>
-        </section>
+        </div>
+        <button
+          type="button"
+          onClick={loadSampleDemo}
+          className="self-start sm:self-auto flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700/80 hover:border-sky-500/50 hover:bg-slate-800 text-sky-400 text-xs font-medium transition-all shadow-sm"
+        >
+          <Sparkles className="w-3.5 h-3.5" />
+          <span>Load Demo Sample</span>
+        </button>
+      </div>
 
-        {error && (
-          <div class="p-3 bg-error-container/30 border border-error text-error text-xs font-mono-code rounded flex items-center gap-2">
-            <span class="material-symbols-outlined text-sm">warning</span>
-            <span>{error}</span>
-          </div>
-        )}
+      {/* Error alert */}
+      {error && (
+        <div className="p-3.5 bg-rose-950/40 border border-rose-800/80 text-rose-300 text-xs rounded-xl flex items-center gap-2.5">
+          <AlertCircle className="w-4 h-4 shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
 
-        {/* Two-Column Workbench Split Layout */}
-        <section class="grid grid-cols-1 lg:grid-cols-2 gap-space-lg">
-          {/* LEFT COLUMN: Diagram Source */}
-          <div class="rounded bg-surface-container-low border border-outline-variant p-space-md flex flex-col justify-between space-y-space-md">
-            <div class="space-y-space-md">
-              {/* Header for Source */}
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                  <span class="material-symbols-outlined text-primary-container text-[20px]">account_tree</span>
-                  <h2 class="text-headline-sm font-headline-sm text-on-surface">Diagram Source</h2>
-                </div>
-                <span class="text-mono-label font-mono-label text-outline">Target Node: A1</span>
-              </div>
+      {/* Two Balanced Columns */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Left: Diagram Upload Card */}
+        <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between gap-5">
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-sm font-semibold text-white flex items-center gap-2">
+                <ImageIcon className="w-4 h-4 text-sky-400" />
+                Architecture Diagram
+              </span>
+              <span className="text-xs text-slate-500">PNG, JPG, SVG</span>
+            </div>
 
-              {/* Upload Area */}
+            {!diagramPreview ? (
               <div
-                class={`border border-dashed ${
-                  dragActive ? 'border-primary bg-surface-container' : 'border-primary-container'
-                } rounded bg-surface-container-lowest p-space-lg flex flex-col items-center justify-center text-center cursor-pointer transition-colors hover:bg-surface-container`}
+                className={`border-2 border-dashed rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all ${
+                  dragActive
+                    ? 'border-sky-400 bg-sky-500/10'
+                    : 'border-slate-800 hover:border-slate-700 hover:bg-slate-900/60'
+                }`}
                 onDragEnter={handleDrag}
                 onDragLeave={handleDrag}
                 onDragOver={handleDrag}
@@ -159,205 +184,173 @@ export default function UploadStep({
                   id="diagram-file-picker"
                   type="file"
                   accept="image/*"
-                  class="hidden"
+                  className="hidden"
                   onChange={(e) => handleFileChange(e.target.files[0])}
                 />
-                <div class="w-12 h-12 rounded bg-surface-container border border-outline-variant flex items-center justify-center text-primary-container mb-space-sm">
-                  <span class="material-symbols-outlined text-[26px]">cloud_upload</span>
+                <div className="w-12 h-12 rounded-xl bg-slate-800/80 border border-slate-700 flex items-center justify-center text-sky-400 mb-3 shadow-inner">
+                  <UploadCloud className="w-6 h-6" />
                 </div>
-                <p class="text-body-sm font-body-sm text-on-surface font-medium">
-                  Drop architecture diagram here or click to browse
+                <p className="text-sm font-medium text-slate-200">
+                  Drop diagram image here
                 </p>
-                <p class="text-mono-label font-mono-label text-outline mt-1">
-                  Accepted schematic formats:
+                <p className="text-xs text-slate-500 mt-1">
+                  or <span className="text-sky-400 hover:underline">browse files</span> from your computer
                 </p>
-                <div class="flex flex-wrap gap-1.5 justify-center mt-space-sm">
-                  <span class="px-2 py-0.5 rounded bg-surface-container border border-outline-variant text-mono-label font-mono-label text-on-surface-variant">.PNG</span>
-                  <span class="px-2 py-0.5 rounded bg-surface-container border border-outline-variant text-mono-label font-mono-label text-on-surface-variant">.SVG</span>
-                  <span class="px-2 py-0.5 rounded bg-surface-container border border-outline-variant text-mono-label font-mono-label text-on-surface-variant">.Excalidraw</span>
-                  <span class="px-2 py-0.5 rounded bg-surface-container border border-outline-variant text-mono-label font-mono-label text-on-surface-variant">.Mermaid</span>
-                  <span class="px-2 py-0.5 rounded bg-surface-container border border-outline-variant text-mono-label font-mono-label text-on-surface-variant">Whiteboard Photos</span>
-                </div>
               </div>
-
-              {/* Uploaded Thumbnail & Component Breakdown Card */}
-              {diagramPreview && (
-                <div class="rounded bg-surface-container border border-outline-variant p-space-sm space-y-space-sm">
-                  <div class="flex items-center justify-between pb-space-xs border-b border-outline-variant">
-                    <div class="flex items-center gap-2 truncate">
-                      <span class="material-symbols-outlined text-primary-container text-[18px]">image</span>
-                      <span class="text-mono-label font-mono-label text-on-surface truncate">
-                        {diagramImage?.name || 'diagram.png'}
-                      </span>
-                    </div>
-                    <div class="flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high border border-tertiary text-mono-label font-mono-label text-tertiary whitespace-nowrap">
-                      <span class="material-symbols-outlined text-[14px]">check_circle</span>
-                      <span>Ready for Extraction</span>
-                    </div>
+            ) : (
+              <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-3.5 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 truncate">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span className="text-xs text-slate-200 font-medium truncate">
+                      {diagramImage?.name || 'diagram.png'}
+                    </span>
                   </div>
-
-                  <div class="bg-surface-container-lowest border border-outline-variant rounded p-2 overflow-hidden flex items-center justify-center">
-                    <img
-                      src={diagramPreview}
-                      alt="Architecture Diagram Preview"
-                      class="max-h-48 w-auto object-contain rounded"
-                    />
-                  </div>
+                  <button
+                    type="button"
+                    onClick={clearDiagram}
+                    className="text-xs text-slate-400 hover:text-rose-400 flex items-center gap-1 transition-colors"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                    Change
+                  </button>
                 </div>
-              )}
-            </div>
-
-            <div class="pt-2 border-t border-outline-variant flex items-center justify-between text-mono-label font-mono-label text-outline">
-              <span>OCR Layer: Active</span>
-              <span>Model: Gemma 4 Vision</span>
-            </div>
-          </div>
-
-          {/* RIGHT COLUMN: GitHub Repository Target */}
-          <div class="rounded bg-surface-container-low border border-outline-variant p-space-md flex flex-col justify-between space-y-space-md">
-            <div class="space-y-space-md">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                  <span class="material-symbols-outlined text-primary-container text-[20px]">code_blocks</span>
-                  <h2 class="text-headline-sm font-headline-sm text-on-surface">Target Codebase</h2>
-                </div>
-                <span class="text-mono-label font-mono-label text-outline">Target Mode: Git AST</span>
-              </div>
-
-              {/* Repository URL Input */}
-              <div class="space-y-1.5">
-                <label class="block text-mono-label font-mono-label text-on-surface">
-                  GitHub Repository URL or Local Path
-                </label>
-                <div class="relative flex items-center">
-                  <div class="absolute left-3 flex items-center pointer-events-none text-on-surface-variant">
-                    <span class="material-symbols-outlined text-[18px]">hub</span>
-                  </div>
-                  <input
-                    class="w-full bg-surface-container-lowest border border-outline-variant focus:border-primary-container text-on-surface pl-10 pr-4 py-2 rounded font-mono-code text-mono-code outline-none transition-colors"
-                    placeholder="https://github.com/owner/repo or demo/planted-drift"
-                    type="text"
-                    value={repoUrl}
-                    onChange={(e) => setRepoUrl(e.target.value)}
+                <div className="w-full h-44 rounded-lg bg-black/40 flex items-center justify-center overflow-hidden border border-slate-800/60">
+                  <img
+                    src={diagramPreview}
+                    alt="Uploaded Diagram"
+                    className="max-h-full max-w-full object-contain"
                   />
                 </div>
               </div>
+            )}
+          </div>
 
-              {/* Demo Quick-Load CTA */}
-              <div>
+          <div className="text-xs text-slate-500 flex items-center gap-1.5">
+            <Eye className="w-3.5 h-3.5 text-slate-400" />
+            Parsed visually via Gemma 4 multimodal vision
+          </div>
+        </div>
+
+        {/* Right: Codebase Target Card */}
+        <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between gap-5">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-semibold text-white flex items-center gap-2">
+                <FolderGit2 className="w-4 h-4 text-sky-400" />
+                Target Codebase
+              </span>
+              <span className="text-xs text-slate-500">Local or GitHub</span>
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-slate-400 mb-1.5">
+                Repository Path or URL
+              </label>
+              <input
+                type="text"
+                className="w-full bg-slate-950/60 border border-slate-800 focus:border-sky-500 text-white px-3.5 py-2.5 rounded-xl text-xs font-mono outline-none transition-colors"
+                placeholder="e.g. demo/planted-drift or owner/repo"
+                value={repoUrl}
+                onChange={(e) => setRepoUrl(e.target.value)}
+              />
+              <div className="flex items-center gap-2 mt-2">
+                <span className="text-[11px] text-slate-500">Quick fill:</span>
                 <button
                   type="button"
-                  onClick={loadSampleDemo}
-                  class="w-full flex items-center justify-center gap-2 py-2 px-3 bg-surface-container hover:bg-surface-container-high text-on-surface rounded border border-outline-variant font-mono-label text-mono-label transition-colors"
+                  onClick={() => setRepoUrl('demo/planted-drift')}
+                  className="text-[11px] text-slate-400 hover:text-sky-300 underline"
                 >
-                  <span class="material-symbols-outlined text-primary-container text-[16px]">auto_awesome</span>
-                  <span>Load Planted-Drift Demo Setup</span>
+                  demo/planted-drift
+                </button>
+                <span className="text-slate-600">•</span>
+                <button
+                  type="button"
+                  onClick={() => setRepoUrl('.')}
+                  className="text-[11px] text-slate-400 hover:text-sky-300 underline"
+                >
+                  current repo (.)
                 </button>
               </div>
+            </div>
 
-              {/* Expandable Accordion */}
-              <div class="border border-outline-variant rounded bg-surface-container-lowest p-space-sm space-y-space-sm">
-                <div
-                  class="flex items-center justify-between pb-space-xs border-b border-outline-variant cursor-pointer"
-                  onClick={() => setAccordionOpen(!accordionOpen)}
-                >
-                  <div class="flex items-center gap-1.5">
-                    <span class="material-symbols-outlined text-primary-container text-[18px]">tune</span>
-                    <span class="text-mono-label font-mono-label text-on-surface font-semibold">
-                      Repository Auth &amp; Branch Configuration
-                    </span>
-                  </div>
-                  <span class="material-symbols-outlined text-outline text-[18px]">
-                    {accordionOpen ? 'expand_less' : 'expand_more'}
-                  </span>
-                </div>
-
-                {accordionOpen && (
-                  <div class="space-y-3 pt-1">
-                    <div class="space-y-1">
-                      <label class="block text-mono-label font-mono-label text-outline">Target Branch / Commit SHA</label>
-                      <div class="relative flex items-center">
-                        <div class="absolute left-2.5 text-on-surface-variant flex items-center">
-                          <span class="material-symbols-outlined text-[16px]">call_split</span>
-                        </div>
-                        <input
-                          class="w-full bg-surface-container border border-outline-variant focus:border-primary-container text-on-surface pl-8 pr-3 py-1.5 rounded font-mono-code text-mono-code outline-none text-xs"
-                          placeholder="main or commit SHA"
-                          type="text"
-                          value={branch}
-                          onChange={(e) => setBranch(e.target.value)}
-                        />
-                      </div>
-                    </div>
-
-                    <div class="space-y-1">
-                      <div class="flex items-center justify-between">
-                        <label class="block text-mono-label font-mono-label text-outline">
-                          GitHub Personal Access Token (PAT)
-                        </label>
-                        <span class="text-mono-label font-mono-label text-outline text-[10px]">Read-only repo scope</span>
-                      </div>
-                      <div class="relative flex items-center">
-                        <div class="absolute left-2.5 text-on-surface-variant flex items-center">
-                          <span class="material-symbols-outlined text-[16px]">key</span>
-                        </div>
-                        <input
-                          class="w-full bg-surface-container border border-outline-variant focus:border-primary-container text-on-surface pl-8 pr-3 py-1.5 rounded font-mono-code text-mono-code outline-none text-xs tracking-widest"
-                          placeholder="ghp_••••••••••••••••••••••••••••••••"
-                          type="password"
-                          value={token}
-                          onChange={(e) => setToken(e.target.value)}
-                        />
-                      </div>
-                    </div>
-
-                    <div class="flex items-start gap-2 p-2 rounded bg-surface-container border border-outline-variant">
-                      <span class="material-symbols-outlined text-primary-container text-[16px] mt-0.5">verified_user</span>
-                      <p class="text-mono-label font-mono-label text-outline text-[11px] leading-normal">
-                        Tokens are never stored or logged. Used strictly for ephemeral repository reads.
-                      </p>
-                    </div>
-                  </div>
+            {/* Collapsible Advanced Settings */}
+            <div className="border border-slate-800/80 rounded-xl bg-slate-950/40 overflow-hidden">
+              <button
+                type="button"
+                onClick={() => setShowAdvanced(!showAdvanced)}
+                className="w-full flex items-center justify-between p-3 text-xs text-slate-400 hover:text-slate-200 transition-colors"
+              >
+                <span className="font-medium">
+                  Branch &amp; GitHub Token (Optional)
+                </span>
+                {showAdvanced ? (
+                  <ChevronUp className="w-4 h-4" />
+                ) : (
+                  <ChevronDown className="w-4 h-4" />
                 )}
-              </div>
-            </div>
+              </button>
 
-            <div class="pt-2 border-t border-outline-variant flex items-center justify-between text-mono-label font-mono-label text-outline">
-              <span>Security: Pure ephemeral AST</span>
-              <span>Rate Limit: Monitored</span>
-            </div>
-          </div>
-        </section>
-
-        {/* Primary Action Footer */}
-        <section class="rounded bg-surface-container-low border border-outline-variant p-space-md flex flex-col sm:flex-row items-center justify-between gap-space-md">
-          <div class="flex items-center gap-space-sm text-left">
-            <div class="w-8 h-8 rounded bg-surface-container flex items-center justify-center border border-outline-variant text-primary-container shrink-0">
-              <span class="material-symbols-outlined text-[20px]">psychology</span>
-            </div>
-            <div>
-              <p class="font-headline-sm text-headline-sm text-on-surface">Ready to parse multimodal topology</p>
-              <p class="text-mono-label font-mono-label text-outline">Extracts nodes, edges, and dependencies using multimodal vision parser.</p>
-            </div>
-          </div>
-
-          <div class="w-full sm:w-auto shrink-0">
-            <button
-              onClick={handleSubmit}
-              disabled={loading}
-              class="w-full sm:w-auto flex items-center justify-center gap-2 px-space-lg py-2.5 rounded bg-primary-container hover:bg-primary-fixed-dim text-on-primary-container font-headline-sm text-headline-sm font-semibold transition-colors duration-150 border border-primary-container"
-            >
-              {loading ? (
-                <span>Extracting with Gemma 4...</span>
-              ) : (
-                <>
-                  <span>Extract Components with Gemma 4 Vision</span>
-                  <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-                </>
+              {showAdvanced && (
+                <div className="p-3.5 pt-0 space-y-3 border-t border-slate-800/60 mt-1">
+                  <div>
+                    <label className="block text-[11px] text-slate-400 mb-1">Target Branch</label>
+                    <input
+                      type="text"
+                      className="w-full bg-slate-900 border border-slate-800 text-white px-3 py-1.5 rounded-lg text-xs font-mono outline-none focus:border-sky-500"
+                      placeholder="main"
+                      value={branch}
+                      onChange={(e) => setBranch(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-[11px] text-slate-400">GitHub Personal Access Token</label>
+                      <span className="text-[10px] text-slate-500">Private repos only</span>
+                    </div>
+                    <input
+                      type="password"
+                      className="w-full bg-slate-900 border border-slate-800 text-white px-3 py-1.5 rounded-lg text-xs font-mono outline-none focus:border-sky-500"
+                      placeholder="ghp_••••••••••••••••••••••••••••••••"
+                      value={token}
+                      onChange={(e) => setToken(e.target.value)}
+                    />
+                  </div>
+                  <p className="text-[10px] text-slate-500 leading-tight">
+                    Tokens are never saved or stored. Used solely for in-memory reads.
+                  </p>
+                </div>
               )}
-            </button>
+            </div>
           </div>
-        </section>
+
+          <div className="text-xs text-slate-500 flex items-center gap-1.5">
+            <ShieldCheck className="w-3.5 h-3.5 text-slate-400" />
+            Zero AI in repository scanner — pure deterministic audit
+          </div>
+        </div>
+      </div>
+
+      {/* Prominent Action Button */}
+      <div className="flex justify-end pt-2">
+        <button
+          type="button"
+          onClick={handleSubmit}
+          disabled={loading}
+          className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-semibold text-sm shadow-lg shadow-sky-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {loading ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              <span>Analyzing Diagram with Gemma 4...</span>
+            </>
+          ) : (
+            <>
+              <span>Analyze Architecture</span>
+              <ArrowRight className="w-4 h-4" />
+            </>
+          )}
+        </button>
       </div>
     </main>
   );

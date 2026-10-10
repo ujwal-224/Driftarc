@@ -1,4 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import {
+  ExternalLink,
+  CheckCircle2,
+  Info,
+  Send,
+  Eye,
+  ArrowLeft,
+  AlertCircle,
+  Loader2
+} from 'lucide-react';
 import { draftIssues, createIssue } from '../api.js';
 
 export default function IssuePanel({
@@ -73,185 +83,152 @@ export default function IssuePanel({
   };
 
   return (
-    <main class="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
-      <div class="space-y-6">
-        {/* Header Block */}
-        <div class="border-b border-outline-variant pb-4 flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div>
-            <div class="flex items-center gap-2 mb-1">
-              <span class="font-mono-label text-mono-label text-primary px-1.5 py-0.5 border border-primary/40 bg-surface-container-lowest">
-                STEP 04 / ISSUE DISPATCH
-              </span>
-              <span class="font-mono-label text-mono-label text-outline-variant">// VERIFIED REMEDIATION TICKETS</span>
-            </div>
-            <h1 class="text-headline-lg font-headline-lg text-on-surface tracking-tight">
-              AI Issue Drafter &amp; GitHub Dispatcher
-            </h1>
-            <p class="text-body-sm font-body-sm text-on-surface-variant mt-1">
-              Gemma 4 drafts narrative titles and summaries from verified facts only. Concrete file and line evidence is appended deterministically by code.
-            </p>
-          </div>
-          <div class="flex items-center gap-2 font-mono-label text-mono-label">
-            <span class="text-on-surface-variant">ACTIONABLE DRIFTS:</span>
-            <span class="font-mono-metric text-headline-sm text-primary bg-[#12192B] px-2 py-0.5 border border-outline-variant">
-              {String(drafts.length).padStart(2, '0')}
-            </span>
-          </div>
+    <main className="w-full max-w-4xl mx-auto px-6 py-10 flex flex-col gap-8">
+      {/* Clean Header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-slate-800">
+        <div>
+          <h1 className="text-2xl font-bold text-white tracking-tight">
+            Drafted GitHub Issues
+          </h1>
+          <p className="text-sm text-slate-400 mt-1.5">
+            Gemma 4 generated issue narratives for {drafts.length} drift findings with verified code evidence attached.
+          </p>
         </div>
 
-        {error && (
-          <div class="p-3 bg-error-container/30 border border-error text-error text-xs font-mono-code rounded flex items-center gap-2">
-            <span class="material-symbols-outlined text-sm">warning</span>
-            <span>{error}</span>
-          </div>
-        )}
+        {/* Dry Run Toggle */}
+        <label className="flex items-center gap-2 cursor-pointer bg-slate-900 px-3.5 py-2 rounded-xl border border-slate-800 text-xs text-slate-300">
+          <input
+            type="checkbox"
+            checked={dryRun}
+            onChange={(e) => setDryRun(e.target.checked)}
+            className="w-4 h-4 rounded bg-slate-800 border-slate-700 text-sky-500 focus:ring-0"
+          />
+          <span>Dry Run Mode (Simulate)</span>
+        </label>
+      </div>
 
-        {/* Control Bar */}
-        <div class="bg-surface-container-low border border-outline-variant p-space-md rounded flex flex-wrap items-center justify-between gap-4">
-          <div class="flex items-center gap-3">
-            <label class="flex items-center gap-2 cursor-pointer font-mono-label text-mono-label text-on-surface">
-              <input
-                type="checkbox"
-                checked={dryRun}
-                onChange={(e) => setDryRun(e.target.checked)}
-                class="w-4 h-4 rounded bg-surface-container border-outline-variant text-primary-container focus:ring-0 focus:outline-none"
-              />
-              <span>Dry Run Mode</span>
-            </label>
-            <span class="text-outline text-xs">•</span>
-            <span class="text-mono-label font-mono-label text-outline text-xs">
-              Simulates creation locally without publishing to GitHub
-            </span>
-          </div>
-
-          <div class="flex items-center gap-2 font-mono-label text-mono-label text-xs">
-            <span class="text-on-surface-variant">Target Repo:</span>
-            <code class="px-2 py-0.5 rounded bg-surface-container text-primary border border-outline-variant">
-              {repoUrl || 'Local Repo'}
-            </code>
-          </div>
+      {error && (
+        <div className="p-3.5 bg-rose-950/40 border border-rose-800/80 text-rose-300 text-xs rounded-xl flex items-center gap-2.5">
+          <AlertCircle className="w-4 h-4 shrink-0" />
+          <span>{error}</span>
         </div>
+      )}
 
-        {loading ? (
-          <div class="space-y-4">
-            <div class="h-6 w-1/3 bg-surface-container rounded skeleton-shimmer"></div>
-            <div class="h-64 bg-surface-container rounded skeleton-shimmer"></div>
-          </div>
-        ) : drafts.length === 0 ? (
-          <div class="bg-surface-container-low border border-outline-variant rounded p-12 text-center">
-            <span class="material-symbols-outlined text-4xl text-[#10B981] mb-2">verified</span>
-            <h3 class="text-headline-sm font-headline-sm text-on-surface">Zero Architectural Drift Detected</h3>
-            <p class="text-body-sm font-body-sm text-on-surface-variant mt-1">
-              All declared components match cleanly in your codebase. No issues need to be drafted.
-            </p>
-          </div>
-        ) : (
-          <div class="space-y-6">
-            {drafts.map((draft, idx) => {
-              const result = createdResults[idx];
-              const isSubmitting = submittingIndex === idx;
-              const isMismatch = draft.finding?.status === 'mismatch';
-              const borderColor = isMismatch ? '#F43F5E' : '#F59E0B';
+      {loading ? (
+        <div className="p-12 text-center text-slate-400 text-sm flex flex-col items-center gap-3">
+          <Loader2 className="w-5 h-5 animate-spin text-sky-400" />
+          <span>Drafting issues with Gemma 4...</span>
+        </div>
+      ) : drafts.length === 0 ? (
+        <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-12 text-center">
+          <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
+          <h3 className="text-base font-semibold text-white">No Actionable Drift Detected</h3>
+          <p className="text-xs text-slate-400 mt-1">
+            All components match cleanly in your codebase. No issues need to be drafted.
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-6">
+          {drafts.map((draft, idx) => {
+            const result = createdResults[idx];
+            const isSubmitting = submittingIndex === idx;
+            const isMismatch = draft.finding?.status === 'mismatch';
 
-              return (
-                <div
-                  key={idx}
-                  class="bg-surface-container-low border border-outline-variant rounded overflow-hidden p-space-md space-y-4"
-                  style={{ borderLeft: `3px solid ${borderColor}` }}
-                >
-                  <div class="flex items-center justify-between border-b border-outline-variant pb-3">
-                    <div class="flex items-center gap-2">
-                      <span
-                        class="px-2 py-0.5 rounded text-mono-label font-mono-label font-semibold border"
-                        style={{ borderColor, color: borderColor }}
-                      >
-                        {draft.finding?.status?.toUpperCase()}
-                      </span>
-                      <span class="text-headline-sm font-headline-sm text-on-surface">
-                        {draft.finding?.name}
-                      </span>
-                    </div>
-                    <span class="text-mono-label font-mono-label text-outline text-xs">
-                      TICKET-0{idx + 1}
+            return (
+              <div
+                key={idx}
+                className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 space-y-4"
+                style={{ borderLeft: `3px solid ${isMismatch ? '#F43F5E' : '#F59E0B'}` }}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className={`text-[10px] uppercase font-semibold px-2 py-0.5 rounded-md border ${
+                      isMismatch ? 'bg-rose-500/10 text-rose-400 border-rose-500/30' : 'bg-amber-500/10 text-amber-400 border-amber-500/30'
+                    }`}>
+                      {draft.finding?.status?.toUpperCase()}
+                    </span>
+                    <span className="text-sm font-semibold text-white">
+                      {draft.finding?.name}
                     </span>
                   </div>
-
-                  <div class="space-y-1.5">
-                    <label class="block text-mono-label font-mono-label text-on-surface-variant">
-                      Issue Title
-                    </label>
-                    <input
-                      type="text"
-                      class="w-full bg-surface-container-lowest border border-outline-variant focus:border-primary-container text-on-surface px-3 py-2 rounded font-mono-code text-xs outline-none"
-                      value={draft.title}
-                      onChange={(e) => handleUpdateTitle(idx, e.target.value)}
-                    />
-                  </div>
-
-                  <div class="space-y-1.5">
-                    <label class="block text-mono-label font-mono-label text-on-surface-variant">
-                      Markdown Body &amp; Appended Code Evidence
-                    </label>
-                    <textarea
-                      rows={10}
-                      class="w-full bg-surface-container-lowest border border-outline-variant focus:border-primary-container text-on-surface p-3 rounded font-mono-code text-xs outline-none resize-y"
-                      value={draft.body}
-                      onChange={(e) => handleUpdateBody(idx, e.target.value)}
-                    />
-                  </div>
-
-                  {result && (
-                    <div
-                      class={`p-3 rounded border text-xs font-mono-code flex items-center gap-2 ${
-                        result.dryRun
-                          ? 'bg-surface-container border-primary text-primary'
-                          : 'bg-surface-container border-[#10B981] text-[#10B981]'
-                      }`}
-                    >
-                      <span class="material-symbols-outlined text-sm">
-                        {result.dryRun ? 'info' : 'check_circle'}
-                      </span>
-                      {result.dryRun ? (
-                        <span>[Dry-Run Simulation Succeeded]: {result.message}</span>
-                      ) : (
-                        <span>
-                          GitHub Issue Created: <a href={result.htmlUrl} target="_blank" rel="noreferrer" class="underline font-bold">#{result.number} {result.title}</a>
-                        </span>
-                      )}
-                    </div>
-                  )}
-
-                  <div class="flex items-center justify-end gap-3 pt-2">
-                    <button
-                      type="button"
-                      disabled={isSubmitting}
-                      onClick={() => handleSubmitIssue(idx)}
-                      class="px-5 py-2 rounded bg-primary-container hover:bg-primary-fixed-dim text-on-primary-container font-semibold text-xs font-mono-label transition-colors flex items-center gap-2"
-                    >
-                      <span class="material-symbols-outlined text-base">
-                        {dryRun ? 'visibility' : 'send'}
-                      </span>
-                      <span>
-                        {isSubmitting ? 'Processing...' : dryRun ? 'Dry-Run Issue' : 'Create Real GitHub Issue'}
-                      </span>
-                    </button>
-                  </div>
                 </div>
-              );
-            })}
-          </div>
-        )}
 
-        {/* Back Action */}
-        <div class="pt-4 border-t border-outline-variant">
-          <button
-            onClick={onBack}
-            class="px-4 py-2 bg-surface-container hover:bg-surface-container-high border border-outline-variant text-on-surface font-mono-label text-xs rounded transition-colors flex items-center gap-1.5"
-          >
-            <span class="material-symbols-outlined text-sm">arrow_back</span>
-            Back to Scan Findings
-          </button>
+                <div>
+                  <label className="block text-xs font-medium text-slate-400 mb-1">Issue Title</label>
+                  <input
+                    type="text"
+                    className="w-full bg-slate-950/60 border border-slate-800 text-white px-3.5 py-2 rounded-xl text-xs font-mono outline-none focus:border-sky-500"
+                    value={draft.title}
+                    onChange={(e) => handleUpdateTitle(idx, e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-slate-400 mb-1">Issue Body &amp; Appended Evidence</label>
+                  <textarea
+                    rows={8}
+                    className="w-full bg-slate-950/60 border border-slate-800 text-slate-300 p-3.5 rounded-xl text-xs font-mono outline-none focus:border-sky-500 resize-y"
+                    value={draft.body}
+                    onChange={(e) => handleUpdateBody(idx, e.target.value)}
+                  />
+                </div>
+
+                {result && (
+                  <div className={`p-3 rounded-xl border text-xs flex items-center gap-2 ${
+                    result.dryRun
+                      ? 'bg-sky-500/10 border-sky-500/30 text-sky-300'
+                      : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+                  }`}>
+                    {result.dryRun ? <Info className="w-4 h-4 shrink-0" /> : <CheckCircle2 className="w-4 h-4 shrink-0" />}
+                    {result.dryRun ? (
+                      <span>[Simulation]: {result.message}</span>
+                    ) : (
+                      <span className="flex items-center gap-1.5">
+                        Issue published:{' '}
+                        <a href={result.htmlUrl} target="_blank" rel="noreferrer" className="underline font-bold flex items-center gap-1">
+                          #{result.number} {result.title}
+                          <ExternalLink className="w-3 h-3 inline" />
+                        </a>
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                <div className="flex justify-end pt-1">
+                  <button
+                    type="button"
+                    disabled={isSubmitting}
+                    onClick={() => handleSubmitIssue(idx)}
+                    className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-medium border border-slate-700 transition-colors flex items-center gap-2"
+                  >
+                    {isSubmitting ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    ) : dryRun ? (
+                      <Eye className="w-3.5 h-3.5" />
+                    ) : (
+                      <Send className="w-3.5 h-3.5" />
+                    )}
+                    <span>
+                      {isSubmitting ? 'Processing...' : dryRun ? 'Preview Simulation' : 'Publish to GitHub'}
+                    </span>
+                  </button>
+                </div>
+              </div>
+            );
+          })}
         </div>
+      )}
+
+      {/* Back Navigation */}
+      <div className="pt-6 border-t border-slate-800">
+        <button
+          type="button"
+          onClick={onBack}
+          className="px-5 py-2.5 rounded-xl border border-slate-800 hover:bg-slate-900 text-slate-300 text-xs font-medium transition-colors flex items-center gap-1.5"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Scan Results
+        </button>
       </div>
     </main>
   );
