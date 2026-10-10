@@ -300,7 +300,7 @@ export default function Results({
         <button
           type="button"
           onClick={onProceedToIssues}
-          className="px-7 py-3 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-semibold text-xs shadow-lg shadow-sky-500/20 transition-all flex items-center gap-2"
+          className="px-7 py-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs shadow-md transition-all flex items-center gap-2"
         >
           <span>Draft GitHub Issues with Gemma 4</span>
           <ArrowRight className="w-4 h-4" />

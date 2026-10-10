@@ -93,19 +93,19 @@ export default function App() {
       <div className="fixed inset-0 bg-dot-pattern opacity-40 pointer-events-none z-0"></div>
 
       {/* Modern Frosted Header */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#080c14]/80 border-b border-white/[0.08] px-6 h-16 flex items-center justify-between">
+      <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#080c14]/90 border-b border-white/[0.08] px-6 h-16 flex items-center justify-between">
         {/* Brand */}
         <div
           onClick={() => setView('landing')}
           className="flex items-center gap-3 cursor-pointer group"
           title="Back to Landing Page"
         >
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 via-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-sky-500/25 ring-1 ring-white/20 group-hover:scale-105 transition-transform">
+          <div className="w-9 h-9 rounded-xl bg-sky-600 flex items-center justify-center text-white shadow-md ring-1 ring-white/10 group-hover:bg-sky-500 transition-colors">
             <Layers className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-base font-bold bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent tracking-tight">
+              <span className="text-base font-bold text-white tracking-tight">
                 DriftArc
               </span>
               <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-sky-500/10 text-sky-400 border border-sky-500/20 font-semibold tracking-wide">
@@ -160,7 +160,7 @@ export default function App() {
                     disabled={!isAccessible}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                       isActive
-                        ? 'bg-gradient-to-r from-sky-500 to-indigo-600 text-white shadow-md shadow-sky-500/20'
+                        ? 'bg-sky-600 text-white shadow-sm'
                         : isCompleted
                         ? 'text-emerald-400 hover:bg-white/[0.06]'
                         : isAccessible
@@ -193,7 +193,7 @@ export default function App() {
           {view === 'landing' ? (
             <button
               onClick={() => setView('studio')}
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white text-xs font-bold shadow-md shadow-sky-500/20 transition-all flex items-center gap-1.5"
+              className="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold shadow-sm transition-all flex items-center gap-1.5"
             >
               <span>Launch Studio</span>
               <ArrowRight className="w-3.5 h-3.5" />

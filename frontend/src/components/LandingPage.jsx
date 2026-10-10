@@ -39,11 +39,11 @@ export default function LandingPage({ onLaunchStudio }) {
             {/* Headline */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] text-white">
               Your architecture diagram is{' '}
-              <span className="bg-gradient-to-r from-rose-400 via-amber-300 to-rose-400 bg-clip-text text-transparent">
+              <span className="text-rose-400">
                 lying.
               </span>
               <br />
-              <span className="bg-gradient-to-r from-sky-400 via-indigo-300 to-white bg-clip-text text-transparent">
+              <span className="text-sky-400">
                 DriftArc uncovers the truth.
               </span>
             </h1>
@@ -59,7 +59,7 @@ export default function LandingPage({ onLaunchStudio }) {
               <button
                 type="button"
                 onClick={onLaunchStudio}
-                className="px-8 py-4 rounded-2xl bg-gradient-to-r from-sky-500 via-indigo-600 to-purple-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold text-sm shadow-xl shadow-sky-500/25 ring-1 ring-white/20 transition-all flex items-center gap-2.5 group"
+                className="px-8 py-4 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-semibold text-sm shadow-md transition-all flex items-center gap-2.5 group"
               >
                 <span>Launch DriftArc Studio</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -93,8 +93,8 @@ export default function LandingPage({ onLaunchStudio }) {
 
           {/* Right 3D Scene Viewport (5 Cols) */}
           <div className="lg:col-span-5 relative w-full h-[460px] sm:h-[540px] flex items-center justify-center">
-            {/* Ambient Back Glow */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-sky-500/20 via-indigo-500/10 to-purple-500/20 rounded-3xl filter blur-3xl opacity-70 pointer-events-none"></div>
+            {/* Ambient Back Panel */}
+            <div className="absolute inset-0 bg-slate-900/40 rounded-3xl pointer-events-none"></div>
 
             {/* Glass Container Framing 3D Canvas */}
             <div className="relative w-full h-full rounded-3xl glass-panel p-2 overflow-hidden flex flex-col justify-between shadow-2xl">
@@ -247,10 +247,10 @@ export default function LandingPage({ onLaunchStudio }) {
           <button
             type="button"
             onClick={onLaunchStudio}
-            className="px-10 py-4 rounded-2xl bg-gradient-to-r from-sky-500 via-indigo-600 to-purple-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold text-base shadow-2xl shadow-sky-500/30 ring-1 ring-white/20 transition-all inline-flex items-center gap-3 group"
+            className="px-8 py-4 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-semibold text-sm shadow-md transition-all inline-flex items-center gap-2.5 group"
           >
             <span>Launch DriftArc Studio</span>
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
       </section>

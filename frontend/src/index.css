@@ -16,22 +16,19 @@
   }
 }
 
-/* Background Atmosphere Grid & Radial Glow */
+/* Clean Minimal Background Atmosphere */
 .bg-mesh-glow {
-  background-image: 
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(56, 189, 248, 0.15), transparent 70%),
-    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(99, 102, 241, 0.08), transparent 70%),
-    radial-gradient(ellipse 50% 30% at 20% 80%, rgba(168, 85, 247, 0.06), transparent 70%);
+  background: transparent;
 }
 
 .bg-dot-pattern {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
   background-size: 24px 24px;
 }
 
 /* Glassmorphism Card Style */
 .glass-panel {
-  background: rgba(15, 23, 42, 0.55);
+  background: rgba(15, 23, 42, 0.65);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -49,17 +46,16 @@
 .glass-card-interactive:hover {
   transform: translateY(-2px);
   border-color: rgba(56, 189, 248, 0.3);
-  box-shadow: 0 24px 48px -12px rgba(56, 189, 248, 0.12);
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.4);
 }
 
-/* Skeleton Loading Shimmer */
+/* Skeleton Loading (Clean solid pulse) */
 .skeleton-shimmer {
-  background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+  background-color: #1e293b;
+  animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-@keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }

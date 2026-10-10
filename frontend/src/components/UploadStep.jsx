@@ -103,7 +103,7 @@ export default function UploadStep({
           <span>Multimodal Vision + Deterministic Code Scanner</span>
         </div>
 
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight bg-gradient-to-b from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white">
           Audit Architecture Against Real Code
         </h1>
 
@@ -156,7 +156,7 @@ export default function UploadStep({
                     className="hidden"
                     onChange={(e) => handleFileChange(e.target.files[0])}
                   />
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-sky-500/20 to-indigo-500/20 border border-sky-500/30 flex items-center justify-center text-sky-400 mb-3 shadow-lg shadow-sky-500/10 group-hover:scale-105 transition-transform">
+                  <div className="w-14 h-14 rounded-2xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400 mb-3 shadow-md group-hover:scale-105 transition-transform">
                     <UploadCloud className="w-7 h-7" />
                   </div>
                   <p className="text-sm font-semibold text-white">
@@ -316,7 +316,7 @@ export default function UploadStep({
             type="button"
             onClick={handleSubmit}
             disabled={loading}
-            className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-sky-500 via-indigo-600 to-purple-600 hover:from-sky-400 hover:to-indigo-500 text-white font-semibold text-sm shadow-xl shadow-sky-500/25 ring-1 ring-white/20 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed group"
+            className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-semibold text-sm shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed group"
           >
             {loading ? (
               <>
