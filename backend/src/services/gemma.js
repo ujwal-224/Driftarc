@@ -29,44 +29,69 @@ async function callGeminiApi({ prompt, imageBuffer, mimeType }) {
     throw new Error('GEMINI_API_KEY is not configured in .env');
   }
 
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+  // Model fallback chain if primary model experiences 503 spikes or 429 limits
+  const candidateModels = [model, 'gemini-3.5-flash', 'gemini-3.7-flash'].filter(
+    (m, idx, arr) => arr.indexOf(m) === idx
+  );
 
-  const parts = [];
-  if (imageBuffer && mimeType) {
-    const base64Data = imageBuffer.toString('base64');
-    parts.push({
-      inlineData: {
-        mimeType: mimeType || 'image/png',
-        data: base64Data
+  let lastError;
+  for (const candidate of candidateModels) {
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${candidate}:generateContent?key=${apiKey}`;
+
+    const parts = [];
+    if (imageBuffer && mimeType) {
+      const base64Data = imageBuffer.toString('base64');
+      parts.push({
+        inlineData: {
+          mimeType: mimeType || 'image/png',
+          data: base64Data
+        }
+      });
+    }
+    parts.push({ text: prompt });
+
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts }],
+          generationConfig: {
+            temperature: 0.1,
+            responseMimeType: 'application/json'
+          }
+        })
+      });
+
+      if (!response.ok) {
+        const errorBody = await response.text();
+        // If 503 (high demand) or 429 (rate limit), try fallback model
+        if ((response.status === 503 || response.status === 429) && candidate !== candidateModels[candidateModels.length - 1]) {
+          console.warn(`[DriftCheck] Model ${candidate} returned ${response.status}, attempting fallback...`);
+          lastError = new Error(`Gemini API error (${response.status}) on ${candidate}: ${errorBody}`);
+          continue;
+        }
+        throw new Error(`Gemini API error (${response.status}): ${errorBody}`);
       }
-    });
-  }
-  parts.push({ text: prompt });
 
-  const response = await fetch(endpoint, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{ parts }],
-      generationConfig: {
-        temperature: 0.1,
-        responseMimeType: 'application/json'
+      const data = await response.json();
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!text) {
+        throw new Error('Empty response received from Gemini API');
       }
-    })
-  });
 
-  if (!response.ok) {
-    const errorBody = await response.text();
-    throw new Error(`Gemini API error (${response.status}): ${errorBody}`);
+      return extractJson(text);
+    } catch (err) {
+      lastError = err;
+      if (candidate !== candidateModels[candidateModels.length - 1]) {
+        console.warn(`[DriftCheck] Model ${candidate} failed (${err.message}), trying fallback...`);
+        continue;
+      }
+      throw err;
+    }
   }
 
-  const data = await response.json();
-  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (!text) {
-    throw new Error('Empty response received from Gemini API');
-  }
-
-  return extractJson(text);
+  throw lastError || new Error('All candidate Gemini models failed');
 }
 
 /**
