@@ -1,5 +1,5 @@
 /**
- * Frontend API client communicating via the Vite proxy to DriftCheck backend.
+ * Frontend API client communicating via the Vite proxy to DriftArc backend.
  */
 
 export async function checkHealth() {

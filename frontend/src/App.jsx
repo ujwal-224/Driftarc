@@ -106,7 +106,7 @@ export default function App() {
           <div>
             <div className="flex items-center gap-2">
               <span className="text-base font-bold bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent tracking-tight">
-                DriftCheck
+                DriftArc
               </span>
               <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-sky-500/10 text-sky-400 border border-sky-500/20 font-semibold tracking-wide">
                 v2.4

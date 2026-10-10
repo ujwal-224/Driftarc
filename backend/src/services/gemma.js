@@ -253,7 +253,7 @@ Do NOT fabricate file paths or lines (factual evidence is automatically appended
 
 Return strictly JSON:
 {
-  "title": "[DriftCheck] Brief descriptive issue title",
+  "title": "[DriftArc] Brief descriptive issue title",
   "description": "Clear explanation of the drift and recommended actions."
 }`;
 
@@ -266,13 +266,13 @@ Return strictly JSON:
     }
 
     return {
-      title: result?.title || `[DriftCheck] Architecture Drift: ${finding.name} (${finding.status})`,
+      title: result?.title || `[DriftArc] Architecture Drift: ${finding.name} (${finding.status})`,
       description: result?.description || `Architecture discrepancy identified: ${finding.reason}`
     };
   } catch (error) {
     // Fallback template when LLM call fails or key is missing
     return {
-      title: `[DriftCheck] ${finding.status === 'mismatch' ? 'Missing Component' : 'Undocumented Component'}: ${finding.name}`,
+      title: `[DriftArc] ${finding.status === 'mismatch' ? 'Missing Component' : 'Undocumented Component'}: ${finding.name}`,
       description: `### Architecture Drift Identified\n\n**Component:** ${finding.name}\n**Finding Type:** ${finding.status.toUpperCase()}\n\n**Summary:**\n${finding.reason}\n\n*Note: LLM drafting was offline (${error.message}). Generated standard deterministic issue template.*`
     };
   }

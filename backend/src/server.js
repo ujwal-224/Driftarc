@@ -15,14 +15,14 @@ app.use('/api', router);
 // Root greeting / health
 app.get('/', (req, res) => {
   res.json({
-    app: 'DriftCheck Backend',
+    app: 'DriftArc Backend',
     status: 'running',
     docs: '/api/health'
   });
 });
 
 const server = app.listen(config.port, () => {
-  console.log(`[DriftCheck] Backend server running on http://localhost:${config.port}`);
+  console.log(`[DriftArc] Backend server running on http://localhost:${config.port}`);
 });
 
 export { app, server };

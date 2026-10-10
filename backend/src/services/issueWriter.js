@@ -35,7 +35,7 @@ export function formatEvidenceMarkdown(finding) {
     lines.push('\n*No codebase references were found.*');
   }
 
-  lines.push('\n*Generated deterministically by DriftCheck.*');
+  lines.push('\n*Generated deterministically by DriftArc.*');
   return lines.join('\n');
 }
 

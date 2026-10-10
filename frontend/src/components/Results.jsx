@@ -28,7 +28,7 @@ export default function Results({
   });
 
   const handleCopyMarkdown = () => {
-    let md = `# DriftCheck Architecture Audit Report\n\n`;
+    let md = `# DriftArc Architecture Audit Report\n\n`;
     md += `**Target:** \`${repoUrl}\` (${branch})\n`;
     md += `**Files Scanned:** ${filesScanned}\n`;
     md += `**Summary:** ${summary.match} Matched | ${summary.mismatch} Mismatches | ${summary.undocumented} Undocumented | ${summary.unknown} Unknown\n\n`;

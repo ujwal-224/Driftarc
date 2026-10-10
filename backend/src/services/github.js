@@ -28,7 +28,7 @@ export async function createGitHubIssue({ owner, repo, title, body, token, dryRu
       'Accept': 'application/vnd.github.v3+json',
       'Authorization': `token ${token}`,
       'Content-Type': 'application/json',
-      'User-Agent': 'DriftCheck-IssueWriter'
+      'User-Agent': 'DriftArc-IssueWriter'
     },
     body: JSON.stringify({ title, body })
   });

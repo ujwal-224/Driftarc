@@ -18,7 +18,7 @@ export const router = express.Router();
 router.get('/health', (req, res) => {
   res.json({
     status: 'ok',
-    service: 'DriftCheck API',
+    service: 'DriftArc API',
     timestamp: new Date().toISOString()
   });
 });

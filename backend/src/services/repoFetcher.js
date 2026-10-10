@@ -82,7 +82,7 @@ export function fetchLocalRepo(dirPath) {
 export async function fetchGitHubRepo({ owner, repo, branch, token }) {
   const headers = {
     'Accept': 'application/vnd.github.v3+json',
-    'User-Agent': 'DriftCheck-Scanner'
+    'User-Agent': 'DriftArc-Scanner'
   };
   if (token) {
     headers['Authorization'] = `token ${token}`;

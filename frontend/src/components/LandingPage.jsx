@@ -44,7 +44,7 @@ export default function LandingPage({ onLaunchStudio }) {
               </span>
               <br />
               <span className="bg-gradient-to-r from-sky-400 via-indigo-300 to-white bg-clip-text text-transparent">
-                DriftCheck uncovers the truth.
+                DriftArc uncovers the truth.
               </span>
             </h1>
 
@@ -61,7 +61,7 @@ export default function LandingPage({ onLaunchStudio }) {
                 onClick={onLaunchStudio}
                 className="px-8 py-4 rounded-2xl bg-gradient-to-r from-sky-500 via-indigo-600 to-purple-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold text-sm shadow-xl shadow-sky-500/25 ring-1 ring-white/20 transition-all flex items-center gap-2.5 group"
               >
-                <span>Launch DriftCheck Studio</span>
+                <span>Launch DriftArc Studio</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
 
@@ -125,10 +125,10 @@ export default function LandingPage({ onLaunchStudio }) {
             <span>The Deterministic Solution</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-            How DriftCheck Solves Architectural Erosion
+            How DriftArc Solves Architectural Erosion
           </h2>
           <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-            Most teams update code but forget diagrams. DriftCheck creates a continuous feedback loop between visual documentation and source repositories.
+            Most teams update code but forget diagrams. DriftArc creates a continuous feedback loop between visual documentation and source repositories.
           </p>
         </div>
 
@@ -213,13 +213,13 @@ export default function LandingPage({ onLaunchStudio }) {
                   <div className="w-3 h-3 rounded-full bg-rose-500/80"></div>
                   <div className="w-3 h-3 rounded-full bg-amber-500/80"></div>
                   <div className="w-3 h-3 rounded-full bg-emerald-500/80"></div>
-                  <span className="text-slate-400 ml-2">driftcheck-audit.log</span>
+                  <span className="text-slate-400 ml-2">driftarc-audit.log</span>
                 </div>
                 <span>git: main</span>
               </div>
 
               <div className="space-y-1.5 text-slate-300 pt-1">
-                <p className="text-sky-400">$ driftcheck scan --diagram ./arch.png --repo ./backend</p>
+                <p className="text-sky-400">$ driftarc scan --diagram ./arch.png --repo ./backend</p>
                 <p className="text-slate-400">Scanning repository: 34 source files, 3 package manifests...</p>
                 <p className="text-emerald-400">  [MATCH] React Client ➔ frontend/package.json:L8</p>
                 <p className="text-emerald-400">  [MATCH] Express API   ➔ backend/package.json:L9</p>
@@ -249,7 +249,7 @@ export default function LandingPage({ onLaunchStudio }) {
             onClick={onLaunchStudio}
             className="px-10 py-4 rounded-2xl bg-gradient-to-r from-sky-500 via-indigo-600 to-purple-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold text-base shadow-2xl shadow-sky-500/30 ring-1 ring-white/20 transition-all inline-flex items-center gap-3 group"
           >
-            <span>Launch DriftCheck Studio</span>
+            <span>Launch DriftArc Studio</span>
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />
           </button>
         </div>
