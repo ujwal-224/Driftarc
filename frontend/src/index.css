@@ -59,3 +59,33 @@
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
 }
+
+/* ================= Light Theme Specific Overrides ================= */
+html:not(.dark) body, html.light body {
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+html:not(.dark) .bg-dot-pattern, html.light .bg-dot-pattern {
+  background-image: radial-gradient(rgba(15, 23, 42, 0.08) 1px, transparent 1px);
+}
+
+html:not(.dark) .glass-panel, html.light .glass-panel {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.06), 0 4px 6px -4px rgba(15, 23, 42, 0.03);
+  color: #0f172a;
+}
+
+html:not(.dark) .glass-panel:hover, html.light .glass-panel:hover {
+  border-color: rgba(203, 213, 225, 1);
+}
+
+html:not(.dark) .glass-card-interactive:hover, html.light .glass-card-interactive:hover {
+  box-shadow: 0 16px 32px -8px rgba(15, 23, 42, 0.1);
+  border-color: rgba(2, 132, 199, 0.4);
+}
+
+html:not(.dark) .skeleton-shimmer, html.light .skeleton-shimmer {
+  background-color: #e2e8f0;
+}

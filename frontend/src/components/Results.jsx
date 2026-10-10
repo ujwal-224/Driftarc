@@ -85,22 +85,22 @@ export default function Results({
   return (
     <main className="w-full max-w-5xl mx-auto px-6 py-10 flex flex-col gap-8">
       {/* Clean Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
             Architecture Scan Results
           </h1>
-          <p className="text-sm text-slate-400 mt-1.5">
-            Audit results for <code className="text-sky-400 font-mono bg-slate-900 px-2 py-0.5 rounded border border-slate-800">{repoUrl}</code> ({filesScanned} files scanned).
+          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1.5">
+            Audit results for <code className="text-sky-600 dark:text-sky-400 font-mono bg-slate-100 dark:bg-slate-900 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-800">{repoUrl}</code> ({filesScanned} files scanned).
           </p>
         </div>
 
         <button
           type="button"
           onClick={handleCopyMarkdown}
-          className="self-start sm:self-auto flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-xs font-medium text-slate-300 transition-colors"
+          className="self-start sm:self-auto flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-xs font-medium text-slate-700 dark:text-slate-300 transition-colors shadow-sm"
         >
-          {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+          {copied ? <Check className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
           <span>{copied ? 'Copied to Clipboard' : 'Copy Markdown Report'}</span>
         </button>
       </div>
@@ -108,62 +108,62 @@ export default function Results({
       {/* 4 Clean Metric Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Matches */}
-        <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between">
-          <span className="text-xs font-medium text-slate-400 flex items-center justify-between">
+        <div className="bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col justify-between shadow-sm">
+          <span className="text-xs font-medium text-slate-600 dark:text-slate-400 flex items-center justify-between">
             Matched
-            <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
           </span>
           <div className="mt-2">
-            <span className="text-3xl font-bold text-emerald-400 font-mono">{summary.match || 0}</span>
+            <span className="text-3xl font-bold text-emerald-600 dark:text-emerald-400 font-mono">{summary.match || 0}</span>
             <p className="text-xs text-slate-500 mt-0.5">Found in diagram &amp; code</p>
           </div>
         </div>
 
         {/* Mismatches */}
-        <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between">
-          <span className="text-xs font-medium text-slate-400 flex items-center justify-between">
+        <div className="bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col justify-between shadow-sm">
+          <span className="text-xs font-medium text-slate-600 dark:text-slate-400 flex items-center justify-between">
             Mismatches
-            <span className="w-2 h-2 rounded-full bg-rose-400"></span>
+            <span className="w-2 h-2 rounded-full bg-rose-500"></span>
           </span>
           <div className="mt-2">
-            <span className="text-3xl font-bold text-rose-400 font-mono">{summary.mismatch || 0}</span>
+            <span className="text-3xl font-bold text-rose-600 dark:text-rose-400 font-mono">{summary.mismatch || 0}</span>
             <p className="text-xs text-slate-500 mt-0.5">In diagram, missing in code</p>
           </div>
         </div>
 
         {/* Undocumented */}
-        <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between">
-          <span className="text-xs font-medium text-slate-400 flex items-center justify-between">
+        <div className="bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col justify-between shadow-sm">
+          <span className="text-xs font-medium text-slate-600 dark:text-slate-400 flex items-center justify-between">
             Undocumented
-            <span className="w-2 h-2 rounded-full bg-amber-400"></span>
+            <span className="w-2 h-2 rounded-full bg-amber-500"></span>
           </span>
           <div className="mt-2">
-            <span className="text-3xl font-bold text-amber-400 font-mono">{summary.undocumented || 0}</span>
+            <span className="text-3xl font-bold text-amber-600 dark:text-amber-400 font-mono">{summary.undocumented || 0}</span>
             <p className="text-xs text-slate-500 mt-0.5">In code, missing from diagram</p>
           </div>
         </div>
 
         {/* Unknown */}
-        <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between">
-          <span className="text-xs font-medium text-slate-400 flex items-center justify-between">
+        <div className="bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col justify-between shadow-sm">
+          <span className="text-xs font-medium text-slate-600 dark:text-slate-400 flex items-center justify-between">
             Unknown
-            <span className="w-2 h-2 rounded-full bg-purple-400"></span>
+            <span className="w-2 h-2 rounded-full bg-purple-500"></span>
           </span>
           <div className="mt-2">
-            <span className="text-3xl font-bold text-purple-400 font-mono">{summary.unknown || 0}</span>
+            <span className="text-3xl font-bold text-purple-600 dark:text-purple-400 font-mono">{summary.unknown || 0}</span>
             <p className="text-xs text-slate-500 mt-0.5">Uncataloged technologies</p>
           </div>
         </div>
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-800 pb-3 overflow-x-auto">
+      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3 overflow-x-auto">
         <button
           onClick={() => setFilter('all')}
           className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
             filter === 'all'
-              ? 'bg-sky-500 text-white'
-              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+              ? 'bg-sky-600 text-white'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900'
           }`}
         >
           All Signals ({findings.length})
@@ -172,8 +172,8 @@ export default function Results({
           onClick={() => setFilter('match')}
           className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
             filter === 'match'
-              ? 'bg-emerald-500 text-white'
-              : 'text-slate-400 hover:text-emerald-400 hover:bg-slate-900'
+              ? 'bg-emerald-600 text-white'
+              : 'text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-100 dark:hover:bg-slate-900'
           }`}
         >
           Matches ({summary.match || 0})
@@ -182,8 +182,8 @@ export default function Results({
           onClick={() => setFilter('mismatch')}
           className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
             filter === 'mismatch'
-              ? 'bg-rose-500 text-white'
-              : 'text-slate-400 hover:text-rose-400 hover:bg-slate-900'
+              ? 'bg-rose-600 text-white'
+              : 'text-slate-600 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-slate-900'
           }`}
         >
           Mismatches ({summary.mismatch || 0})
@@ -192,8 +192,8 @@ export default function Results({
           onClick={() => setFilter('undocumented')}
           className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
             filter === 'undocumented'
-              ? 'bg-amber-500 text-white'
-              : 'text-slate-400 hover:text-amber-400 hover:bg-slate-900'
+              ? 'bg-amber-600 text-white'
+              : 'text-slate-600 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-slate-100 dark:hover:bg-slate-900'
           }`}
         >
           Undocumented ({summary.undocumented || 0})
@@ -208,12 +208,12 @@ export default function Results({
           return (
             <div
               key={idx}
-              className="bg-slate-900/40 border border-slate-800 rounded-2xl p-5 space-y-3.5 transition-all"
+              className="bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-3.5 transition-all shadow-sm"
               style={{ borderLeft: `3px solid ${badge.accent}` }}
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-2.5">
-                  <h3 className="text-base font-semibold text-white">{finding.name}</h3>
+                  <h3 className="text-base font-semibold text-slate-900 dark:text-white">{finding.name}</h3>
                   <span className={`text-[10px] uppercase font-semibold px-2 py-0.5 rounded-md border ${badge.bg}`}>
                     {badge.label}
                   </span>
@@ -225,28 +225,28 @@ export default function Results({
                 )}
               </div>
 
-              <p className="text-xs text-slate-300 leading-relaxed">
+              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                 {finding.reason}
               </p>
 
               {/* Code Evidence Table */}
               {finding.evidence && finding.evidence.length > 0 && (
-                <div className="rounded-xl border border-slate-800 bg-slate-950/60 overflow-hidden text-xs">
+                <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 overflow-hidden text-xs">
                   <table className="w-full text-left border-collapse">
                     <thead>
-                      <tr className="border-b border-slate-800 text-slate-500 text-[11px] font-mono">
+                      <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-500 text-[11px] font-mono">
                         <th className="py-2 px-3 font-normal">File</th>
                         <th className="py-2 px-3 font-normal">Line</th>
                         <th className="py-2 px-3 font-normal">Matched Snippet</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-800/60 font-mono text-[11px]">
+                    <tbody className="divide-y divide-slate-200 dark:divide-slate-800/60 font-mono text-[11px]">
                       {finding.evidence.map((ev, eIdx) => (
-                        <tr key={eIdx} className="hover:bg-slate-900/50 transition-colors">
-                          <td className="py-2 px-3 text-sky-400">{ev.file}</td>
+                        <tr key={eIdx} className="hover:bg-slate-100 dark:hover:bg-slate-900/50 transition-colors">
+                          <td className="py-2 px-3 text-sky-600 dark:text-sky-400">{ev.file}</td>
                           <td className="py-2 px-3 text-slate-500">L{ev.line}</td>
-                          <td className="py-2 px-3 text-slate-300">
-                            <code className="bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800">
+                          <td className="py-2 px-3 text-slate-800 dark:text-slate-300">
+                            <code className="bg-white dark:bg-slate-900 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-800">
                               {ev.snippet}
                             </code>
                           </td>
@@ -263,23 +263,23 @@ export default function Results({
 
       {/* Heuristic Connections Verification (if present) */}
       {connectionsCheck && connectionsCheck.length > 0 && (
-        <div className="bg-slate-900/30 border border-slate-800 rounded-2xl p-5 space-y-3">
-          <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-            <Route className="w-4 h-4 text-sky-400" />
+        <div className="bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-3">
+          <h3 className="text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+            <Route className="w-4 h-4 text-sky-600 dark:text-sky-400" />
             Topology Connections Check
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
             {connectionsCheck.map((conn, idx) => (
               <div
                 key={idx}
-                className="p-2.5 rounded-xl bg-slate-950/40 border border-slate-800 flex items-center justify-between"
+                className="p-2.5 rounded-xl bg-white dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 flex items-center justify-between shadow-sm"
               >
-                <div className="font-mono text-slate-300">
+                <div className="font-mono text-slate-800 dark:text-slate-300">
                   <span>{conn.from}</span>
-                  <span className="text-slate-500 mx-1.5">➔</span>
+                  <span className="text-slate-400 dark:text-slate-500 mx-1.5">➔</span>
                   <span>{conn.to}</span>
                 </div>
-                <span className="text-slate-400 text-[11px]">{conn.note}</span>
+                <span className="text-slate-500 dark:text-slate-400 text-[11px]">{conn.note}</span>
               </div>
             ))}
           </div>
@@ -287,11 +287,11 @@ export default function Results({
       )}
 
       {/* Bottom Navigation */}
-      <div className="flex items-center justify-between pt-6 border-t border-slate-800">
+      <div className="flex items-center justify-between pt-6 border-t border-slate-200 dark:border-slate-800">
         <button
           type="button"
           onClick={onBack}
-          className="px-5 py-2.5 rounded-xl border border-slate-800 hover:bg-slate-900 text-slate-300 text-xs font-medium transition-colors flex items-center gap-1.5"
+          className="px-5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 text-xs font-medium transition-colors flex items-center gap-1.5"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Review

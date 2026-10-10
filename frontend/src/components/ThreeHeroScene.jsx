@@ -1,12 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-export default function ThreeHeroScene() {
+export default function ThreeHeroScene({ theme = 'dark' }) {
   const mountRef = useRef(null);
 
   useEffect(() => {
     const container = mountRef.current;
     if (!container) return;
+
+    const isLight = theme === 'light';
 
     // Scene & Camera setup
     const scene = new THREE.Scene();
@@ -30,24 +32,24 @@ export default function ThreeHeroScene() {
     scene.add(systemGroup);
 
     // Ambient & Directional Lights
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+    const ambientLight = new THREE.AmbientLight(0xffffff, isLight ? 1.4 : 0.8);
     scene.add(ambientLight);
 
-    const dirLight1 = new THREE.DirectionalLight(0x38bdf8, 2);
+    const dirLight1 = new THREE.DirectionalLight(0x38bdf8, isLight ? 2.5 : 2);
     dirLight1.position.set(10, 10, 10);
     scene.add(dirLight1);
 
-    const dirLight2 = new THREE.DirectionalLight(0xffffff, 1.2);
+    const dirLight2 = new THREE.DirectionalLight(0xffffff, isLight ? 1.5 : 1.2);
     dirLight2.position.set(-10, -10, -10);
     scene.add(dirLight2);
 
     // 1. Central Core Wireframe Polyhedron (representing Deterministic Scanner Core)
     const coreGeo = new THREE.IcosahedronGeometry(2.2, 1);
     const coreMat = new THREE.MeshStandardMaterial({
-      color: 0x38bdf8,
+      color: isLight ? 0x0284c7 : 0x38bdf8,
       wireframe: true,
-      emissive: 0x0284c7,
-      emissiveIntensity: 0.6,
+      emissive: isLight ? 0x0369a1 : 0x0284c7,
+      emissiveIntensity: isLight ? 0.4 : 0.6,
       roughness: 0.2
     });
     const coreMesh = new THREE.Mesh(coreGeo, coreMat);
@@ -56,10 +58,10 @@ export default function ThreeHeroScene() {
     // Inner glowing sphere
     const innerGeo = new THREE.SphereGeometry(1.2, 32, 32);
     const innerMat = new THREE.MeshBasicMaterial({
-      color: 0x38bdf8,
+      color: isLight ? 0x0284c7 : 0x38bdf8,
       wireframe: false,
       transparent: true,
-      opacity: 0.35
+      opacity: isLight ? 0.25 : 0.35
     });
     const innerMesh = new THREE.Mesh(innerGeo, innerMat);
     systemGroup.add(innerMesh);
@@ -83,11 +85,11 @@ export default function ThreeHeroScene() {
       const boxMat = new THREE.MeshStandardMaterial({
         color: item.color,
         emissive: item.color,
-        emissiveIntensity: 0.35,
+        emissiveIntensity: isLight ? 0.2 : 0.35,
         roughness: 0.3,
-        metalness: 0.7,
+        metalness: isLight ? 0.5 : 0.7,
         transparent: true,
-        opacity: 0.9
+        opacity: 0.95
       });
       const box = new THREE.Mesh(boxGeo, boxMat);
       box.position.set(item.pos[0], item.pos[1], item.pos[2]);
@@ -95,10 +97,10 @@ export default function ThreeHeroScene() {
       // Wireframe edge outline
       const wireGeo = new THREE.BoxGeometry(1.42, 0.92, 0.92);
       const wireMat = new THREE.MeshBasicMaterial({
-        color: 0xffffff,
+        color: isLight ? 0x0f172a : 0xffffff,
         wireframe: true,
         transparent: true,
-        opacity: 0.4
+        opacity: isLight ? 0.6 : 0.4
       });
       const wire = new THREE.Mesh(wireGeo, wireMat);
       box.add(wire);
@@ -110,7 +112,7 @@ export default function ThreeHeroScene() {
           color: 0xf43f5e,
           side: THREE.DoubleSide,
           transparent: true,
-          opacity: 0.8
+          opacity: 0.7
         });
         const ring = new THREE.Mesh(ringGeo, ringMat);
         ring.rotation.x = Math.PI / 2;
@@ -146,7 +148,7 @@ export default function ThreeHeroScene() {
       const lineMat = new THREE.LineBasicMaterial({
         color: color,
         transparent: true,
-        opacity: 0.45,
+        opacity: isLight ? 0.6 : 0.45,
         linewidth: 1
       });
       const line = new THREE.Line(lineGeo, lineMat);
@@ -167,10 +169,10 @@ export default function ThreeHeroScene() {
     particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
     const particleMat = new THREE.PointsMaterial({
       size: 0.08,
-      color: 0x7dd3fc,
+      color: isLight ? 0x0284c7 : 0x7dd3fc,
       transparent: true,
-      opacity: 0.6,
-      blending: THREE.AdditiveBlending
+      opacity: isLight ? 0.75 : 0.6,
+      blending: isLight ? THREE.NormalBlending : THREE.AdditiveBlending
     });
     const particleSystem = new THREE.Points(particleGeo, particleMat);
     scene.add(particleSystem);
@@ -250,7 +252,7 @@ export default function ThreeHeroScene() {
       }
       renderer.dispose();
     };
-  }, []);
+  }, [theme]);
 
   return (
     <div
