@@ -1,19 +1,53 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { fetchLocalRepo } from '../src/services/repoFetcher.js';
 import { scan } from '../src/services/scanner.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-describe('Planted Drift Demo Fixture Scanner Verification', () => {
-  it('detects all 3 planted architectural differences in demo/planted-drift', () => {
-    const demoDir = path.resolve(__dirname, '../../demo/planted-drift');
-    const files = fetchLocalRepo(demoDir);
-
-    assert.ok(files.length > 0, 'Demo fixture should contain scannable files');
+describe('Synthetic Drift Scanner Verification', () => {
+  it('detects all 3 planted architectural differences in simulated project', () => {
+    // In-memory files simulating a project with planted drift
+    const files = [
+      {
+        path: 'package.json',
+        content: JSON.stringify({
+          dependencies: {
+            react: '^18.2.0',
+            express: '^4.19.2',
+            stripe: '^15.1.0',
+            mongoose: '^8.3.0',
+            amqplib: '^0.10.4'
+          }
+        }, null, 2)
+      },
+      {
+        path: 'docker-compose.yml',
+        content: `
+version: '3.8'
+services:
+  mongo:
+    image: mongo:6.0
+  queue:
+    image: rabbitmq:3-management
+`
+      },
+      {
+        path: '.env.example',
+        content: `
+PORT=3000
+MONGODB_URI=mongodb://localhost:27017/shop
+RABBITMQ_URL=amqp://localhost:5672
+STRIPE_SECRET_KEY=sk_test_12345
+`
+      },
+      {
+        path: 'src/index.js',
+        content: `
+import express from 'express';
+import mongoose from 'mongoose';
+import amqp from 'amqplib';
+import Stripe from 'stripe';
+`
+      }
+    ];
 
     // Architecture diagram declared components (5 boxes)
     const components = [
@@ -35,13 +69,13 @@ describe('Planted Drift Demo Fixture Scanner Verification', () => {
     assert.strictEqual(apiFinding?.status, 'match', 'API should match');
     assert.strictEqual(stripeFinding?.status, 'match', 'Stripe should match');
 
-    // --- Planted Difference 1: No Redis anywhere (mismatch) ---
+    // --- Difference 1: No Redis anywhere (mismatch) ---
     const redisFinding = findings.find(f => f.name === 'Redis');
     assert.ok(redisFinding, 'Redis finding should exist');
     assert.strictEqual(redisFinding.status, 'mismatch', 'Redis must be flagged as mismatch');
     assert.strictEqual(redisFinding.evidence.length, 0, 'Redis must have zero evidence in repo');
 
-    // --- Planted Difference 2: MongoDB used instead of Postgres (Postgres mismatch + MongoDB undocumented) ---
+    // --- Difference 2: MongoDB used instead of Postgres (Postgres mismatch + MongoDB undocumented) ---
     const postgresFinding = findings.find(f => f.name === 'Postgres');
     assert.ok(postgresFinding, 'Postgres finding should exist');
     assert.strictEqual(postgresFinding.status, 'mismatch', 'Postgres must be flagged as mismatch');
@@ -51,7 +85,7 @@ describe('Planted Drift Demo Fixture Scanner Verification', () => {
     assert.strictEqual(mongoFinding.status, 'undocumented', 'MongoDB must be flagged as undocumented');
     assert.ok(mongoFinding.evidence.length > 0, 'MongoDB should have concrete code/docker evidence');
 
-    // --- Planted Difference 3: RabbitMQ used but not drawn (undocumented) ---
+    // --- Difference 3: RabbitMQ used but not drawn (undocumented) ---
     const rabbitFinding = findings.find(f => f.signatureId === 'rabbitmq');
     assert.ok(rabbitFinding, 'RabbitMQ finding should exist');
     assert.strictEqual(rabbitFinding.status, 'undocumented', 'RabbitMQ must be flagged as undocumented');

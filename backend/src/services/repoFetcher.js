@@ -20,7 +20,20 @@ export function parseGitHubUrl(urlOrSlug) {
  */
 function isScannableFile(filePath) {
   if (!filePath) return false;
-  if (filePath.includes('node_modules/') || filePath.includes('.git/') || filePath.includes('dist/') || filePath.includes('build/')) {
+  const normalized = filePath.replace(/\\/g, '/');
+  if (
+    normalized.includes('node_modules/') ||
+    normalized.includes('.git/') ||
+    normalized.includes('dist/') ||
+    normalized.includes('build/') ||
+    normalized.includes('demo/') ||
+    normalized.includes('/test/') ||
+    normalized.startsWith('test/') ||
+    normalized.includes('/tests/') ||
+    normalized.startsWith('tests/') ||
+    normalized.includes('/__tests__/') ||
+    /\.(test|spec)\.[a-z0-9]+$/i.test(normalized)
+  ) {
     return false;
   }
   const ext = path.extname(filePath).toLowerCase();
@@ -53,7 +66,7 @@ export function fetchLocalRepo(dirPath) {
     const entries = fs.readdirSync(currentDir, { withFileTypes: true });
     for (const entry of entries) {
       const fullPath = path.join(currentDir, entry.name);
-      if (entry.name === 'node_modules' || entry.name === '.git' || entry.name === 'dist') {
+      if (entry.name === 'node_modules' || entry.name === '.git' || entry.name === 'dist' || entry.name === 'demo') {
         continue;
       }
       if (entry.isDirectory()) {

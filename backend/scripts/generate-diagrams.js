@@ -149,8 +149,5 @@ function renderSvgToPng(svgContent, targetPngPath) {
   console.log(`Generated: ${targetPngPath}`);
 }
 
-const demoPng = path.resolve(__dirname, '../../demo/planted-drift/diagram.png');
 const docsPng = path.resolve(__dirname, '../../docs/architecture.png');
-
-renderSvgToPng(plantedDriftSvg, demoPng);
 renderSvgToPng(selfArchSvg, docsPng);

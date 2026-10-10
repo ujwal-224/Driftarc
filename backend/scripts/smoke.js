@@ -18,7 +18,6 @@ async function runSmokeTest() {
   let imagePath = process.argv[2];
   if (!imagePath) {
     const candidatePaths = [
-      path.resolve(__dirname, '../../demo/planted-drift/diagram.png'),
       path.resolve(__dirname, '../../docs/architecture.png'),
       path.resolve(__dirname, '../fixtures/sample-diagram.png')
     ];

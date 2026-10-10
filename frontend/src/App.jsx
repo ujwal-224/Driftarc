@@ -71,7 +71,7 @@ export default function App() {
     setGlobalError(null);
 
     try {
-      const isLocal = repoUrl.startsWith('demo/') || repoUrl.startsWith('./') || repoUrl.startsWith('/');
+      const isLocal = repoUrl.startsWith('./') || repoUrl.startsWith('/') || repoUrl === '.';
       const payload = {
         components,
         connections,
