@@ -138,25 +138,106 @@ export const signatures = [
       /(?:from\s+['"]express-openid-connect['"]|require\(\s*['"]express-openid-connect['"]\))/i
     ],
     envPatterns: [/AUTH0_DOMAIN/i, /AUTH0_CLIENT_ID/i, /AUTH0_CLIENT_SECRET/i]
+  },
+  // --- Extended AI & Cloud Signatures ---
+  {
+    id: 'gemini',
+    name: 'Gemma / Google Gemini API',
+    aliases: [
+      'gemma 4 / gemini vision',
+      'gemma 4 / gemini text',
+      'gemma 4 vision',
+      'gemma 4 text',
+      'gemini vision',
+      'gemini text',
+      'gemma 4',
+      'gemma',
+      'gemini',
+      'google gemini',
+      'google gemini api',
+      'google ai',
+      'gemma vision',
+      'gemma text'
+    ],
+    dependencies: ['@google/generative-ai', '@google/genai'],
+    importPatterns: [
+      /(?:from\s+['"]@google\/generative-ai['"]|require\(\s*['"]@google\/generative-ai['"]\))/i,
+      /(?:from\s+['"]@google\/genai['"]|require\(\s*['"]@google\/genai['"]\))/i,
+      /(?:from\s+['"][^'"]*gemma(?:\.js)?['"]|require\(\s*['"][^'"]*gemma(?:\.js)?['"]\))/i
+    ],
+    filePatterns: [/services\/gemma\.js$/i, /gemma\.js$/i],
+    envPatterns: [/GEMINI_API_KEY/i, /GOOGLE_API_KEY/i, /LLM_PROVIDER/i, /LLM_MODEL.*gemma/i],
+    codePatterns: [
+      /generativelanguage\.googleapis\.com/i,
+      /callGeminiApi/i,
+      /extractDiagram/i,
+      /gemma-4/i
+    ]
+  },
+  {
+    id: 'github-api',
+    name: 'GitHub REST API',
+    aliases: [
+      'github rest api',
+      'github api',
+      'github issues',
+      'github',
+      'octokit'
+    ],
+    dependencies: ['@octokit/rest', '@octokit/core', 'octokit'],
+    importPatterns: [
+      /(?:from\s+['"]@octokit\/rest['"]|require\(\s*['"]@octokit\/rest['"]\))/i,
+      /(?:from\s+['"]octokit['"]|require\(\s*['"]octokit['"]\))/i,
+      /(?:from\s+['"][^'"]*github(?:\.js)?['"]|require\(\s*['"][^'"]*github(?:\.js)?['"]\))/i
+    ],
+    filePatterns: [/services\/github\.js$/i, /github\.js$/i],
+    envPatterns: [/GITHUB_TOKEN/i, /GITHUB_PERSONAL_ACCESS_TOKEN/i],
+    codePatterns: [
+      /api\.github\.com/i,
+      /DriftArc-IssueWriter/i,
+      /createGitHubIssue/i
+    ]
   }
 ];
 
 /**
  * Find a signature matching a component name or alias.
+ * Prioritizes exact matches, then exact alias matches, then longest-matching alias
+ * to prevent generic aliases (like 'rest api') from shadowing specific ones (like 'github rest api').
  */
 export function findSignature(componentName) {
   if (!componentName) return null;
   const normalized = componentName.trim().toLowerCase();
 
-  return signatures.find(sig => {
-    if (sig.id === normalized || sig.name.toLowerCase() === normalized) {
-      return true;
+  // 1. Direct exact match on ID or canonical name
+  const exact = signatures.find(
+    sig => sig.id === normalized || sig.name.toLowerCase() === normalized
+  );
+  if (exact) return exact;
+
+  // 2. Direct exact match on any alias
+  const exactAlias = signatures.find(
+    sig => sig.aliases && sig.aliases.some(alias => alias.toLowerCase() === normalized)
+  );
+  if (exactAlias) return exactAlias;
+
+  // 3. Substring match ranked by longest matching alias length
+  let bestMatch = null;
+  let bestScore = 0;
+
+  for (const sig of signatures) {
+    if (!sig.aliases) continue;
+    for (const alias of sig.aliases) {
+      const aliasLower = alias.toLowerCase();
+      if (normalized.includes(aliasLower) || aliasLower.includes(normalized)) {
+        const score = aliasLower.length;
+        if (score > bestScore) {
+          bestScore = score;
+          bestMatch = sig;
+        }
+      }
     }
-    return sig.aliases && sig.aliases.some(alias => {
-      // Direct alias match or word boundary match
-      if (alias === normalized) return true;
-      if (normalized.includes(alias) || alias.includes(normalized)) return true;
-      return false;
-    });
-  }) || null;
+  }
+
+  return bestMatch;
 }

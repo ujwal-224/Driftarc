@@ -191,4 +191,57 @@ module.exports = app;
       assert.strictEqual(finding.status, 'match', `${comp.name} should match`);
     }
   });
+
+  // Test 9: Gemma / Gemini AI detection
+  it('detects Gemma / Gemini AI signatures with concrete evidence', () => {
+    const files = [
+      {
+        path: '.env',
+        content: 'GEMINI_API_KEY=test-ai-key-12345\nPORT=3001'
+      },
+      {
+        path: 'src/services/gemma.js',
+        content: 'export async function extractDiagram() { /* callGeminiApi */ }'
+      }
+    ];
+    const components = [{ name: 'Gemma 4 / Gemini Vision' }, { name: 'Gemma 4 / Gemini Text' }];
+
+    const result = scan({ files, components });
+
+    const visionFinding = result.findings.find(f => f.name === 'Gemma 4 / Gemini Vision');
+    const textFinding = result.findings.find(f => f.name === 'Gemma 4 / Gemini Text');
+
+    assert.ok(visionFinding, 'Should have vision finding');
+    assert.strictEqual(visionFinding.status, 'match');
+    assert.strictEqual(visionFinding.signatureId, 'gemini');
+    assert.ok(visionFinding.evidence.length >= 2, 'Should have env and file evidence');
+
+    assert.ok(textFinding, 'Should have text finding');
+    assert.strictEqual(textFinding.status, 'match');
+    assert.strictEqual(textFinding.signatureId, 'gemini');
+  });
+
+  // Test 10: Specificity order - GitHub REST API does not falsely shadow to generic Express API
+  it('prioritizes GitHub REST API signature over generic Express REST API alias', () => {
+    const files = [
+      {
+        path: 'src/services/github.js',
+        content: 'const url = "https://api.github.com/repos/test/issues";'
+      },
+      {
+        path: 'package.json',
+        content: JSON.stringify({ dependencies: { express: '^4.19.0' } })
+      }
+    ];
+    const components = [{ name: 'GitHub REST API' }];
+
+    const result = scan({ files, components });
+
+    const ghFinding = result.findings.find(f => f.name === 'GitHub REST API');
+    assert.ok(ghFinding, 'Should find GitHub REST API');
+    assert.strictEqual(ghFinding.signatureId, 'github-api');
+    assert.strictEqual(ghFinding.status, 'match');
+    assert.ok(ghFinding.evidence.some(e => e.file === 'src/services/github.js'));
+    assert.ok(!ghFinding.evidence.some(e => e.file === 'package.json'), 'Should not match express dependency');
+  });
 });

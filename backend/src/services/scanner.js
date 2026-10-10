@@ -85,7 +85,27 @@ export function findEvidenceForSignature(sig, files) {
       }
     }
 
-    // 5. Check file path patterns
+    // 5. Check code patterns in source code (.js, .jsx, .ts, .tsx, .mjs, .cjs)
+    if (isSourceCode && sig.codePatterns) {
+      for (let i = 0; i < lines.length; i++) {
+        const lineContent = lines[i];
+        for (const pattern of sig.codePatterns) {
+          if (pattern.test(lineContent)) {
+            // Deduplicate if this line was already matched
+            if (!evidence.some(e => e.file === filePath && e.line === i + 1)) {
+              evidence.push({
+                file: filePath,
+                line: i + 1,
+                snippet: lineContent.trim(),
+                type: 'code'
+              });
+            }
+          }
+        }
+      }
+    }
+
+    // 6. Check file path patterns
     if (sig.filePatterns) {
       for (const pattern of sig.filePatterns) {
         if (pattern.test(filePath)) {
