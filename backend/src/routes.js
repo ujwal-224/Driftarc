@@ -83,7 +83,7 @@ router.post('/scan', async (req, res) => {
       }
     }
 
-    const scanResult = scan({ files, components, connections });
+    const scanResult = await scan({ files, components, connections });
     res.json({
       ...scanResult,
       filesScanned: files.length

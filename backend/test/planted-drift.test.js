@@ -3,7 +3,7 @@ import assert from 'node:assert';
 import { scan } from '../src/services/scanner.js';
 
 describe('Synthetic Drift Scanner Verification', () => {
-  it('detects all 3 planted architectural differences in simulated project', () => {
+  it('detects all 3 planted architectural differences in simulated project', async () => {
     // In-memory files simulating a project with planted drift
     const files = [
       {
@@ -58,7 +58,7 @@ import Stripe from 'stripe';
       { name: 'Stripe' }
     ];
 
-    const { findings, summary } = scan({ files, components });
+    const { findings, summary } = await scan({ files, components });
 
     // Matched components
     const reactFinding = findings.find(f => f.name === 'React');

@@ -205,18 +205,21 @@ export const signatures = [
  * Prioritizes exact matches, then exact alias matches, then longest-matching alias
  * to prevent generic aliases (like 'rest api') from shadowing specific ones (like 'github rest api').
  */
-export function findSignature(componentName) {
+export function findSignature(componentName, extraSignatures = []) {
   if (!componentName) return null;
   const normalized = componentName.trim().toLowerCase();
+  const pool = Array.isArray(extraSignatures) && extraSignatures.length > 0
+    ? [...signatures, ...extraSignatures]
+    : signatures;
 
   // 1. Direct exact match on ID or canonical name
-  const exact = signatures.find(
+  const exact = pool.find(
     sig => sig.id === normalized || sig.name.toLowerCase() === normalized
   );
   if (exact) return exact;
 
   // 2. Direct exact match on any alias
-  const exactAlias = signatures.find(
+  const exactAlias = pool.find(
     sig => sig.aliases && sig.aliases.some(alias => alias.toLowerCase() === normalized)
   );
   if (exactAlias) return exactAlias;
@@ -225,7 +228,7 @@ export function findSignature(componentName) {
   let bestMatch = null;
   let bestScore = 0;
 
-  for (const sig of signatures) {
+  for (const sig of pool) {
     if (!sig.aliases) continue;
     for (const alias of sig.aliases) {
       const aliasLower = alias.toLowerCase();

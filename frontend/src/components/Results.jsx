@@ -4,7 +4,14 @@ import {
   Copy,
   ArrowRight,
   ArrowLeft,
-  Route
+  Route,
+  Zap,
+  Cpu,
+  Clock,
+  Layers,
+  CheckCircle2,
+  AlertTriangle,
+  XCircle
 } from 'lucide-react';
 
 export default function Results({
@@ -26,6 +33,8 @@ export default function Results({
     if (filter === 'all') return true;
     return f.status === filter;
   });
+
+  const perf = summary?.performance || null;
 
   const handleCopyMarkdown = () => {
     let md = `# DriftArc Architecture Audit Report\n\n`;
@@ -87,10 +96,14 @@ export default function Results({
       {/* Clean Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
         <div>
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-600 dark:text-sky-400 text-xs font-medium mb-2">
+            <Zap className="w-3 h-3" />
+            <span>4-Pillar Optimized Architecture Engine</span>
+          </div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
             Architecture Scan Results
           </h1>
-          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1.5">
+          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
             Audit results for <code className="text-sky-600 dark:text-sky-400 font-mono bg-slate-100 dark:bg-slate-900 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-800">{repoUrl}</code> ({filesScanned} files scanned).
           </p>
         </div>
@@ -104,6 +117,32 @@ export default function Results({
           <span>{copied ? 'Copied to Clipboard' : 'Copy Markdown Report'}</span>
         </button>
       </div>
+
+      {/* Optimized Telemetry Strip (Pillars 1-4) */}
+      {perf && (
+        <div className="bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 text-xs shadow-sm">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-600 dark:text-sky-400">
+              <Cpu className="w-3.5 h-3.5" />
+            </div>
+            <span className="font-semibold text-slate-900 dark:text-white">Optimized Architecture Engine:</span>
+            <span className="text-slate-600 dark:text-slate-400">Dynamic Synthesis • Polyglot AST • Flow Tracer • Hash Cache</span>
+          </div>
+
+          <div className="flex items-center gap-4 text-[11px] font-mono text-slate-500">
+            <span className="flex items-center gap-1">
+              <Clock className="w-3 h-3 text-sky-500" />
+              {perf.scanDurationMs}ms latency
+            </span>
+            <span>•</span>
+            <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
+              ⚡ {perf.hitRatio} cache hit
+            </span>
+            <span>•</span>
+            <span>{perf.filesScanned} files</span>
+          </div>
+        </div>
+      )}
 
       {/* 4 Clean Metric Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -217,6 +256,12 @@ export default function Results({
                   <span className={`text-[10px] uppercase font-semibold px-2 py-0.5 rounded-md border ${badge.bg}`}>
                     {badge.label}
                   </span>
+                  {finding.synthesized && (
+                    <span className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20 flex items-center gap-1">
+                      <Zap className="w-2.5 h-2.5" />
+                      Synthesized Rule
+                    </span>
+                  )}
                 </div>
                 {finding.evidence && finding.evidence.length > 0 && (
                   <span className="text-xs text-slate-500 font-mono">
@@ -238,6 +283,7 @@ export default function Results({
                         <th className="py-2 px-3 font-normal">File</th>
                         <th className="py-2 px-3 font-normal">Line</th>
                         <th className="py-2 px-3 font-normal">Matched Snippet</th>
+                        <th className="py-2 px-3 font-normal">Type</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-200 dark:divide-slate-800/60 font-mono text-[11px]">
@@ -250,6 +296,7 @@ export default function Results({
                               {ev.snippet}
                             </code>
                           </td>
+                          <td className="py-2 px-3 text-slate-400 capitalize">{ev.type || 'code'}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -261,27 +308,74 @@ export default function Results({
         })}
       </div>
 
-      {/* Heuristic Connections Verification (if present) */}
+      {/* Pillar 3: Real Call-Graph Connection Verification */}
       {connectionsCheck && connectionsCheck.length > 0 && (
-        <div className="bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-3">
-          <h3 className="text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-            <Route className="w-4 h-4 text-sky-600 dark:text-sky-400" />
-            Topology Connections Check
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-            {connectionsCheck.map((conn, idx) => (
-              <div
-                key={idx}
-                className="p-2.5 rounded-xl bg-white dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 flex items-center justify-between shadow-sm"
-              >
-                <div className="font-mono text-slate-800 dark:text-slate-300">
-                  <span>{conn.from}</span>
-                  <span className="text-slate-400 dark:text-slate-500 mx-1.5">➔</span>
-                  <span>{conn.to}</span>
+        <div className="bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+              <Route className="w-4 h-4 text-sky-600 dark:text-sky-400" />
+              Call-Graph Flow Verification (Pillar 3)
+            </h3>
+            <span className="text-[11px] text-slate-500 font-mono">AST &amp; Client Invocations</span>
+          </div>
+
+          <div className="grid grid-cols-1 gap-3 text-xs">
+            {connectionsCheck.map((conn, idx) => {
+              const isVerified = conn.status === 'flow-verified';
+              const isBroken = conn.status === 'broken-flow';
+
+              return (
+                <div
+                  key={idx}
+                  className="p-3.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-2 shadow-sm"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="font-mono text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                      <span>{conn.from}</span>
+                      <span className="text-sky-500">➔</span>
+                      <span>{conn.to}</span>
+                      {conn.label && (
+                        <span className="text-[11px] font-normal text-slate-500">({conn.label})</span>
+                      )}
+                    </div>
+
+                    <span
+                      className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border uppercase flex items-center gap-1 ${
+                        isVerified
+                          ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/30'
+                          : isBroken
+                          ? 'bg-rose-500/10 text-rose-500 border-rose-500/30'
+                          : 'bg-amber-500/10 text-amber-500 border-amber-500/30'
+                      }`}
+                    >
+                      {isVerified ? (
+                        <CheckCircle2 className="w-3 h-3" />
+                      ) : isBroken ? (
+                        <XCircle className="w-3 h-3" />
+                      ) : (
+                        <AlertTriangle className="w-3 h-3" />
+                      )}
+                      {conn.status.replace('-', ' ')}
+                    </span>
+                  </div>
+
+                  <p className="text-xs text-slate-600 dark:text-slate-400">{conn.note}</p>
+
+                  {/* Isolated Call Site Snippets */}
+                  {conn.callSites && conn.callSites.length > 0 && (
+                    <div className="mt-2 pt-2 border-t border-slate-100 dark:border-slate-800/80 space-y-1 font-mono text-[11px]">
+                      <span className="text-[10px] uppercase font-bold text-slate-400">Isolated Call Sites:</span>
+                      {conn.callSites.slice(0, 3).map((cs, cIdx) => (
+                        <div key={cIdx} className="flex items-center justify-between text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-900 px-2.5 py-1 rounded border border-slate-200 dark:border-slate-800">
+                          <span className="text-sky-600 dark:text-sky-400">{cs.file}:L{cs.line}</span>
+                          <code className="text-slate-700 dark:text-slate-200 truncate max-w-md">{cs.snippet}</code>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
-                <span className="text-slate-500 dark:text-slate-400 text-[11px]">{conn.note}</span>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}

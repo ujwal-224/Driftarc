@@ -58,7 +58,7 @@ async function runFakeDiagramAudit() {
   console.log(`   Retrieved ${files.length} codebase files (respecting .gitignore, excluding node_modules/builds).`);
 
   console.log('\n[Stage 4] Running Pure Deterministic Scanner (Zero AI in scanner)...');
-  const { findings, summary, connectionsCheck } = scan({
+  const { findings, summary, connectionsCheck } = await scan({
     files,
     components: diagram.components,
     connections: diagram.connections

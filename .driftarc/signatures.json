@@ -1,0 +1,62 @@
+[
+  {
+    "id": "kafka",
+    "name": "Kafka",
+    "aliases": [
+      "kafka"
+    ],
+    "dependencies": [
+      "kafka",
+      "kafka",
+      "kafkajs",
+      "kafka-node",
+      "kafka-client",
+      "kafka-driver"
+    ],
+    "manifestKeys": {
+      "npm": [
+        "kafka",
+        "kafka",
+        "kafkajs",
+        "kafka-node",
+        "kafka-client"
+      ],
+      "python": [
+        "kafka",
+        "kafka",
+        "kafka-python",
+        "aiokafka",
+        "confluent-kafka"
+      ],
+      "go": [
+        "kafka",
+        "kafka",
+        "kafka-go"
+      ],
+      "rust": [
+        "kafka",
+        "kafka",
+        "rdkafka"
+      ]
+    },
+    "envPatterns": [
+      "KAFKA_",
+      "KAFKA_URL",
+      "KAFKA_BROKER"
+    ],
+    "dockerPatterns": [
+      "image:\\s*.*kafka"
+    ],
+    "importPatterns": [
+      "(?:from\\s+['\"][^'\"]*kafka['\"]|require\\(\\s*['\"][^'\"]*kafka['\"]\\))"
+    ],
+    "filePatterns": [
+      "kafka\\.(?:js|ts|py|go|rs)$"
+    ],
+    "codePatterns": [
+      "(?:new\\s+kafka|createkafka|kafkaClient)"
+    ],
+    "synthesized": true,
+    "source": "heuristic"
+  }
+]

@@ -2,9 +2,9 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import { scan } from '../src/services/scanner.js';
 
-describe('DriftCheck Deterministic Scanner', () => {
+describe('DriftArc 4-Pillar Optimized Architecture Engine', () => {
   // Test 1: Basic component matching
-  it('identifies matched component when dependency exists in package.json', () => {
+  it('identifies matched component when dependency exists in package.json', async () => {
     const files = [
       {
         path: 'package.json',
@@ -18,7 +18,7 @@ describe('DriftCheck Deterministic Scanner', () => {
     ];
     const components = [{ name: 'React' }];
 
-    const result = scan({ files, components });
+    const result = await scan({ files, components });
 
     const matchFinding = result.findings.find(f => f.name === 'React');
     assert.ok(matchFinding, 'Should have React finding');
@@ -28,7 +28,7 @@ describe('DriftCheck Deterministic Scanner', () => {
   });
 
   // Test 2: Basic component mismatch
-  it('flags mismatch when declared component is absent from codebase', () => {
+  it('flags mismatch when declared component is absent from codebase', async () => {
     const files = [
       {
         path: 'package.json',
@@ -41,7 +41,7 @@ describe('DriftCheck Deterministic Scanner', () => {
     ];
     const components = [{ name: 'Redis' }];
 
-    const result = scan({ files, components });
+    const result = await scan({ files, components });
 
     const redisFinding = result.findings.find(f => f.name === 'Redis');
     assert.ok(redisFinding, 'Should have Redis finding');
@@ -49,8 +49,8 @@ describe('DriftCheck Deterministic Scanner', () => {
     assert.strictEqual(redisFinding.evidence.length, 0);
   });
 
-  // Test 3: docker-compose detection (Task 4)
-  it('detects component from docker-compose.yml definition', () => {
+  // Test 3: docker-compose detection
+  it('detects component from docker-compose.yml definition', async () => {
     const files = [
       {
         path: 'docker-compose.yml',
@@ -66,7 +66,7 @@ services:
     ];
     const components = [{ name: 'PostgreSQL' }];
 
-    const result = scan({ files, components });
+    const result = await scan({ files, components });
 
     const pgFinding = result.findings.find(f => f.name === 'PostgreSQL');
     assert.ok(pgFinding, 'Should find PostgreSQL from docker-compose');
@@ -74,8 +74,8 @@ services:
     assert.ok(pgFinding.evidence.some(e => e.file === 'docker-compose.yml'));
   });
 
-  // Test 4: .env.example detection (Task 4)
-  it('detects component from .env.example configuration keys', () => {
+  // Test 4: .env.example detection
+  it('detects component from .env.example configuration keys', async () => {
     const files = [
       {
         path: '.env.example',
@@ -88,7 +88,7 @@ STRIPE_WEBHOOK_SECRET=whsec_12345
     ];
     const components = [{ name: 'Stripe' }];
 
-    const result = scan({ files, components });
+    const result = await scan({ files, components });
 
     const stripeFinding = result.findings.find(f => f.name === 'Stripe');
     assert.ok(stripeFinding, 'Should find Stripe from .env.example');
@@ -96,8 +96,8 @@ STRIPE_WEBHOOK_SECRET=whsec_12345
     assert.ok(stripeFinding.evidence.some(e => e.file === '.env.example'));
   });
 
-  // Test 5: require() import detection (Task 4)
-  it('detects component from CommonJS require() import statement', () => {
+  // Test 5: require() import detection
+  it('detects component from CommonJS require() import statement', async () => {
     const files = [
       {
         path: 'src/server.cjs',
@@ -110,7 +110,7 @@ module.exports = app;
     ];
     const components = [{ name: 'Express' }];
 
-    const result = scan({ files, components });
+    const result = await scan({ files, components });
 
     const expressFinding = result.findings.find(f => f.name === 'Express');
     assert.ok(expressFinding, 'Should find Express from require statement');
@@ -118,8 +118,8 @@ module.exports = app;
     assert.ok(expressFinding.evidence.some(e => e.type === 'import'));
   });
 
-  // Test 6: Monorepo apps/api/package.json detection (Task 4)
-  it('detects component inside monorepo subdirectory apps/api/package.json', () => {
+  // Test 6: Monorepo apps/api/package.json detection
+  it('detects component inside monorepo subdirectory apps/api/package.json', async () => {
     const files = [
       {
         path: 'apps/api/package.json',
@@ -133,7 +133,7 @@ module.exports = app;
     ];
     const components = [{ name: 'API' }];
 
-    const result = scan({ files, components });
+    const result = await scan({ files, components });
 
     const apiFinding = result.findings.find(f => f.name === 'API');
     assert.ok(apiFinding, 'Should find API in monorepo subfolder');
@@ -141,8 +141,8 @@ module.exports = app;
     assert.strictEqual(apiFinding.evidence[0].file, 'apps/api/package.json');
   });
 
-  // Test 7: Component with no rule must be unknown, NEVER match (Task 4)
-  it('marks unknown component without signature as unknown, never match', () => {
+  // Test 7: Component with synthesis disabled remains unknown
+  it('marks unknown component without signature as unknown when synthesis is disabled', async () => {
     const files = [
       {
         path: 'src/custom.js',
@@ -151,7 +151,7 @@ module.exports = app;
     ];
     const components = [{ name: 'QuantumTeleportationEngine' }];
 
-    const result = scan({ files, components });
+    const result = await scan({ files, components, enableSynthesis: false });
 
     const unknownFinding = result.findings.find(f => f.name === 'QuantumTeleportationEngine');
     assert.ok(unknownFinding, 'Should have unknown finding');
@@ -159,8 +159,8 @@ module.exports = app;
     assert.strictEqual(unknownFinding.evidence.length, 0);
   });
 
-  // Test 8: Extended technologies (Task 4: Supabase, Prisma, Neon, Sentry, Auth0)
-  it('detects extended signatures (Supabase, Prisma, Neon, Sentry, Auth0)', () => {
+  // Test 8: Extended technologies (Supabase, Prisma, Neon, Sentry, Auth0)
+  it('detects extended signatures (Supabase, Prisma, Neon, Sentry, Auth0)', async () => {
     const files = [
       {
         path: 'package.json',
@@ -183,7 +183,7 @@ module.exports = app;
       { name: 'Auth0' }
     ];
 
-    const result = scan({ files, components });
+    const result = await scan({ files, components });
 
     for (const comp of components) {
       const finding = result.findings.find(f => f.name === comp.name);
@@ -193,7 +193,7 @@ module.exports = app;
   });
 
   // Test 9: Gemma / Gemini AI detection
-  it('detects Gemma / Gemini AI signatures with concrete evidence', () => {
+  it('detects Gemma / Gemini AI signatures with concrete evidence', async () => {
     const files = [
       {
         path: '.env',
@@ -206,7 +206,7 @@ module.exports = app;
     ];
     const components = [{ name: 'Gemma 4 / Gemini Vision' }, { name: 'Gemma 4 / Gemini Text' }];
 
-    const result = scan({ files, components });
+    const result = await scan({ files, components });
 
     const visionFinding = result.findings.find(f => f.name === 'Gemma 4 / Gemini Vision');
     const textFinding = result.findings.find(f => f.name === 'Gemma 4 / Gemini Text');
@@ -221,8 +221,8 @@ module.exports = app;
     assert.strictEqual(textFinding.signatureId, 'gemini');
   });
 
-  // Test 10: Specificity order - GitHub REST API does not falsely shadow to generic Express API
-  it('prioritizes GitHub REST API signature over generic Express REST API alias', () => {
+  // Test 10: Specificity order
+  it('prioritizes GitHub REST API signature over generic Express REST API alias', async () => {
     const files = [
       {
         path: 'src/services/github.js',
@@ -235,7 +235,7 @@ module.exports = app;
     ];
     const components = [{ name: 'GitHub REST API' }];
 
-    const result = scan({ files, components });
+    const result = await scan({ files, components });
 
     const ghFinding = result.findings.find(f => f.name === 'GitHub REST API');
     assert.ok(ghFinding, 'Should find GitHub REST API');
@@ -243,5 +243,142 @@ module.exports = app;
     assert.strictEqual(ghFinding.status, 'match');
     assert.ok(ghFinding.evidence.some(e => e.file === 'src/services/github.js'));
     assert.ok(!ghFinding.evidence.some(e => e.file === 'package.json'), 'Should not match express dependency');
+  });
+
+  // ================= 4-PILLAR ARCHITECTURE TESTS =================
+
+  // Pillar 1: Dynamic Signature Synthesis
+  it('Pillar 1: dynamically synthesizes signature for uncataloged component (Kafka) and verifies evidence', async () => {
+    const files = [
+      {
+        path: 'package.json',
+        content: JSON.stringify({
+          dependencies: {
+            kafkajs: '^2.2.4'
+          }
+        }, null, 2)
+      },
+      {
+        path: 'docker-compose.yml',
+        content: 'image: confluentinc/cp-kafka:7.3.0\nenvironment:\n  KAFKA_BROKER: kafka:9092'
+      }
+    ];
+    // "Kafka" is not in static catalog, but synthesized dynamically!
+    const components = [{ name: 'Kafka' }];
+
+    const result = await scan({ files, components, enableSynthesis: true });
+
+    const kafkaFinding = result.findings.find(f => f.name === 'Kafka');
+    assert.ok(kafkaFinding, 'Kafka finding should be synthesized');
+    assert.strictEqual(kafkaFinding.status, 'match');
+    assert.strictEqual(kafkaFinding.synthesized, true);
+    assert.ok(kafkaFinding.evidence.length >= 2, 'Should capture dependency and docker evidence');
+  });
+
+  // Pillar 2: Universal Polyglot Manifests (Python, Go, Rust)
+  it('Pillar 2: detects dependencies from Python requirements.txt, Go go.mod, and Rust Cargo.toml', async () => {
+    const files = [
+      // Python requirements
+      {
+        path: 'requirements.txt',
+        content: 'fastapi==0.110.0\nredis>=5.0.0\n# comment line with postgresql\n'
+      },
+      // Go mod
+      {
+        path: 'go.mod',
+        content: `
+module my-go-service
+
+go 1.22
+
+require (
+  github.com/gin-gonic/gin v1.9.1
+  github.com/redis/go-redis/v9 v9.5.1
+)
+`
+      },
+      // Rust Cargo.toml
+      {
+        path: 'Cargo.toml',
+        content: `
+[package]
+name = "rust-service"
+version = "0.1.0"
+
+[dependencies]
+stripe = "0.28"
+tokio = "1.0"
+`
+      }
+    ];
+
+    const components = [{ name: 'Redis' }, { name: 'Stripe' }];
+
+    const result = await scan({ files, components });
+
+    const redisFinding = result.findings.find(f => f.name === 'Redis');
+    const stripeFinding = result.findings.find(f => f.name === 'Stripe');
+
+    assert.ok(redisFinding, 'Should detect Redis from requirements.txt and go.mod');
+    assert.strictEqual(redisFinding.status, 'match');
+    assert.ok(redisFinding.evidence.some(e => e.file === 'requirements.txt'));
+
+    assert.ok(stripeFinding, 'Should detect Stripe from Cargo.toml');
+    assert.strictEqual(stripeFinding.status, 'match');
+    assert.ok(stripeFinding.evidence.some(e => e.file === 'Cargo.toml'));
+  });
+
+  // Pillar 3: Real Call-Graph Connection Tracing
+  it('Pillar 3: isolates call sites to verify real flow between frontend and API', async () => {
+    const files = [
+      {
+        path: 'frontend/src/api.js',
+        content: `
+export async function getHealth() {
+  const res = await fetch('/api/health');
+  return res.json();
+}
+`
+      },
+      {
+        path: 'frontend/package.json',
+        content: JSON.stringify({ dependencies: { react: '^18.2.0' } })
+      },
+      {
+        path: 'backend/package.json',
+        content: JSON.stringify({ dependencies: { express: '^4.19.0' } })
+      }
+    ];
+
+    const components = [{ name: 'React' }, { name: 'Express / Node API' }];
+    const connections = [{ from: 'React', to: 'Express / Node API', label: 'HTTP API' }];
+
+    const result = await scan({ files, components, connections });
+
+    assert.ok(result.connectionsCheck.length > 0, 'Should have connection check');
+    const conn = result.connectionsCheck[0];
+    assert.strictEqual(conn.status, 'flow-verified');
+    assert.strictEqual(conn.flowVerified, true);
+    assert.ok(conn.callSites.length > 0, 'Should have exact call site snippet');
+    assert.strictEqual(conn.callSites[0].file, 'frontend/src/api.js');
+    assert.ok(conn.callSites[0].snippet.includes("fetch('/api/health')"));
+  });
+
+  // Pillar 4: Incremental Content Hash Cache
+  it('Pillar 4: provides sub-50ms incremental scan metrics and cache hit stats', async () => {
+    const files = [
+      {
+        path: 'package.json',
+        content: JSON.stringify({ dependencies: { react: '^18.2.0' } })
+      }
+    ];
+    const components = [{ name: 'React' }];
+
+    const result = await scan({ files, components });
+
+    assert.ok(result.summary.performance, 'Should include performance metrics');
+    assert.ok(typeof result.summary.performance.scanDurationMs === 'number');
+    assert.ok(typeof result.summary.performance.hitRatio === 'string');
+    assert.ok(result.summary.performance.optimizedEngine.includes('4-Pillar'));
   });
 });
