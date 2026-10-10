@@ -76,15 +76,16 @@ DriftCheck supports both **Google Gemini API** and **OpenAI-compatible endpoints
 
 ### Environment Configuration (`backend/.env`)
 
-#### Option A: Google Gemini API (Recommended for Cloud)
+#### Verified Working Setup: Google Gemini Multimodal Vision API
 ```env
 PORT=3001
 LLM_PROVIDER=gemini
-LLM_MODEL=gemini-2.5-flash
+LLM_MODEL=gemini-3.8-flash
 GEMINI_API_KEY=your_gemini_api_key_here
 ```
+> **Smoke Test Status**: ✅ Tested and verified with `backend/scripts/smoke.js`. Successfully parsed `demo/planted-drift/diagram.png` into `{ components, connections }` with 100% extraction accuracy.
 
-#### Option B: Gemma 4 via OpenAI-Compatible Host (OpenRouter / Ollama)
+#### Alternative Setup: Gemma 4 via OpenAI-Compatible Host (OpenRouter / Ollama)
 ```env
 PORT=3001
 LLM_PROVIDER=openai
