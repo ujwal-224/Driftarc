@@ -5,19 +5,64 @@ import { config } from '../config.js';
  */
 function extractJson(text) {
   if (!text) return null;
-  const cleaned = text
-    .replace(/^```(?:json)?\s*/i, '')
-    .replace(/\s*```$/i, '')
-    .trim();
-  try {
-    return JSON.parse(cleaned);
-  } catch {
-    const jsonMatch = text.match(/(\{[\s\S]*\}|\[[\s\S]*\])/);
-    if (jsonMatch) {
-      return JSON.parse(jsonMatch[0]);
-    }
-    throw new Error(`Failed to parse JSON response from model: ${text.slice(0, 200)}...`);
+
+  // 1. Check for markdown code fences first
+  const codeBlockMatch = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+  if (codeBlockMatch) {
+    try {
+      return JSON.parse(codeBlockMatch[1].trim());
+    } catch {}
   }
+
+  // 2. Try whole string directly
+  try {
+    return JSON.parse(text.trim());
+  } catch {}
+
+  // 3. Extract outermost balanced JSON object or array
+  const startIdx = text.search(/[\{\[]/);
+  if (startIdx !== -1) {
+    const isObj = text[startIdx] === '{';
+    let depth = 0;
+    let endIdx = -1;
+    let inString = false;
+    let escape = false;
+
+    for (let i = startIdx; i < text.length; i++) {
+      const ch = text[i];
+      if (escape) {
+        escape = false;
+        continue;
+      }
+      if (ch === '\\') {
+        escape = true;
+        continue;
+      }
+      if (ch === '"') {
+        inString = !inString;
+        continue;
+      }
+      if (!inString) {
+        if (ch === (isObj ? '{' : '[')) depth++;
+        else if (ch === (isObj ? '}' : ']')) {
+          depth--;
+          if (depth === 0) {
+            endIdx = i;
+            break;
+          }
+        }
+      }
+    }
+
+    if (endIdx !== -1) {
+      const candidate = text.slice(startIdx, endIdx + 1);
+      try {
+        return JSON.parse(candidate);
+      } catch {}
+    }
+  }
+
+  throw new Error(`Failed to parse JSON response from model: ${text.slice(0, 200)}...`);
 }
 
 /**
