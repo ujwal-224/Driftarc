@@ -1,0 +1,11 @@
+{
+  "name": "driftcheck",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node backend/src/server.js",
+    "test": "npm --prefix backend test",
+    "self-check": "node backend/scripts/self-check.js"
+  }
+}

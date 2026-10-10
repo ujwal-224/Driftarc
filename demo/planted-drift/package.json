@@ -1,0 +1,14 @@
+{
+  "name": "planted-drift-demo",
+  "version": "1.0.0",
+  "description": "Demo application with intentional architectural drift",
+  "type": "module",
+  "main": "src/index.js",
+  "dependencies": {
+    "react": "^18.2.0",
+    "express": "^4.19.2",
+    "mongoose": "^8.3.0",
+    "amqplib": "^0.10.4",
+    "stripe": "^15.1.0"
+  }
+}
