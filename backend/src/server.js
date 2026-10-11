@@ -5,7 +5,17 @@ import { router } from './routes.js';
 
 const app = express();
 
-app.use(cors());
+const corsOrigin = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(',').map((s) => s.trim())
+  : '*';
+
+app.use(
+  cors({
+    origin: corsOrigin === '*' ? '*' : corsOrigin,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-github-token']
+  })
+);
 app.use(express.json({ limit: '15mb' }));
 app.use(express.urlencoded({ extended: true, limit: '15mb' }));
 

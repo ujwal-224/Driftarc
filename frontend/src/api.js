@@ -1,9 +1,13 @@
 /**
- * Frontend API client communicating via the Vite proxy to DriftArc backend.
+ * Frontend API client communicating with DriftArc backend.
+ * Uses VITE_API_URL in production (e.g. Render backend on Vercel deployment)
+ * and falls back to relative /api for local Vite proxy development.
  */
 
+const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
+
 export async function checkHealth() {
-  const res = await fetch('/api/health');
+  const res = await fetch(`${API_BASE}/api/health`);
   if (!res.ok) throw new Error(`Health check failed: ${res.status}`);
   return res.json();
 }
@@ -13,12 +17,12 @@ export async function extractDiagram(imageFile, imageBase64) {
   if (imageFile) {
     const formData = new FormData();
     formData.append('image', imageFile);
-    res = await fetch('/api/diagram/extract', {
+    res = await fetch(`${API_BASE}/api/diagram/extract`, {
       method: 'POST',
       body: formData
     });
   } else if (imageBase64) {
-    res = await fetch('/api/diagram/extract', {
+    res = await fetch(`${API_BASE}/api/diagram/extract`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ imageBase64 })
@@ -40,7 +44,7 @@ export async function runScan({ repoUrl, branch, localPath, components, connecti
     headers['x-github-token'] = token;
   }
 
-  const res = await fetch('/api/scan', {
+  const res = await fetch(`${API_BASE}/api/scan`, {
     method: 'POST',
     headers,
     body: JSON.stringify({
@@ -60,7 +64,7 @@ export async function runScan({ repoUrl, branch, localPath, components, connecti
 }
 
 export async function draftIssues({ findings, repoName }) {
-  const res = await fetch('/api/issues/draft', {
+  const res = await fetch(`${API_BASE}/api/issues/draft`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ findings, repoName })
@@ -79,7 +83,7 @@ export async function createIssue({ repoUrl, issue, dryRun, token }) {
     headers['x-github-token'] = token;
   }
 
-  const res = await fetch('/api/issues/create', {
+  const res = await fetch(`${API_BASE}/api/issues/create`, {
     method: 'POST',
     headers,
     body: JSON.stringify({
