@@ -7,7 +7,8 @@ import {
   ArrowLeft,
   ArrowRightLeft,
   Loader2,
-  X
+  X,
+  Key
 } from 'lucide-react';
 
 const CATEGORY_STYLES = {
@@ -26,6 +27,9 @@ export default function ReviewStep({
   setConnections,
   repoUrl,
   branch,
+  token,
+  setToken,
+  onOpenTokenModal,
   onBack,
   onStartScan,
   loading
@@ -75,16 +79,32 @@ export default function ReviewStep({
           </p>
         </div>
 
-        <div className="flex items-center gap-2 self-start sm:self-auto shrink-0 max-w-full">
+        <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto shrink-0 max-w-full">
           <span className="text-xs text-slate-500 dark:text-slate-400 shrink-0">
             Target:
           </span>
           <code 
             title={repoUrl}
-            className="text-sky-600 dark:text-sky-400 font-mono text-xs bg-slate-100 dark:bg-slate-900 px-2.5 py-1 rounded-md border border-slate-200 dark:border-slate-800 inline-block whitespace-nowrap max-w-[260px] sm:max-w-xs md:max-w-sm lg:max-w-md truncate align-middle shadow-xs"
+            className="text-sky-600 dark:text-sky-400 font-mono text-xs bg-slate-100 dark:bg-slate-900 px-2.5 py-1 rounded-md border border-slate-200 dark:border-slate-800 inline-block whitespace-nowrap max-w-[220px] sm:max-w-xs truncate align-middle shadow-xs"
           >
             {repoUrl}
           </code>
+
+          {onOpenTokenModal && (
+            <button
+              type="button"
+              onClick={onOpenTokenModal}
+              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium border transition-colors shadow-xs ${
+                token
+                  ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800/80 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/40'
+                  : 'bg-slate-100 dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-700'
+              }`}
+              title={token ? 'GitHub Personal Access Token is active' : 'Add GitHub Personal Access Token to avoid rate limits'}
+            >
+              <Key className="w-3 h-3 text-current" />
+              <span>{token ? 'PAT Active' : 'Add PAT'}</span>
+            </button>
+          )}
         </div>
       </div>
 

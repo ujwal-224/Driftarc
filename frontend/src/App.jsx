@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Layers, Check, ShieldCheck, Cpu, ArrowLeft, ArrowRight, Sparkles, Sun, Moon } from 'lucide-react';
+import { Layers, Check, ShieldCheck, Cpu, ArrowLeft, ArrowRight, Sparkles, Sun, Moon, AlertCircle, Key, X, RefreshCw } from 'lucide-react';
 import { checkHealth, runScan } from './api.js';
 import LandingPage from './components/LandingPage.jsx';
 import UploadStep from './components/UploadStep.jsx';
 import ReviewStep from './components/ReviewStep.jsx';
 import Results from './components/Results.jsx';
 import IssuePanel from './components/IssuePanel.jsx';
+import TokenModal from './components/TokenModal.jsx';
 
 export default function App() {
   const [theme, setTheme] = useState(() => {
@@ -33,7 +34,26 @@ export default function App() {
   const [diagramPreview, setDiagramPreview] = useState(null);
   const [repoUrl, setRepoUrl] = useState('');
   const [branch, setBranch] = useState('main');
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState(() => {
+    try {
+      return localStorage.getItem('driftarc_github_token') || '';
+    } catch {
+      return '';
+    }
+  });
+
+  // Sync token to localStorage
+  useEffect(() => {
+    try {
+      if (token) {
+        localStorage.setItem('driftarc_github_token', token);
+      } else {
+        localStorage.removeItem('driftarc_github_token');
+      }
+    } catch {}
+  }, [token]);
+
+  const [showTokenModal, setShowTokenModal] = useState(false);
 
   // Extracted Architecture
   const [components, setComponents] = useState([]);
@@ -66,16 +86,18 @@ export default function App() {
     setCurrentStep(2);
   };
 
-  const handleStartScan = async () => {
+  const handleStartScan = async (overrideToken) => {
     setScanLoading(true);
     setGlobalError(null);
+
+    const activeToken = overrideToken !== undefined ? overrideToken : token;
 
     try {
       const isLocal = repoUrl.startsWith('./') || repoUrl.startsWith('/') || repoUrl === '.';
       const payload = {
         components,
         connections,
-        token
+        token: activeToken
       };
 
       if (isLocal) {
@@ -252,8 +274,43 @@ export default function App() {
 
       {/* Global Error Banner */}
       {globalError && (
-        <div className="relative z-10 w-full bg-rose-100 dark:bg-rose-950/60 border-b border-rose-300 dark:border-rose-500/30 px-4 py-2.5 text-center text-rose-800 dark:text-rose-200 text-xs flex items-center justify-center gap-2 backdrop-blur-md">
-          <span>{globalError}</span>
+        <div className="relative z-20 w-full bg-rose-50 dark:bg-rose-950/70 border-b border-rose-200 dark:border-rose-500/30 px-6 py-3 text-rose-800 dark:text-rose-200 text-xs flex flex-col sm:flex-row items-center justify-between gap-3 backdrop-blur-md shadow-sm">
+          <div className="flex items-center gap-2.5 text-left flex-1">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+              <span className="font-semibold text-rose-900 dark:text-rose-100">
+                {globalError.toLowerCase().includes('rate limit') || globalError.includes('403')
+                  ? 'GitHub Rate Limit Encountered:'
+                  : 'Scan Error:'}
+              </span>
+              <span className="text-slate-700 dark:text-slate-300">
+                {globalError.toLowerCase().includes('rate limit') || globalError.includes('403')
+                  ? 'Unauthenticated cloud requests share an IP rate limit on GitHub. Provide a Personal Access Token (PAT) to scan seamlessly.'
+                  : globalError}
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+            {(globalError.toLowerCase().includes('rate limit') || globalError.includes('403')) && (
+              <button
+                type="button"
+                onClick={() => setShowTokenModal(true)}
+                className="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-medium text-xs shadow-sm transition-all flex items-center gap-1.5"
+              >
+                <Key className="w-3.5 h-3.5" />
+                <span>{token ? 'Update Token' : 'Add GitHub Token'}</span>
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => setGlobalError(null)}
+              className="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+              title="Dismiss error"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       )}
 
@@ -287,6 +344,9 @@ export default function App() {
                 setConnections={setConnections}
                 repoUrl={repoUrl}
                 branch={branch}
+                token={token}
+                setToken={setToken}
+                onOpenTokenModal={() => setShowTokenModal(true)}
                 onBack={() => setCurrentStep(1)}
                 onStartScan={handleStartScan}
                 loading={scanLoading}
@@ -339,6 +399,19 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      {/* GitHub Token Configuration Modal */}
+      <TokenModal
+        isOpen={showTokenModal}
+        onClose={() => setShowTokenModal(false)}
+        token={token}
+        onSave={(newToken) => setToken(newToken)}
+        onSaveAndRetry={(newToken) => {
+          setToken(newToken);
+          setShowTokenModal(false);
+          handleStartScan(newToken);
+        }}
+      />
     </div>
   );
 }

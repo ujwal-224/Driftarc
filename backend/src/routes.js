@@ -62,7 +62,7 @@ router.post('/scan', async (req, res) => {
   try {
     const { repoUrl, branch, localPath, components = [], connections = [] } = req.body;
     let files = req.body.files;
-    const token = req.headers['x-github-token'] || req.body.token;
+    const token = req.headers['x-github-token'] || req.body.token || process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
 
     if (!Array.isArray(files) || files.length === 0) {
       if (localPath) {
@@ -126,7 +126,7 @@ router.post('/issues/draft', async (req, res) => {
 router.post('/issues/create', async (req, res) => {
   try {
     const { repoUrl, issue, dryRun = false } = req.body;
-    const token = req.headers['x-github-token'] || req.body.token;
+    const token = req.headers['x-github-token'] || req.body.token || process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
 
     if (!repoUrl) {
       return res.status(400).json({ error: 'repoUrl is required' });
