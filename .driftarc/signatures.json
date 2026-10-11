@@ -58,5 +58,729 @@
     ],
     "synthesized": true,
     "source": "heuristic"
+  },
+  {
+    "id": "views",
+    "name": "Views",
+    "aliases": [
+      "views"
+    ],
+    "dependencies": [
+      "views",
+      "views",
+      "viewsjs",
+      "views-node",
+      "views-client",
+      "views-driver"
+    ],
+    "manifestKeys": {
+      "npm": [
+        "views",
+        "views",
+        "viewsjs",
+        "views-node",
+        "views-client"
+      ],
+      "python": [
+        "views",
+        "views",
+        "views-python",
+        "aiokafka",
+        "confluent-views"
+      ],
+      "go": [
+        "views",
+        "views",
+        "views-go"
+      ],
+      "rust": [
+        "views",
+        "views",
+        "rdviews"
+      ]
+    },
+    "envPatterns": [
+      "VIEWS_",
+      "VIEWS_URL",
+      "VIEWS_BROKER"
+    ],
+    "dockerPatterns": [
+      "image:\\s*.*views"
+    ],
+    "importPatterns": [
+      "(?:from\\s+['\"][^'\"]*views['\"]|require\\(\\s*['\"][^'\"]*views['\"]\\))"
+    ],
+    "filePatterns": [
+      "views\\.(?:js|ts|py|go|rs)$"
+    ],
+    "codePatterns": [
+      "(?:new\\s+views|createviews|viewsClient)"
+    ],
+    "synthesized": true,
+    "source": "heuristic"
+  },
+  {
+    "id": "appcontext",
+    "name": "AppContext",
+    "aliases": [
+      "appcontext"
+    ],
+    "dependencies": [
+      "appcontext",
+      "appcontext",
+      "appcontextjs",
+      "appcontext-node",
+      "appcontext-client",
+      "appcontext-driver"
+    ],
+    "manifestKeys": {
+      "npm": [
+        "appcontext",
+        "appcontext",
+        "appcontextjs",
+        "appcontext-node",
+        "appcontext-client"
+      ],
+      "python": [
+        "appcontext",
+        "appcontext",
+        "appcontext-python",
+        "aiokafka",
+        "confluent-appcontext"
+      ],
+      "go": [
+        "appcontext",
+        "appcontext",
+        "appcontext-go"
+      ],
+      "rust": [
+        "appcontext",
+        "appcontext",
+        "rdappcontext"
+      ]
+    },
+    "envPatterns": [
+      "APPCONTEXT_",
+      "APPCONTEXT_URL",
+      "APPCONTEXT_BROKER"
+    ],
+    "dockerPatterns": [
+      "image:\\s*.*appcontext"
+    ],
+    "importPatterns": [
+      "(?:from\\s+['\"][^'\"]*appcontext['\"]|require\\(\\s*['\"][^'\"]*appcontext['\"]\\))"
+    ],
+    "filePatterns": [
+      "appcontext\\.(?:js|ts|py|go|rs)$"
+    ],
+    "codePatterns": [
+      "(?:new\\s+appcontext|createappcontext|appcontextClient)"
+    ],
+    "synthesized": true,
+    "source": "heuristic"
+  },
+  {
+    "id": "i18n-qr",
+    "name": "i18n + QR",
+    "aliases": [
+      "i18n + qr",
+      "i18n-qr",
+      "i18n"
+    ],
+    "dependencies": [
+      "i18n-qr",
+      "i18n",
+      "i18n-qrjs",
+      "i18n-qr-node",
+      "i18n-qr-client",
+      "i18n-qr-driver"
+    ],
+    "manifestKeys": {
+      "npm": [
+        "i18n-qr",
+        "i18n",
+        "i18n-qrjs",
+        "i18n-qr-node",
+        "i18n-qr-client"
+      ],
+      "python": [
+        "i18n-qr",
+        "i18n",
+        "i18n-qr-python",
+        "aiokafka",
+        "confluent-i18n-qr"
+      ],
+      "go": [
+        "i18n-qr",
+        "i18n",
+        "i18n-qr-go"
+      ],
+      "rust": [
+        "i18n-qr",
+        "i18n",
+        "rdi18n-qr"
+      ]
+    },
+    "envPatterns": [
+      "I18N_",
+      "I18N-QR_URL",
+      "I18N-QR_BROKER"
+    ],
+    "dockerPatterns": [
+      "image:\\s*.*i18n"
+    ],
+    "importPatterns": [
+      "(?:from\\s+['\"][^'\"]*i18n['\"]|require\\(\\s*['\"][^'\"]*i18n['\"]\\))"
+    ],
+    "filePatterns": [
+      "i18n\\.(?:js|ts|py|go|rs)$"
+    ],
+    "codePatterns": [
+      "(?:new\\s+i18n|createi18n|i18nClient)"
+    ],
+    "synthesized": true,
+    "source": "heuristic"
+  },
+  {
+    "id": "auth-shops",
+    "name": "Auth + shops",
+    "aliases": [
+      "auth + shops",
+      "auth-shops",
+      "auth"
+    ],
+    "dependencies": [
+      "auth-shops",
+      "auth",
+      "auth-shopsjs",
+      "auth-shops-node",
+      "auth-shops-client",
+      "auth-shops-driver"
+    ],
+    "manifestKeys": {
+      "npm": [
+        "auth-shops",
+        "auth",
+        "auth-shopsjs",
+        "auth-shops-node",
+        "auth-shops-client"
+      ],
+      "python": [
+        "auth-shops",
+        "auth",
+        "auth-shops-python",
+        "aiokafka",
+        "confluent-auth-shops"
+      ],
+      "go": [
+        "auth-shops",
+        "auth",
+        "auth-shops-go"
+      ],
+      "rust": [
+        "auth-shops",
+        "auth",
+        "rdauth-shops"
+      ]
+    },
+    "envPatterns": [
+      "AUTH_",
+      "AUTH-SHOPS_URL",
+      "AUTH-SHOPS_BROKER"
+    ],
+    "dockerPatterns": [
+      "image:\\s*.*auth"
+    ],
+    "importPatterns": [
+      "(?:from\\s+['\"][^'\"]*auth['\"]|require\\(\\s*['\"][^'\"]*auth['\"]\\))"
+    ],
+    "filePatterns": [
+      "auth\\.(?:js|ts|py|go|rs)$"
+    ],
+    "codePatterns": [
+      "(?:new\\s+auth|createauth|authClient)"
+    ],
+    "synthesized": true,
+    "source": "heuristic"
+  },
+  {
+    "id": "verifications",
+    "name": "Verifications",
+    "aliases": [
+      "verifications"
+    ],
+    "dependencies": [
+      "verifications",
+      "verifications",
+      "verificationsjs",
+      "verifications-node",
+      "verifications-client",
+      "verifications-driver"
+    ],
+    "manifestKeys": {
+      "npm": [
+        "verifications",
+        "verifications",
+        "verificationsjs",
+        "verifications-node",
+        "verifications-client"
+      ],
+      "python": [
+        "verifications",
+        "verifications",
+        "verifications-python",
+        "aiokafka",
+        "confluent-verifications"
+      ],
+      "go": [
+        "verifications",
+        "verifications",
+        "verifications-go"
+      ],
+      "rust": [
+        "verifications",
+        "verifications",
+        "rdverifications"
+      ]
+    },
+    "envPatterns": [
+      "VERIFICATIONS_",
+      "VERIFICATIONS_URL",
+      "VERIFICATIONS_BROKER"
+    ],
+    "dockerPatterns": [
+      "image:\\s*.*verifications"
+    ],
+    "importPatterns": [
+      "(?:from\\s+['\"][^'\"]*verifications['\"]|require\\(\\s*['\"][^'\"]*verifications['\"]\\))"
+    ],
+    "filePatterns": [
+      "verifications\\.(?:js|ts|py|go|rs)$"
+    ],
+    "codePatterns": [
+      "(?:new\\s+verifications|createverifications|verificationsClient)"
+    ],
+    "synthesized": true,
+    "source": "heuristic"
+  },
+  {
+    "id": "certificates",
+    "name": "Certificates",
+    "aliases": [
+      "certificates"
+    ],
+    "dependencies": [
+      "certificates",
+      "certificates",
+      "certificatesjs",
+      "certificates-node",
+      "certificates-client",
+      "certificates-driver"
+    ],
+    "manifestKeys": {
+      "npm": [
+        "certificates",
+        "certificates",
+        "certificatesjs",
+        "certificates-node",
+        "certificates-client"
+      ],
+      "python": [
+        "certificates",
+        "certificates",
+        "certificates-python",
+        "aiokafka",
+        "confluent-certificates"
+      ],
+      "go": [
+        "certificates",
+        "certificates",
+        "certificates-go"
+      ],
+      "rust": [
+        "certificates",
+        "certificates",
+        "rdcertificates"
+      ]
+    },
+    "envPatterns": [
+      "CERTIFICATES_",
+      "CERTIFICATES_URL",
+      "CERTIFICATES_BROKER"
+    ],
+    "dockerPatterns": [
+      "image:\\s*.*certificates"
+    ],
+    "importPatterns": [
+      "(?:from\\s+['\"][^'\"]*certificates['\"]|require\\(\\s*['\"][^'\"]*certificates['\"]\\))"
+    ],
+    "filePatterns": [
+      "certificates\\.(?:js|ts|py|go|rs)$"
+    ],
+    "codePatterns": [
+      "(?:new\\s+certificates|createcertificates|certificatesClient)"
+    ],
+    "synthesized": true,
+    "source": "heuristic"
+  },
+  {
+    "id": "inspection",
+    "name": "Inspection",
+    "aliases": [
+      "inspection"
+    ],
+    "dependencies": [
+      "inspection",
+      "inspection",
+      "inspectionjs",
+      "inspection-node",
+      "inspection-client",
+      "inspection-driver"
+    ],
+    "manifestKeys": {
+      "npm": [
+        "inspection",
+        "inspection",
+        "inspectionjs",
+        "inspection-node",
+        "inspection-client"
+      ],
+      "python": [
+        "inspection",
+        "inspection",
+        "inspection-python",
+        "aiokafka",
+        "confluent-inspection"
+      ],
+      "go": [
+        "inspection",
+        "inspection",
+        "inspection-go"
+      ],
+      "rust": [
+        "inspection",
+        "inspection",
+        "rdinspection"
+      ]
+    },
+    "envPatterns": [
+      "INSPECTION_",
+      "INSPECTION_URL",
+      "INSPECTION_BROKER"
+    ],
+    "dockerPatterns": [
+      "image:\\s*.*inspection"
+    ],
+    "importPatterns": [
+      "(?:from\\s+['\"][^'\"]*inspection['\"]|require\\(\\s*['\"][^'\"]*inspection['\"]\\))"
+    ],
+    "filePatterns": [
+      "inspection\\.(?:js|ts|py|go|rs)$"
+    ],
+    "codePatterns": [
+      "(?:new\\s+inspection|createinspection|inspectionClient)"
+    ],
+    "synthesized": true,
+    "source": "heuristic"
+  },
+  {
+    "id": "rulesengine",
+    "name": "rulesEngine",
+    "aliases": [
+      "rulesengine"
+    ],
+    "dependencies": [
+      "rulesengine",
+      "rulesengine",
+      "rulesenginejs",
+      "rulesengine-node",
+      "rulesengine-client",
+      "rulesengine-driver"
+    ],
+    "manifestKeys": {
+      "npm": [
+        "rulesengine",
+        "rulesengine",
+        "rulesenginejs",
+        "rulesengine-node",
+        "rulesengine-client"
+      ],
+      "python": [
+        "rulesengine",
+        "rulesengine",
+        "rulesengine-python",
+        "aiokafka",
+        "confluent-rulesengine"
+      ],
+      "go": [
+        "rulesengine",
+        "rulesengine",
+        "rulesengine-go"
+      ],
+      "rust": [
+        "rulesengine",
+        "rulesengine",
+        "rdrulesengine"
+      ]
+    },
+    "envPatterns": [
+      "RULESENGINE_",
+      "RULESENGINE_URL",
+      "RULESENGINE_BROKER"
+    ],
+    "dockerPatterns": [
+      "image:\\s*.*rulesengine"
+    ],
+    "importPatterns": [
+      "(?:from\\s+['\"][^'\"]*rulesengine['\"]|require\\(\\s*['\"][^'\"]*rulesengine['\"]\\))"
+    ],
+    "filePatterns": [
+      "rulesengine\\.(?:js|ts|py|go|rs)$"
+    ],
+    "codePatterns": [
+      "(?:new\\s+rulesengine|createrulesengine|rulesengineClient)"
+    ],
+    "synthesized": true,
+    "source": "heuristic"
+  },
+  {
+    "id": "qrservice",
+    "name": "qrService",
+    "aliases": [
+      "qrservice"
+    ],
+    "dependencies": [
+      "qrservice",
+      "qrservice",
+      "qrservicejs",
+      "qrservice-node",
+      "qrservice-client",
+      "qrservice-driver"
+    ],
+    "manifestKeys": {
+      "npm": [
+        "qrservice",
+        "qrservice",
+        "qrservicejs",
+        "qrservice-node",
+        "qrservice-client"
+      ],
+      "python": [
+        "qrservice",
+        "qrservice",
+        "qrservice-python",
+        "aiokafka",
+        "confluent-qrservice"
+      ],
+      "go": [
+        "qrservice",
+        "qrservice",
+        "qrservice-go"
+      ],
+      "rust": [
+        "qrservice",
+        "qrservice",
+        "rdqrservice"
+      ]
+    },
+    "envPatterns": [
+      "QRSERVICE_",
+      "QRSERVICE_URL",
+      "QRSERVICE_BROKER"
+    ],
+    "dockerPatterns": [
+      "image:\\s*.*qrservice"
+    ],
+    "importPatterns": [
+      "(?:from\\s+['\"][^'\"]*qrservice['\"]|require\\(\\s*['\"][^'\"]*qrservice['\"]\\))"
+    ],
+    "filePatterns": [
+      "qrservice\\.(?:js|ts|py|go|rs)$"
+    ],
+    "codePatterns": [
+      "(?:new\\s+qrservice|createqrservice|qrserviceClient)"
+    ],
+    "synthesized": true,
+    "source": "heuristic"
+  },
+  {
+    "id": "pdfservice",
+    "name": "pdfService",
+    "aliases": [
+      "pdfservice"
+    ],
+    "dependencies": [
+      "pdfservice",
+      "pdfservice",
+      "pdfservicejs",
+      "pdfservice-node",
+      "pdfservice-client",
+      "pdfservice-driver"
+    ],
+    "manifestKeys": {
+      "npm": [
+        "pdfservice",
+        "pdfservice",
+        "pdfservicejs",
+        "pdfservice-node",
+        "pdfservice-client"
+      ],
+      "python": [
+        "pdfservice",
+        "pdfservice",
+        "pdfservice-python",
+        "aiokafka",
+        "confluent-pdfservice"
+      ],
+      "go": [
+        "pdfservice",
+        "pdfservice",
+        "pdfservice-go"
+      ],
+      "rust": [
+        "pdfservice",
+        "pdfservice",
+        "rdpdfservice"
+      ]
+    },
+    "envPatterns": [
+      "PDFSERVICE_",
+      "PDFSERVICE_URL",
+      "PDFSERVICE_BROKER"
+    ],
+    "dockerPatterns": [
+      "image:\\s*.*pdfservice"
+    ],
+    "importPatterns": [
+      "(?:from\\s+['\"][^'\"]*pdfservice['\"]|require\\(\\s*['\"][^'\"]*pdfservice['\"]\\))"
+    ],
+    "filePatterns": [
+      "pdfservice\\.(?:js|ts|py|go|rs)$"
+    ],
+    "codePatterns": [
+      "(?:new\\s+pdfservice|createpdfservice|pdfserviceClient)"
+    ],
+    "synthesized": true,
+    "source": "heuristic"
+  },
+  {
+    "id": "mailservice",
+    "name": "mailService",
+    "aliases": [
+      "mailservice"
+    ],
+    "dependencies": [
+      "mailservice",
+      "mailservice",
+      "mailservicejs",
+      "mailservice-node",
+      "mailservice-client",
+      "mailservice-driver"
+    ],
+    "manifestKeys": {
+      "npm": [
+        "mailservice",
+        "mailservice",
+        "mailservicejs",
+        "mailservice-node",
+        "mailservice-client"
+      ],
+      "python": [
+        "mailservice",
+        "mailservice",
+        "mailservice-python",
+        "aiokafka",
+        "confluent-mailservice"
+      ],
+      "go": [
+        "mailservice",
+        "mailservice",
+        "mailservice-go"
+      ],
+      "rust": [
+        "mailservice",
+        "mailservice",
+        "rdmailservice"
+      ]
+    },
+    "envPatterns": [
+      "MAILSERVICE_",
+      "MAILSERVICE_URL",
+      "MAILSERVICE_BROKER"
+    ],
+    "dockerPatterns": [
+      "image:\\s*.*mailservice"
+    ],
+    "importPatterns": [
+      "(?:from\\s+['\"][^'\"]*mailservice['\"]|require\\(\\s*['\"][^'\"]*mailservice['\"]\\))"
+    ],
+    "filePatterns": [
+      "mailservice\\.(?:js|ts|py|go|rs)$"
+    ],
+    "codePatterns": [
+      "(?:new\\s+mailservice|createmailservice|mailserviceClient)"
+    ],
+    "synthesized": true,
+    "source": "heuristic"
+  },
+  {
+    "id": "smtp",
+    "name": "SMTP",
+    "aliases": [
+      "smtp"
+    ],
+    "dependencies": [
+      "smtp",
+      "smtp",
+      "smtpjs",
+      "smtp-node",
+      "smtp-client",
+      "smtp-driver"
+    ],
+    "manifestKeys": {
+      "npm": [
+        "smtp",
+        "smtp",
+        "smtpjs",
+        "smtp-node",
+        "smtp-client"
+      ],
+      "python": [
+        "smtp",
+        "smtp",
+        "smtp-python",
+        "aiokafka",
+        "confluent-smtp"
+      ],
+      "go": [
+        "smtp",
+        "smtp",
+        "smtp-go"
+      ],
+      "rust": [
+        "smtp",
+        "smtp",
+        "rdsmtp"
+      ]
+    },
+    "envPatterns": [
+      "SMTP_",
+      "SMTP_URL",
+      "SMTP_BROKER"
+    ],
+    "dockerPatterns": [
+      "image:\\s*.*smtp"
+    ],
+    "importPatterns": [
+      "(?:from\\s+['\"][^'\"]*smtp['\"]|require\\(\\s*['\"][^'\"]*smtp['\"]\\))"
+    ],
+    "filePatterns": [
+      "smtp\\.(?:js|ts|py|go|rs)$"
+    ],
+    "codePatterns": [
+      "(?:new\\s+smtp|createsmtp|smtpClient)"
+    ],
+    "synthesized": true,
+    "source": "heuristic"
   }
 ]

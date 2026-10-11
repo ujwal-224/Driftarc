@@ -74,24 +74,25 @@ async function callGeminiApi({ prompt, imageBuffer, mimeType }) {
     throw new Error('GEMINI_API_KEY is not configured in .env');
   }
 
-  // Normalize model identifier: remove spaces or map friendly names
-  let normalizedModel = (model || '').trim();
-  if (!normalizedModel || normalizedModel.toLowerCase().includes('gemma')) {
-    // Note: On Google Gemini API, Gemma (gemma-4-26b-a4b-it) is a text-only model.
-    // Multimodal vision diagram extraction requires a Flash vision model.
-    normalizedModel = 'gemini-3.8-flash';
-  } else if (normalizedModel.includes(' ')) {
-    normalizedModel = normalizedModel.replace(/\s+/g, '-').toLowerCase();
+  // Map friendly model names to official Google API model identifiers
+  let primaryModel = (model || '').trim();
+  if (!primaryModel || primaryModel.toLowerCase().includes('26b')) {
+    primaryModel = 'gemma-4-26b-a4b-it';
+  } else if (primaryModel.toLowerCase().includes('31b')) {
+    primaryModel = 'gemma-4-31b-it';
+  } else if (primaryModel.toLowerCase().includes('gemma')) {
+    primaryModel = 'gemma-4-26b-a4b-it';
+  } else if (primaryModel.includes(' ')) {
+    primaryModel = primaryModel.replace(/\s+/g, '-').toLowerCase();
   }
 
-  // Model fallback chain: high-quota flash models first
+  // Fallback chain: Prioritize Gemma 4 models (14,400 requests/day limit) first!
   const candidateModels = [
-    normalizedModel,
-    'gemini-3.8-flash',
-    'gemini-flash-latest',
+    primaryModel,
+    'gemma-4-26b-a4b-it',
+    'gemma-4-31b-it',
     'gemini-flash-lite-latest',
-    'gemini-3.5-flash-lite',
-    'gemini-2.5-flash-lite'
+    'gemini-3.8-flash'
   ].filter((m, idx, arr) => arr.indexOf(m) === idx && m && !m.includes(' '));
 
   let lastError;
@@ -127,7 +128,7 @@ async function callGeminiApi({ prompt, imageBuffer, mimeType }) {
         const errorBody = await response.text();
         // If 503 (high demand) or 429 (rate limit), try fallback model
         if ((response.status === 503 || response.status === 429) && candidate !== candidateModels[candidateModels.length - 1]) {
-          console.warn(`[DriftCheck] Model ${candidate} returned ${response.status}, attempting fallback...`);
+          console.warn(`[DriftArc] Model ${candidate} returned ${response.status}, attempting fallback...`);
           lastError = new Error(`Gemini API error (${response.status}) on ${candidate}: ${errorBody}`);
           continue;
         }
@@ -135,7 +136,11 @@ async function callGeminiApi({ prompt, imageBuffer, mimeType }) {
       }
 
       const data = await response.json();
-      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      const candidateParts = data?.candidates?.[0]?.content?.parts || [];
+      // Handle thinking models where part 0 is thought and part 1 is actual json
+      const outputPart = candidateParts.find(p => !p.thought && p.text) || candidateParts[candidateParts.length - 1];
+      const text = outputPart?.text || candidateParts.map(p => p.text).join('\n');
+
       if (!text) {
         throw new Error('Empty response received from Gemini API');
       }

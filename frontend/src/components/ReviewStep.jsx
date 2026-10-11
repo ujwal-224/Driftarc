@@ -75,10 +75,16 @@ export default function ReviewStep({
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-slate-500 dark:text-slate-400">
-            Target: <code className="text-sky-600 dark:text-sky-400 font-mono bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded-md border border-slate-200 dark:border-slate-800">{repoUrl}</code>
+        <div className="flex items-center gap-2 self-start sm:self-auto shrink-0 max-w-full">
+          <span className="text-xs text-slate-500 dark:text-slate-400 shrink-0">
+            Target:
           </span>
+          <code 
+            title={repoUrl}
+            className="text-sky-600 dark:text-sky-400 font-mono text-xs bg-slate-100 dark:bg-slate-900 px-2.5 py-1 rounded-md border border-slate-200 dark:border-slate-800 inline-block whitespace-nowrap max-w-[260px] sm:max-w-xs md:max-w-sm lg:max-w-md truncate align-middle shadow-xs"
+          >
+            {repoUrl}
+          </code>
         </div>
       </div>
 

@@ -103,8 +103,15 @@ export default function Results({
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
             Architecture Scan Results
           </h1>
-          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
-            Audit results for <code className="text-sky-600 dark:text-sky-400 font-mono bg-slate-100 dark:bg-slate-900 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-800">{repoUrl}</code> ({filesScanned} files scanned).
+          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 flex flex-wrap items-center gap-1.5">
+            <span>Audit results for</span>
+            <code 
+              title={repoUrl}
+              className="text-sky-600 dark:text-sky-400 font-mono text-xs bg-slate-100 dark:bg-slate-900 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-800 inline-block whitespace-nowrap max-w-[260px] sm:max-w-md truncate align-middle"
+            >
+              {repoUrl}
+            </code>
+            <span>({filesScanned} files scanned).</span>
           </p>
         </div>
 
