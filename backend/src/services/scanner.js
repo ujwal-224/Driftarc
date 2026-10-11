@@ -179,7 +179,7 @@ export async function scan({
   const startTime = Date.now();
 
   // Pillar 4: Incremental Content Hash Cache check
-  const { stats: cacheStats } = checkIncrementalCache(files);
+  const { stats: cacheStats, updateCache } = checkIncrementalCache(files);
 
   // Load dynamically cached signatures (Pillar 1)
   const cachedSigs = loadCachedSignatures().map(hydrateSignature);
@@ -271,6 +271,13 @@ export async function scan({
     files,
     findSignatureFn: lookupSig
   });
+
+  // Pillar 4: Update content hash cache index
+  const resultsByFile = {};
+  for (const f of files) {
+    if (f && f.path) resultsByFile[f.path] = true;
+  }
+  updateCache(resultsByFile);
 
   const durationMs = Date.now() - startTime;
 
