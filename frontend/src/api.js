@@ -1,10 +1,9 @@
 /**
  * Frontend API client communicating with DriftArc backend.
- * Uses VITE_API_URL in production (e.g. Render backend on Vercel deployment)
- * and falls back to relative /api for local Vite proxy development.
+ * Uses VITE_API_URL or defaults to the deployed Render backend (https://driftarc.onrender.com).
  */
 
-const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
+const API_BASE = (import.meta.env.VITE_API_URL || 'https://driftarc.onrender.com').replace(/\/+$/, '');
 
 export async function checkHealth() {
   const res = await fetch(`${API_BASE}/api/health`);
