@@ -74,10 +74,25 @@ async function callGeminiApi({ prompt, imageBuffer, mimeType }) {
     throw new Error('GEMINI_API_KEY is not configured in .env');
   }
 
-  // Model fallback chain if primary model experiences 503 spikes or 429 limits
-  const candidateModels = [model, 'gemini-3.5-flash', 'gemini-3.7-flash'].filter(
-    (m, idx, arr) => arr.indexOf(m) === idx
-  );
+  // Normalize model identifier: remove spaces or map friendly names
+  let normalizedModel = (model || '').trim();
+  if (!normalizedModel || normalizedModel.toLowerCase().includes('gemma')) {
+    // Note: On Google Gemini API, Gemma (gemma-4-26b-a4b-it) is a text-only model.
+    // Multimodal vision diagram extraction requires a Flash vision model.
+    normalizedModel = 'gemini-3.8-flash';
+  } else if (normalizedModel.includes(' ')) {
+    normalizedModel = normalizedModel.replace(/\s+/g, '-').toLowerCase();
+  }
+
+  // Model fallback chain: high-quota flash models first
+  const candidateModels = [
+    normalizedModel,
+    'gemini-3.8-flash',
+    'gemini-flash-latest',
+    'gemini-flash-lite-latest',
+    'gemini-3.5-flash-lite',
+    'gemini-2.5-flash-lite'
+  ].filter((m, idx, arr) => arr.indexOf(m) === idx && m && !m.includes(' '));
 
   let lastError;
   for (const candidate of candidateModels) {
